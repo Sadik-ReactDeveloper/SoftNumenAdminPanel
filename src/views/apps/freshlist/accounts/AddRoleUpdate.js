@@ -62,11 +62,12 @@ export default function AddRoleNew() {
       });
     }
   };
+  console.log(Selected);
   useEffect(() => {
     console.log(Selected);
   }, [Selected]);
 
-  const handleSumit = (e) => {
+  const handleSumit = e => {
     e.preventDefault();
     let userdata = JSON.parse(localStorage.getItem("userData"));
 
@@ -79,7 +80,7 @@ export default function AddRoleNew() {
 
     axiosConfig
       .post(`/addroles`, formdata)
-      .then((res) => {
+      .then(res => {
         console.log(res);
         swal("Success", "Role Created");
         setSelected("");
@@ -90,7 +91,7 @@ export default function AddRoleNew() {
           checkbox.checked = false;
         }
       })
-      .catch((er) => {
+      .catch(er => {
         console.log(er);
       });
   };
@@ -114,7 +115,7 @@ export default function AddRoleNew() {
                     <Input
                       required
                       value={Role}
-                      onChange={(e) => setRole(e.target.value)}
+                      onChange={e => setRole(e.target.value)}
                       type="text"
                       placeholder="Enter Role"
                       className="form-control"
@@ -125,7 +126,7 @@ export default function AddRoleNew() {
                     <Input
                       required
                       value={Desc}
-                      onChange={(e) => setDesc(e.target.value)}
+                      onChange={e => setDesc(e.target.value)}
                       type="text"
                       placeholder="Enter Role Desc.."
                       // className="form-control"
@@ -143,7 +144,7 @@ export default function AddRoleNew() {
                           borderRadius: "12px",
                           // background: "#e5dfdf26",
                           height: `${
-                            show && SelectedIndex === index ? "340px" : "40px"
+                            show && SelectedIndex === index ? "400px" : "40px"
                           }`,
                         }}
                         className="customcol gy-0 mb-2 "
@@ -165,7 +166,7 @@ export default function AddRoleNew() {
                                 className="mt-1"
                                 name="check"
                                 id={`head_${value?.title}`}
-                                onClick={(e) => {
+                                onClick={e => {
                                   handlesetparent(e.target.checked, index);
                                   handleSelectPage(
                                     e.target.value,
@@ -223,7 +224,7 @@ export default function AddRoleNew() {
                                             <input
                                               name="check"
                                               id={`item_${permit}`}
-                                              onClick={(e) => {
+                                              onClick={e => {
                                                 handleSelectPage(
                                                   e.target.value,
                                                   e.target.checked,

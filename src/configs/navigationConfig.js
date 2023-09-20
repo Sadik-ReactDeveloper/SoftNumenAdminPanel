@@ -48,8 +48,8 @@ const navigationConfig = [
   },
   {
     type: "groupHeader",
-    groupTitle: "Account",
-    title: "Account",
+    groupTitle: "Accounts",
+    title: "Customers",
   },
   {
     id: "Customer",
@@ -58,7 +58,7 @@ const navigationConfig = [
     icon: <FaProductHunt size={15} />,
     children: [
       {
-        id: "createAccount",
+        id: "Create Customer",
         title: "Create Customer",
         type: "item",
         icon: <FaCircle size={8} />,
@@ -66,7 +66,7 @@ const navigationConfig = [
         navLink: "/app/Trupee/account/CreateAccount",
       },
       {
-        id: "producttype",
+        id: "Customer List",
         title: "Customer List",
         type: "item",
         icon: <FaList size={8} />,
@@ -90,7 +90,7 @@ const navigationConfig = [
       //   navLink: "/app/freshlist/house/AddProduct",
       // },
       {
-        id: "createrole",
+        id: "Create Role",
         title: "Create Role",
         type: "item",
         icon: <FaCircle size={8} />,
@@ -98,7 +98,7 @@ const navigationConfig = [
         navLink: "/app/freshlist/account/addRoleNew",
       },
       {
-        id: "List",
+        id: "Role List",
         title: "Role List",
         type: "item",
         icon: <FaCircle size={8} />,
@@ -119,7 +119,7 @@ const navigationConfig = [
     icon: <FaProductHunt size={15} />,
     children: [
       {
-        id: "createAccount",
+        id: "Product Registration",
         title: "Product Registration",
         type: "item",
         icon: <FaCircle size={8} />,
@@ -127,8 +127,8 @@ const navigationConfig = [
         navLink: "/app/Trupee/account/CreateAccount",
       },
       {
-        id: "producttype",
-        title: "Spare Part ",
+        id: "Spare Part",
+        title: "Spare Part",
         type: "item",
         icon: <FaList size={8} />,
         permissions: ["admin", "editor"],
@@ -136,7 +136,7 @@ const navigationConfig = [
       },
 
       {
-        id: "createrole",
+        id: "orders",
         title: "Orders",
         type: "item",
         icon: <FaCircle size={8} />,
@@ -144,7 +144,7 @@ const navigationConfig = [
         navLink: "/app/freshlist/account/addRoleNew",
       },
       {
-        id: "List",
+        id: "Parts Catelog",
         title: "Parts Catelog",
         type: "item",
         icon: <FaCircle size={8} />,
@@ -152,7 +152,7 @@ const navigationConfig = [
         navLink: "/app/Trupee/account/RoleList",
       },
       {
-        id: "List",
+        id: "Scrutiny/inspections",
         title: "Scrutiny/inspections",
         type: "item",
         icon: <FaCircle size={8} />,
@@ -160,7 +160,7 @@ const navigationConfig = [
         navLink: "/app/Trupee/account/RoleList",
       },
       {
-        id: "List",
+        id: "Invoice/Billing",
         title: "Invoice/Billing",
         type: "item",
         icon: <FaCircle size={8} />,
@@ -183,29 +183,29 @@ const navigationConfig = [
         permissions: ["admin", "editor"],
         navLink: "/app/Trupee/account/RoleList",
       },
-      {
-        id: "service",
-        title: "Service",
-        type: "item",
-        icon: <FaCircle size={8} />,
-        permissions: ["admin", "editor"],
-        navLink: "/app/Trupee/account/RoleList",
-      },
+      // {
+      //   id: "service",
+      //   title: "Service",
+      //   type: "item",
+      //   icon: <FaCircle size={8} />,
+      //   permissions: ["admin", "editor"],
+      //   navLink: "/app/Trupee/account/RoleList",
+      // },
     ],
   },
   {
     type: "groupHeader",
     groupTitle: "WAREHOUSE MANAGEMENT",
-    title: "WAREHOUSE MANAGEMENT",
+    title: "WAREHOUSE",
   },
   {
-    id: "warehouse",
+    id: "WAREHOUSE",
     title: "WAREHOUSE",
     type: "collapse",
     icon: <FaProductHunt size={15} />,
     children: [
       {
-        id: "productDashboard",
+        id: "Create Warehouse",
         title: "Create Warehouse",
         type: "item",
         icon: <FaCircle size={8} />,
@@ -218,7 +218,7 @@ const navigationConfig = [
   {
     type: "groupHeader",
     groupTitle: "Quotation MANAGEMENT",
-    title: "Quotation MANAGEMENT",
+    title: "Quotation",
   },
   {
     id: "Quotation",
@@ -227,7 +227,7 @@ const navigationConfig = [
     icon: <FaProductHunt size={15} />,
     children: [
       {
-        id: "productDashboard",
+        id: "Add Suppier",
         title: "Add Suppier",
         type: "item",
         icon: <FaCircle size={8} />,
@@ -235,7 +235,7 @@ const navigationConfig = [
         navLink: "/app/freshlist/house/ProductDashboard",
       },
       {
-        id: "productDashboard",
+        id: "Create Quote",
         title: "Create Quote",
         type: "item",
         icon: <FaCircle size={8} />,
@@ -243,7 +243,7 @@ const navigationConfig = [
         navLink: "/app/freshlist/house/ProductDashboard",
       },
       {
-        id: "productDashboard",
+        id: "Edit Notes",
         title: "Edit Notes",
         type: "item",
         icon: <FaCircle size={8} />,
@@ -251,7 +251,7 @@ const navigationConfig = [
         navLink: "/app/freshlist/house/ProductDashboard",
       },
       {
-        id: "productDashboard",
+        id: "Debit Notes",
         title: " Debit Notes",
         type: "item",
         icon: <FaCircle size={8} />,
@@ -266,13 +266,13 @@ const navigationConfig = [
     title: "Product Managment",
   },
   {
-    id: "product_attribute",
-    title: "Product",
+    id: "Product Managment",
+    title: "Product Managment",
     type: "collapse",
     icon: <FaProductHunt size={15} />,
     children: [
       {
-        id: "addproduct",
+        id: "Product Registration",
         title: "Product Registration",
         type: "item",
         icon: <FaCircle size={8} />,
@@ -280,7 +280,7 @@ const navigationConfig = [
         navLink: "/app/freshlist/house/AddProduct",
       },
       {
-        id: "productDashboard",
+        id: "Product Search",
         title: "Product Search",
         type: "item",
         icon: <FaCircle size={8} />,
@@ -357,7 +357,7 @@ const navigationConfig = [
   {
     type: "groupHeader",
     groupTitle: "Parts Management",
-    title: "Parts Management",
+    title: "Parts",
   },
   {
     id: "Parts",
@@ -497,7 +497,7 @@ const navigationConfig = [
       },
       {
         id: "canceled",
-        title: "Canceled (00)",
+        title: "Canceled",
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
@@ -565,8 +565,8 @@ const navigationConfig = [
         navLink: "/app/freshlist/subcategory/InvoiceGenerator",
       },
       {
-        id: "courier/shipping charges",
-        title: "courier/shipping charges",
+        id: "Courier/Shipping Charges",
+        title: "Courier/Shipping Charges",
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
@@ -860,8 +860,8 @@ const navigationConfig = [
 
   {
     type: "groupHeader",
-    groupTitle: "Media Management",
-    title: "PromoMediation Management",
+    groupTitle: "Media Status Management",
+    title: "Media Status Management",
   },
   {
     id: "Media Status Management",
@@ -887,19 +887,19 @@ const navigationConfig = [
       },
     ],
   },
-  {
-    type: "groupHeader",
-    groupTitle: "Logs",
-    title: "Logs",
-  },
-  {
-    id: "Logs",
-    title: "Logs",
-    type: "item",
-    icon: <FaList size={15} />,
-    permissions: ["admin", "editor"],
-    navLink: "/app/freshlist/report/LogsReport",
-  },
+  // {
+  //   type: "groupHeader",
+  //   groupTitle: "Logs",
+  //   title: "Logs",
+  // },
+  // {
+  //   id: "Logs",
+  //   title: "Logs",
+  //   type: "item",
+  //   icon: <FaList size={15} />,
+  //   permissions: ["admin", "editor"],
+  //   navLink: "/app/freshlist/report/LogsReport",
+  // },
   // {
   //   id: "refund",
   //   title: "Refund Requests",
