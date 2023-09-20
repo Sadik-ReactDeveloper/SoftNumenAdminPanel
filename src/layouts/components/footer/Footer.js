@@ -4,7 +4,7 @@ import { Button } from "reactstrap";
 import { Heart, ArrowUp } from "react-feather";
 import classnames from "classnames";
 
-const Footer = (props) => {
+const Footer = props => {
   let footerTypeArr = ["sticky", "static", "hidden"];
   return (
     <footer
@@ -18,12 +18,8 @@ const Footer = (props) => {
       <p className="mb-0 clearfix">
         <span className="float-md-left d-block d-md-inline-block mt-25">
           COPYRIGHT © {new Date().getFullYear()}
-          <a
-            href="https://themeforest.net/user/pixinvent/portfolio?ref=pixinvent"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Pravri,
+          <a href="=#" target="_blank" rel="noopener noreferrer">
+            SoftNumen,
           </a>
           All rights reserved
         </span>

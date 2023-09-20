@@ -13,11 +13,11 @@ import {
   Form,
   TabContent,
   TabPane,
+  InputGroup,
+  InputGroupAddon,
 } from "reactstrap";
-// import classnames from "classnames";
-// import logo from "../../../../assets/img/logo/logo.ico";
+import { FaBeer } from "react-icons/fa";
 import logo from "../../../../assets/img/logo/paravilogo.png";
-//import loginImg from "../../../../assets/img/pages/login.png";
 import "../../../../assets/scss/pages/authentication.scss";
 import { history } from "../../../../history";
 import LoginAuth0 from "./LoginAuth0";
@@ -34,12 +34,10 @@ class Login extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       email: "",
       password: "",
       resetpassword: false,
-      // rowData: {},
     };
   }
   handlechange = e => {
@@ -52,8 +50,6 @@ class Login extends React.Component {
     const fromdata = new FormData();
     fromdata.append("username", this.state.email);
     fromdata.append("password", this.state.password);
-    // console.log(this.state.email);
-    // console.log(this.state.password);
     axiosConfig
       .post("/usersign", fromdata)
       .then(response => {
@@ -71,13 +67,11 @@ class Login extends React.Component {
             {
               buttons: {
                 ok: { text: "Ok", value: "ok" },
-                // catch: { text: "Cancel ", value: "catch" },
               },
             }
           ).then(value => {
             switch (value) {
               case "ok":
-                // window.location.reload();
                 break;
               default:
             }
@@ -85,13 +79,10 @@ class Login extends React.Component {
         }
       })
       .catch(error => {
-        // console.log(error.response?.data.success);
         let msg = error.response?.data.success;
-
         if (!msg) {
           swal("Error", "Invalid Username or Password");
         }
-        // swal("Error!", "Invalid! Email or Password ", "error");
       });
   };
   changepassword = e => {
@@ -100,8 +91,6 @@ class Login extends React.Component {
     let formdata = new FormData();
     formdata.append("email", this.state.email);
     formdata.append("base_url", "this.state.password");
-    // console.log(this.state.email);
-    // console.log(this.state.password);
     axiosConfig
       .post("/forgetPasswordEmailVerify", formdata)
       .then(res => {
@@ -184,26 +173,36 @@ class Login extends React.Component {
                         <Form onSubmit={this.loginHandler}>
                           <Label>UserName</Label>
                           <FormGroup className="form-label-group position-relative has-icon-left">
-                            <Input
-                              type="text"
-                              name="email"
-                              placeholder="Username"
-                              value={this.state.email}
-                              onChange={this.handlechange}
-                              // required
-                            />
+                            <InputGroup>
+                              <InputGroupAddon addonType="prepend">
+                                @
+                              </InputGroupAddon>
+                              <Input
+                                type="text"
+                                name="email"
+                                placeholder="User Name"
+                                value={this.state.email}
+                                onChange={this.handlechange}
+                                // required
+                              />
+                            </InputGroup>
                           </FormGroup>
 
                           <Label>Password</Label>
                           <FormGroup className="form-label-group position-relative has-icon-left">
-                            <Input
-                              type="password"
-                              name="password"
-                              placeholder="Password"
-                              value={this.state.password}
-                              onChange={this.handlechange}
-                              // required
-                            />
+                            <InputGroup>
+                              <InputGroupAddon addonType="prepend">
+                                @
+                              </InputGroupAddon>
+                              <Input
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                                value={this.state.password}
+                                onChange={this.handlechange}
+                                // required
+                              />
+                            </InputGroup>
                           </FormGroup>
 
                           <div className="d-flex justify-content-between">
