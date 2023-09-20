@@ -894,16 +894,6 @@ const AddProduct = () => {
                         onRemove={onRemove1} // Function will trigger on remove event
                         displayValue="state_title" // Property name to display in the dropdown options
                       />
-                      <Multiselect
-                        required
-                        showCheckbox="true"
-                        isObject="false"
-                        options={StateList} // Options to display in the dropdown
-                        // selectedValues={selectedValue}   // Preselected value to persist in dropdown
-                        onSelect={onSelect1} // Function will trigger on select event
-                        onRemove={onRemove1} // Function will trigger on remove event
-                        displayValue="state_title" // Property name to display in the dropdown options
-                      />
                     </>
                     {/* ) : (
                       <>
