@@ -102,7 +102,7 @@ class SideMenuContent extends React.Component {
     });
   };
 
-  initRender = parentArr => {
+  initRender = (parentArr) => {
     this.setState({
       activeGroups: parentArr.slice(0),
       currentActiveGroup: parentArr.slice(0),
@@ -112,7 +112,7 @@ class SideMenuContent extends React.Component {
   handleshow = () => {
     let userCredentials = JSON.parse(localStorage.getItem("userData"));
 
-    let TabparMission = userCredentials?.role?.map(value => value?.pageName);
+    let TabparMission = userCredentials?.role?.map((value) => value?.pageName);
     // console.log(TabparMission);
     this.setState({ showpage: TabparMission });
     this.setState({ userData: userCredentials });
@@ -190,7 +190,7 @@ class SideMenuContent extends React.Component {
             disabled: item.disabled,
           })}
           key={item.id}
-          onClick={e => {
+          onClick={(e) => {
             e.stopPropagation();
             if (item.type === "item") {
               this.props.handleActiveItem(item.navLink);
@@ -224,7 +224,7 @@ class SideMenuContent extends React.Component {
               this.props.handleSidebarMouseEnter(item.id);
             }}
             key={item.id}
-            onClick={e => {
+            onClick={(e) => {
               return item.type === "collapse" ? e.preventDefault() : "";
             }}
             target={item.newTab ? "_blank" : undefined}

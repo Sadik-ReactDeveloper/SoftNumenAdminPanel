@@ -19,6 +19,7 @@ import { BsBoxSeam } from "react-icons/bs";
 import { TbTruckDelivery } from "react-icons/tb";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import MainDash from "./MainDash";
+import EcommerceDashboard from "../../../layouts/views/dashboard/ecommerce/EcommerceDashboard";
 
 class AnalyticsDashboard extends React.Component {
   constructor(props) {
@@ -407,6 +408,10 @@ class AnalyticsDashboard extends React.Component {
           </Col>
 
         </Row> */}
+        <section>
+          <EcommerceDashboard />
+        </section>
+
         {/* </div> */}
       </React.Fragment>
     );
