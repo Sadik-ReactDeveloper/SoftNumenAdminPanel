@@ -124,7 +124,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/Trupee/account/CreateAccount",
+        navLink: "/app/freshlist/house/AddProduct",
       },
       {
         id: "Spare Part",
