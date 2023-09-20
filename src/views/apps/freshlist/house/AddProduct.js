@@ -625,11 +625,13 @@ const AddProduct = () => {
   const [UserName, setUserName] = useState("");
   const [productName, setproductName] = useState([]);
   const [City, setCity] = useState("");
-  const [formValues, setFormValues] = useState([{ name: "", email: "" }]);
+  const [formValues, setFormValues] = useState([
+    { partname: "", partseriel: "", quantity: "" },
+  ]);
   useEffect(() => {
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let newparmisson = pageparmission?.role?.find(
-      value => value?.pageName === "Create Account"
+      (value) => value?.pageName === "Create Account"
     );
     setViewpermisson(newparmisson?.permission.includes("View"));
     setCreatepermisson(newparmisson?.permission.includes("Create"));
@@ -640,7 +642,7 @@ const AddProduct = () => {
     const formdata = new FormData();
     formdata.append("user_id", pageparmission?.Userinfo?.id);
     formdata.append("role", pageparmission?.Userinfo?.role);
-    axiosConfig.post("/getrolelistdropdown", formdata).then(response => {
+    axiosConfig.post("/getrolelistdropdown", formdata).then((response) => {
       // console.log(response);
       const propertyNames = Object.values(response.data?.data?.roles);
 
@@ -650,15 +652,15 @@ const AddProduct = () => {
     // state List
     axiosConfig
       .get("/getallstates")
-      .then(response => {
+      .then((response) => {
         setStateList(response.data?.states);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error.response.data);
       });
   }, []);
 
-  const submitHandler = e => {
+  const submitHandler = (e) => {
     e.preventDefault();
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let uniqueChars = [...new Set(selectItem1)];
@@ -700,7 +702,7 @@ const AddProduct = () => {
 
     axiosConfig
       .post("/createuser", formdata)
-      .then(response => {
+      .then((response) => {
         if (response.data?.success) {
           swal("Success!", "Submitted SuccessFull!", "success");
           setAssignRole("");
@@ -719,7 +721,7 @@ const AddProduct = () => {
         }
         // this.props.history.push("/app/freshlist/order/all");
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -755,7 +757,7 @@ const AddProduct = () => {
       }
     }
 
-    let arr = selectedList.map(ele => ele.id);
+    let arr = selectedList.map((ele) => ele.id);
     setmultiSelect(arr);
     // console.log(multiSelect);
 
@@ -767,10 +769,10 @@ const AddProduct = () => {
       formdata.append("state_id", value);
       axiosConfig
         .post(`/getcity`, formdata)
-        .then(res => {
+        .then((res) => {
           setCityList(res?.data?.cities);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     } else {
@@ -783,7 +785,7 @@ const AddProduct = () => {
     // console.log(selectedList);
     // setmultiSelect(selectedList);
 
-    let arr = selectedList.map(ele => ele.id);
+    let arr = selectedList.map((ele) => ele.id);
     // console.log(arr);
     setmultiSelect(arr);
     // console.log(multiSelect);
@@ -808,16 +810,16 @@ const AddProduct = () => {
   };
 
   let addFormFields = () => {
-    setFormValues([...formValues, { name: "", email: "" }]);
+    setFormValues([...formValues, { name: "", partseriel: "", quantity: "" }]);
   };
 
-  let removeFormFields = i => {
+  let removeFormFields = (i) => {
     let newFormValues = [...formValues];
     newFormValues.splice(i, 1);
     setFormValues(newFormValues);
   };
 
-  let handleSubmit = event => {
+  let handleSubmit = (event) => {
     event.preventDefault();
     alert(JSON.stringify(formValues));
   };
@@ -834,43 +836,61 @@ const AddProduct = () => {
           <div className="container ">
             <form onSubmit={handleSubmit}>
               {formValues.map((element, index) => (
-                <div className="form-inline" key={index}>
-                  <label>Name</label>
-                  <input
+                <div className="form-inline my-2" key={index}>
+                  <FormGroup>
+                    <Label>Part Name</Label>
+                    <Input
+                      type="text"
+                      name="name"
+                      placeholder="Part Name"
+                      value={element.name || ""}
+                      onChange={(e) => handleChange(index, e)}
+                    />
+                  </FormGroup>
+
+                  <Label>Part Seriel No.</Label>
+                  <Input
                     type="text"
-                    name="name"
-                    value={element.name || ""}
-                    onChange={e => handleChange(index, e)}
+                    name="partseriel"
+                    placeholder="Part Seriel"
+                    value={element.partseriel || ""}
+                    onChange={(e) => handleChange(index, e)}
                   />
-                  <label>Email</label>
-                  <input
+                  <Label>Quantity </Label>
+                  <Input
                     type="text"
-                    name="email"
-                    value={element.email || ""}
-                    onChange={e => handleChange(index, e)}
+                    name="quantity"
+                    placeholder="Quantity"
+                    value={element.quantity || ""}
+                    onChange={(e) => handleChange(index, e)}
                   />
                   {index ? (
-                    <button
-                      type="button"
-                      className="button remove"
+                    <Button
+                      className="button remove ml-1"
+                      color="primary"
                       onClick={() => removeFormFields(index)}
                     >
                       Remove
-                    </button>
+                    </Button>
                   ) : null}
                 </div>
               ))}
               <div className="button-section">
-                <button
-                  className="button add"
-                  type="button"
+                <Button
                   onClick={() => addFormFields()}
+                  color="primary"
+                  className="mr-1 mt-2 mx-2"
                 >
                   Add
-                </button>
-                <button className="button submit" type="submit">
+                </Button>
+                <Button
+                  color="primary"
+                  className="mr-1 mt-2 mx-2 button submit"
+                  // className="button submit"
+                  type="submit"
+                >
                   Submit
-                </button>
+                </Button>
               </div>
             </form>
           </div>
@@ -938,7 +958,7 @@ const AddProduct = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Role--</option>
 
@@ -960,7 +980,7 @@ const AddProduct = () => {
                       placeholder="Enter Your Name"
                       name="fullname"
                       value={fullname}
-                      onChange={e => setfullname(e.target.value)}
+                      onChange={(e) => setfullname(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -973,7 +993,7 @@ const AddProduct = () => {
                       placeholder="Enter Your Name"
                       name="UserName"
                       value={UserName}
-                      onChange={e => setUserName(e.target.value)}
+                      onChange={(e) => setUserName(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -985,7 +1005,7 @@ const AddProduct = () => {
                       required
                       type="number"
                       maxLength={12}
-                      onKeyDown={e =>
+                      onKeyDown={(e) =>
                         ["e", "E", "+", "-"].includes(e.key) &&
                         e.preventDefault()
                       }
@@ -994,7 +1014,7 @@ const AddProduct = () => {
                       placeholder="0123456789"
                       name="Mobile_no"
                       value={Mobile_no}
-                      onChange={e => setMobile_no(e.target.value)}
+                      onChange={(e) => setMobile_no(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -1008,7 +1028,7 @@ const AddProduct = () => {
                       placeholder="abcd@gmail.com..."
                       name="email"
                       value={email}
-                      onChange={e => setemail(e.target.value)}
+                      onChange={(e) => setemail(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -1021,7 +1041,7 @@ const AddProduct = () => {
                       placeholder="Enter password"
                       name="password"
                       value={password}
-                      onChange={e => setpassword(e.target.value)}
+                      onChange={(e) => setpassword(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -1034,7 +1054,7 @@ const AddProduct = () => {
                       placeholder="Enter CompanyName"
                       name="CompanyName"
                       value={CompanyName}
-                      onChange={e => setCompanyName(e.target.value)}
+                      onChange={(e) => setCompanyName(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -1044,7 +1064,7 @@ const AddProduct = () => {
                     <Input
                       required
                       type="number"
-                      onKeyDown={e =>
+                      onKeyDown={(e) =>
                         ["e", "E", "+", "-"].includes(e.key) &&
                         e.preventDefault()
                       }
@@ -1054,7 +1074,7 @@ const AddProduct = () => {
                       placeholder="0123456789"
                       name="Phone_no"
                       value={Phone_no}
-                      onChange={e => setPhone_no(e.target.value)}
+                      onChange={(e) => setPhone_no(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -1067,7 +1087,7 @@ const AddProduct = () => {
                       placeholder="Enter Companytype"
                       name="Companytype"
                       value={Companytype}
-                      onChange={e => setCompanytype(e.target.value)}
+                      onChange={(e) => setCompanytype(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -1080,7 +1100,7 @@ const AddProduct = () => {
                       placeholder="Enter GSTIN No."
                       name="GSTIN"
                       value={GSTIN}
-                      onChange={e => setGSTIN(e.target.value)}
+                      onChange={(e) => setGSTIN(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -1107,18 +1127,18 @@ const AddProduct = () => {
                           required
                           name="SelectedState"
                           value={SelectedState}
-                          onChange={e => {
+                          onChange={(e) => {
                             const formdata = new FormData();
                             setSelectedState(e.target.value);
                             // this.setState({ SelectedState: e.target.value });
                             formdata.append("state_id", e.target.value);
                             axiosConfig
                               .post(`/getcity`, formdata)
-                              .then(res => {
+                              .then((res) => {
                                 setCityList(res?.data?.cities);
                                 // this.setState({ CityList: res?.data?.cities });
                               })
-                              .catch(err => {
+                              .catch((err) => {
                                 console.log(err);
                               });
                           }}
@@ -1160,7 +1180,7 @@ const AddProduct = () => {
                           placeholder="Enter Place_of_Supply"
                           name="Place_of_Supply"
                           value={Place_of_Supply}
-                          onChange={e => setPlace_of_Supply(e.target.value)}
+                          onChange={(e) => setPlace_of_Supply(e.target.value)}
                         />
                       </FormGroup>
                     </Col>
@@ -1179,7 +1199,7 @@ const AddProduct = () => {
                         placeholder="Enter City"
                         name="B_Country"
                         value={B_Country}
-                        onChange={e => setB_Country(e.target.value)}
+                        onChange={(e) => setB_Country(e.target.value)}
                         className="form-control"
                       >
                         <option value="volvo">--Select Country--</option>
@@ -1193,7 +1213,7 @@ const AddProduct = () => {
                       <select
                         name="B_State"
                         value={B_State}
-                        onChange={e => {
+                        onChange={(e) => {
                           console.log(e.target.value);
                           setB_State(e.target.value);
                           // this.setState({ B_State: e.target.value });
@@ -1201,11 +1221,11 @@ const AddProduct = () => {
                           formdata.append("state_id", e.target.value);
                           axiosConfig
                             .post(`/getcity`, formdata)
-                            .then(res => {
+                            .then((res) => {
                               setCityList(res?.data?.cities);
                               // this.setState({ CityList: res?.data?.cities });
                             })
-                            .catch(err => {
+                            .catch((err) => {
                               console.log(err);
                             });
                         }}
@@ -1230,7 +1250,7 @@ const AddProduct = () => {
                           placeholder="Enter City"
                           name="B_City"
                           value={B_City}
-                          onChange={e => setB_City(e.target.value)}
+                          onChange={(e) => setB_City(e.target.value)}
                           className="form-control"
                         >
                           <option value="volvo">--Select City--</option>
@@ -1253,7 +1273,7 @@ const AddProduct = () => {
                         placeholder="Enter Street"
                         name="B_Street"
                         value={B_Street}
-                        onChange={e => setB_Street(e.target.value)}
+                        onChange={(e) => setB_Street(e.target.value)}
                       />
                     </FormGroup>
                   </Col>
@@ -1263,7 +1283,7 @@ const AddProduct = () => {
                       <Input
                         required
                         type="number"
-                        onKeyDown={e =>
+                        onKeyDown={(e) =>
                           ["e", "E", "+", "-"].includes(e.key) &&
                           e.preventDefault()
                         }
@@ -1271,7 +1291,7 @@ const AddProduct = () => {
                         placeholder="Enter PinCode"
                         name="B_PinCode"
                         value={B_PinCode}
-                        onChange={e => setB_PinCode(e.target.value)}
+                        onChange={(e) => setB_PinCode(e.target.value)}
                       />
                     </FormGroup>
                   </Col>
@@ -1282,7 +1302,7 @@ const AddProduct = () => {
                     <Col className="ml-2" lg="6" md="6" sm="12">
                       <Input
                         name="check"
-                        onChange={e => {
+                        onChange={(e) => {
                           handleMatchaddress(e, e.target.checked);
                         }}
                         style={{
@@ -1306,7 +1326,7 @@ const AddProduct = () => {
                         name="S_Country"
                         disabled={checkbox ? true : false}
                         value={S_Country}
-                        onChange={e => setS_Country(e.target.value)}
+                        onChange={(e) => setS_Country(e.target.value)}
                         className="form-control"
                       >
                         <option value="volvo">--Select Country--</option>
@@ -1320,7 +1340,7 @@ const AddProduct = () => {
                       <select
                         name="S_State"
                         value={S_State}
-                        onChange={e => {
+                        onChange={(e) => {
                           // console.log(e.target.value);
                           setS_State(e.target.value);
                           // this.setState({ S_State: e.target.value });
@@ -1328,12 +1348,12 @@ const AddProduct = () => {
                           formdata.append("state_id", e.target.value);
                           axiosConfig
                             .post(`/getcity`, formdata)
-                            .then(res => {
+                            .then((res) => {
                               console.log(res?.data?.cities);
                               setCityList(res?.data?.cities);
                               // this.setState({ CityList: res?.data?.cities });
                             })
-                            .catch(err => {
+                            .catch((err) => {
                               console.log(err);
                             });
                         }}
@@ -1370,7 +1390,7 @@ const AddProduct = () => {
                         placeholder="Enter City"
                         name="S_City"
                         value={S_City}
-                        onChange={e => setS_City(e.target.value)}
+                        onChange={(e) => setS_City(e.target.value)}
                         className="form-control"
                       >
                         <option value="volvo">--Select City--</option>
@@ -1408,7 +1428,7 @@ const AddProduct = () => {
                         placeholder="Enter Street"
                         name="S_Street"
                         value={S_Street}
-                        onChange={e => setS_Street(e.target.value)}
+                        onChange={(e) => setS_Street(e.target.value)}
                       />
                     </FormGroup>
                   </Col>
@@ -1420,14 +1440,14 @@ const AddProduct = () => {
                         disabled={checkbox ? true : false}
                         type="number"
                         placeholder="Enter PinCode"
-                        onKeyDown={e =>
+                        onKeyDown={(e) =>
                           ["e", "E", "+", "-"].includes(e.key) &&
                           e.preventDefault()
                         }
                         min={0}
                         name="S_PinCode"
                         value={S_PinCode}
-                        onChange={e => setS_PinCode(e.target.value)}
+                        onChange={(e) => setS_PinCode(e.target.value)}
                       />
                     </FormGroup>
                   </Col>
@@ -1442,7 +1462,7 @@ const AddProduct = () => {
                   </Label>
                   <div
                     className="form-label-group"
-                    onChange={e => setstatus(e.target.value)}
+                    onChange={(e) => setstatus(e.target.value)}
                   >
                     <input
                       style={{ marginRight: "3px" }}

@@ -84,32 +84,35 @@ const ThemeNavbar = (props) => {
               {props.horizontal ? (
                 <div className="logo d-flex align-items-center">
                   <div className="brand-logo mr-50"></div>
-                  <h2 className="text-primary brand-text mb-0">Vuexy</h2>
+                  <h2 className="text-primary brand-text mb-0">Softnewmen</h2>
                 </div>
               ) : null}
               {/* working navbar */}
-              <NavbarUser
-                handleAppOverlay={props.handleAppOverlay}
-                changeCurrentLang={props.changeCurrentLang}
-                phoneNo={<PhoneNo userdata={user} {...props} />}
-                userImg={
-                  props.user.login.values !== undefined &&
-                  props.user.login.values.loggedInWith !== "jwt" &&
-                  props.user.login.values.photoUrl
-                    ? props.user.login.values.photoUrl
-                    : user !== undefined && user.picture
-                    ? user.picture
-                    : userImg
-                }
-                loggedInWith={
-                  props.user !== undefined &&
-                  props.user.login.values !== undefined
-                    ? props.user.login.values.loggedInWith
-                    : null
-                }
-                logoutWithJWT={props.logoutWithJWT}
-                logoutWithFirebase={props.logoutWithFirebase}
-              />
+              <>
+                {/* <h2>dfdssf</h2> */}
+                <NavbarUser
+                  handleAppOverlay={props.handleAppOverlay}
+                  changeCurrentLang={props.changeCurrentLang}
+                  phoneNo={<PhoneNo userdata={user} {...props} />}
+                  userImg={
+                    props.user.login.values !== undefined &&
+                    props.user.login.values.loggedInWith !== "jwt" &&
+                    props.user.login.values.photoUrl
+                      ? props.user.login.values.photoUrl
+                      : user !== undefined && user.picture
+                      ? user.picture
+                      : userImg
+                  }
+                  loggedInWith={
+                    props.user !== undefined &&
+                    props.user.login.values !== undefined
+                      ? props.user.login.values.loggedInWith
+                      : null
+                  }
+                  logoutWithJWT={props.logoutWithJWT}
+                  logoutWithFirebase={props.logoutWithFirebase}
+                />
+              </>
             </div>
           </div>
         </div>
