@@ -82,9 +82,7 @@ export class AddColorList extends Component {
                 render={({ history }) => (
                   <Button
                     className=" btn btn-danger float-right"
-                    onClick={() =>
-                      history.push("/app/softnewmen/inhouse/productType")
-                    }
+                    onClick={() => history.push("/app/Producttype/ColorList")}
                   >
                     Back
                   </Button>

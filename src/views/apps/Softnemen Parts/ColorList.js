@@ -281,7 +281,7 @@ class ColorList extends React.Component {
                             className="btn float-right"
                             color="primary"
                             onClick={() =>
-                              history.push("/app/Producttype/AddProductType")
+                              history.push("/app/Producttype/AddColorList")
                             }
                           >
                             Add New

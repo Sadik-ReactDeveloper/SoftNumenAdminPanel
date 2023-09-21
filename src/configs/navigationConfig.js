@@ -436,7 +436,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/Producttype/AddColorList",
+        navLink: "/app/Producttype/ColorList",
       },
       {
         id: "Product Name",
