@@ -65,14 +65,14 @@ const navigationConfig = [
         permissions: ["admin", "editor"],
         navLink: "/app/Trupee/account/CreateAccount",
       },
-      {
-        id: "Customer Registration",
-        title: "Customer Registration",
-        type: "item",
-        icon: <FaCircle size={8} />,
-        permissions: ["admin", "editor"],
-        navLink: "/app/Trupee/account/CreateAccount",
-      },
+      // {
+      //   id: "Customer Registration",
+      //   title: "Customer Registration",
+      //   type: "item",
+      //   icon: <FaCircle size={8} />,
+      //   permissions: ["admin", "editor"],
+      //   navLink: "/app/Trupee/account/CreateAccount",
+      // },
       {
         id: "Customer List",
         title: "Customer List",
