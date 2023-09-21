@@ -66,6 +66,14 @@ const navigationConfig = [
         navLink: "/app/Trupee/account/CreateAccount",
       },
       {
+        id: "Customer Registration",
+        title: "Customer Registration",
+        type: "item",
+        icon: <FaCircle size={8} />,
+        permissions: ["admin", "editor"],
+        navLink: "/app/Trupee/account/CreateAccount",
+      },
+      {
         id: "Customer List",
         title: "Customer List",
         type: "item",
@@ -379,7 +387,8 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/category/categoryList",
+        navLink: "/app/softnewmen/inhouse/productType",
+        // navLink: "/app/freshlist/category/categoryList",
       },
       {
         id: "Model Type",
@@ -387,7 +396,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/category/categoryList",
+        navLink: "/app/Producttype/ModalTypeList",
       },
       {
         id: "Variant",
@@ -395,7 +404,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/category/categoryList",
+        navLink: "/app/Producttype/VariantList",
       },
       {
         id: "Engine Type",
@@ -403,7 +412,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/category/categoryList",
+        navLink: "/app/Producttype/EngineType",
       },
       {
         id: "Valves",
@@ -411,7 +420,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/category/categoryList",
+        navLink: "/app/Producttype/ValvesTypeList",
       },
       {
         id: "Body Style",
@@ -419,7 +428,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/category/categoryList",
+        navLink: "/app/Producttype/BodyStyleList",
       },
       {
         id: "Colors",
@@ -427,7 +436,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/category/categoryList",
+        navLink: "/app/Producttype/AddColorList",
       },
       {
         id: "Product Name",
@@ -435,7 +444,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/category/categoryList",
+        navLink: "/app/Producttype/ProductNamelist",
       },
     ],
   },
