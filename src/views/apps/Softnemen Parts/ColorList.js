@@ -269,7 +269,7 @@ class ColorList extends React.Component {
               <Row className="m-2">
                 <Col>
                   <h1 sm="6" className="float-left">
-                    Product Type List
+                    Color List
                   </h1>
                 </Col>
                 {this.state.Createpermisson && (

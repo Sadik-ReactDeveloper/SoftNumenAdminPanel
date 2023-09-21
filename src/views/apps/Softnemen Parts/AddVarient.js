@@ -74,7 +74,7 @@ export class AddVarient extends Component {
           <Row className="m-2">
             <Col>
               <h1 col-sm-6 className="float-left">
-                Add Product type
+                Add Varient
               </h1>
             </Col>
             <Col>
@@ -94,7 +94,7 @@ export class AddVarient extends Component {
             <Form className="m-1" onSubmit={this.submitHandler}>
               <Row className="mb-2">
                 <Col lg="6" md="6" className="mb-1">
-                  <Label>Product type Name</Label>
+                  <Label>Title</Label>
                   <Input
                     type="text"
                     placeholder="Branch Name"
