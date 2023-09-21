@@ -364,6 +364,10 @@ const EditSubCategory = lazy(() =>
 );
 
 // softnewmen
+// edit
+const EditProduct_Type = lazy(() =>
+  import("./views/apps/Softnemen Parts/EditParts/EditProduct_Type")
+);
 const Soft_ProductType = lazy(() =>
   import("./views/apps/Softnemen Parts/ProductType")
 );
