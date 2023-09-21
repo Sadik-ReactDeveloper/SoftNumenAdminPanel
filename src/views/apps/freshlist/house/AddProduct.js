@@ -848,7 +848,7 @@ const AddProduct = () => {
                     />
                   </FormGroup>
 
-                  <Label>Part Seriel No.</Label>
+                  <Label>Part Serial No.</Label>
                   <Input
                     type="text"
                     name="partseriel"
