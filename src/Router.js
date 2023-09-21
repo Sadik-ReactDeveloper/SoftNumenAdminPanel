@@ -29,6 +29,9 @@ const AddCustomer = lazy(() =>
 const CustomerList = lazy(() =>
   import("./views/apps/freshlist/customer/CustomerList")
 );
+const CustomerRegistration = lazy(() =>
+  import("./views/apps/freshlist/customer/CustomerRegistration")
+);
 const ReviewTable = lazy(() =>
   import("./views/apps/freshlist/customer/ReviewTable")
 );
@@ -364,6 +367,10 @@ const EditSubCategory = lazy(() =>
 );
 
 // softnewmen
+// edit
+const EditProduct_Type = lazy(() =>
+  import("./views/apps/Softnemen Parts/EditParts/EditProduct_Type")
+);
 const Soft_ProductType = lazy(() =>
   import("./views/apps/Softnemen Parts/ProductType")
 );
@@ -868,6 +875,10 @@ class AppRouter extends React.Component {
             component={CustomerList}
           />
           <AppRoute
+            path="/app/SoftNumen/Customer/Customer_Registration"
+            component={CustomerRegistration}
+          />
+          <AppRoute
             path="/app/freshlist/customer/viewCustomer/:id"
             component={ViewCustomer}
           />
@@ -1294,6 +1305,10 @@ class AppRouter extends React.Component {
             component={BrandList}
           />
           {/* softnewmen */}
+          <AppRoute
+            path="/app/softnewmen/inhouse/EditProduct_Type/:id"
+            component={EditProduct_Type}
+          />
           <AppRoute
             path="/app/softnewmen/inhouse/productType"
             component={Soft_ProductType}

@@ -11,12 +11,12 @@ import {
   FormGroup,
   CustomInput,
 } from "reactstrap";
-import { history } from "../../../history";
-import axiosConfig from "../../../axiosConfig";
+import { history } from "../../../../history";
+import axiosConfig from "../../../../axiosConfig";
 import { Route } from "react-router-dom";
 import swal from "sweetalert";
 
-export class AddProductname extends Component {
+export class EditProductType extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,6 +40,11 @@ export class AddProductname extends Component {
   changeHandler = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
+
+  componentDidMount() {
+    let { id } = this.props?.match.params;
+    console.log(id);
+  }
   submitHandler = (e) => {
     e.preventDefault();
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
@@ -74,7 +79,7 @@ export class AddProductname extends Component {
           <Row className="m-2">
             <Col>
               <h1 col-sm-6 className="float-left">
-                Add Product
+                Edit Product Type
               </h1>
             </Col>
             <Col>
@@ -83,7 +88,7 @@ export class AddProductname extends Component {
                   <Button
                     className=" btn btn-danger float-right"
                     onClick={() =>
-                      history.push("/app/softnewmen/inhouse/productType")
+                      history.push("/app/Producttype/BodyStyleList")
                     }
                   >
                     Back
@@ -96,7 +101,7 @@ export class AddProductname extends Component {
             <Form className="m-1" onSubmit={this.submitHandler}>
               <Row className="mb-2">
                 <Col lg="6" md="6" className="mb-1">
-                  <Label>Product Name</Label>
+                  <Label>Title</Label>
                   <Input
                     type="text"
                     placeholder="Branch Name"
@@ -163,4 +168,4 @@ export class AddProductname extends Component {
     );
   }
 }
-export default AddProductname;
+export default EditProductType;

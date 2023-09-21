@@ -23,6 +23,7 @@ import { history } from "../../../history";
 import images from "../../assets/img/logo/g.png";
 import { IntlContext } from "../../../utility/context/Internationalization";
 import { Route } from "react-router-dom";
+import ToggleMode from "./ToggleMode";
 
 const handleNavigation = (e) => {
   e.preventDefault();
@@ -282,15 +283,17 @@ class NavbarUser extends React.PureComponent {
               // "pt" : "Portuguese"
             };
             return (
-              <Dropdown
-                tag="li"
-                className="dropdown-language nav-item"
-                isOpen={this.state.langDropdown}
-                toggle={this.handleLangDropdown}
-                data-tour="language"
-              >
-                <DropdownToggle tag="a" className="nav-link">
-                  {/* <ReactCountryFlag
+              <>
+                {/* <ToggleMode /> */}
+                <Dropdown
+                  tag="li"
+                  className="dropdown-language nav-item"
+                  isOpen={this.state.langDropdown}
+                  toggle={this.handleLangDropdown}
+                  data-tour="language"
+                >
+                  <DropdownToggle tag="a" className="nav-link">
+                    {/* <ReactCountryFlag
                   className="country-flag"
                     countryCode={
                       context.state.locale === "en"
@@ -299,12 +302,13 @@ class NavbarUser extends React.PureComponent {
                     }
                     svg
                   /> */}
-                  <span className="d-sm-inline-block d-none text-capitalize align-middle ml-50">
-                    {langArr[context.state.locale]}
-                  </span>
-                </DropdownToggle>
-                <DropdownMenu right></DropdownMenu>
-              </Dropdown>
+                    <span className="d-sm-inline-block d-none text-capitalize align-middle ml-50">
+                      {langArr[context.state.locale]}
+                    </span>
+                  </DropdownToggle>
+                  <DropdownMenu right></DropdownMenu>
+                </Dropdown>
+              </>
             );
           }}
         </IntlContext.Consumer>

@@ -269,7 +269,7 @@ class ColorList extends React.Component {
               <Row className="m-2">
                 <Col>
                   <h1 sm="6" className="float-left">
-                    Product Type List
+                    Color List
                   </h1>
                 </Col>
                 {this.state.Createpermisson && (
@@ -281,7 +281,7 @@ class ColorList extends React.Component {
                             className="btn float-right"
                             color="primary"
                             onClick={() =>
-                              history.push("/app/Producttype/AddProductType")
+                              history.push("/app/Producttype/AddColorList")
                             }
                           >
                             Add New

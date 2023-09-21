@@ -55,7 +55,7 @@ const navigationConfig = [
     id: "Customer",
     title: "Customers",
     type: "collapse",
-    icon: <FaProductHunt size={15} />,
+    icon: <FaUsers size={15} />,
     children: [
       {
         id: "Create Customer",
@@ -65,14 +65,14 @@ const navigationConfig = [
         permissions: ["admin", "editor"],
         navLink: "/app/Trupee/account/CreateAccount",
       },
-      // {
-      //   id: "Customer Registration",
-      //   title: "Customer Registration",
-      //   type: "item",
-      //   icon: <FaCircle size={8} />,
-      //   permissions: ["admin", "editor"],
-      //   navLink: "/app/Trupee/account/CreateAccount",
-      // },
+      {
+        id: "Customer Registration",
+        title: "Customer Registration",
+        type: "item",
+        icon: <FaUserEdit size={8} />,
+        permissions: ["admin", "editor"],
+        navLink: "/app/SoftNumen/Customer/Customer_Registration",
+      },
       {
         id: "Customer List",
         title: "Customer List",
@@ -109,7 +109,7 @@ const navigationConfig = [
         id: "Role List",
         title: "Role List",
         type: "item",
-        icon: <FaCircle size={8} />,
+        icon: <FaUsers size={8} />,
         permissions: ["admin", "editor"],
         navLink: "/app/Trupee/account/RoleList",
       },
@@ -436,7 +436,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/Producttype/AddColorList",
+        navLink: "/app/Producttype/ColorList",
       },
       {
         id: "Product Name",

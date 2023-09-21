@@ -74,7 +74,7 @@ export class AddColorList extends Component {
           <Row className="m-2">
             <Col>
               <h1 col-sm-6 className="float-left">
-                Add Product type
+                Add Color
               </h1>
             </Col>
             <Col>
@@ -82,9 +82,7 @@ export class AddColorList extends Component {
                 render={({ history }) => (
                   <Button
                     className=" btn btn-danger float-right"
-                    onClick={() =>
-                      history.push("/app/softnewmen/inhouse/productType")
-                    }
+                    onClick={() => history.push("/app/Producttype/ColorList")}
                   >
                     Back
                   </Button>
@@ -96,7 +94,7 @@ export class AddColorList extends Component {
             <Form className="m-1" onSubmit={this.submitHandler}>
               <Row className="mb-2">
                 <Col lg="6" md="6" className="mb-1">
-                  <Label>Product type Name</Label>
+                  <Label>Title</Label>
                   <Input
                     type="text"
                     placeholder="Branch Name"
