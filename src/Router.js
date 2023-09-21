@@ -29,6 +29,9 @@ const AddCustomer = lazy(() =>
 const CustomerList = lazy(() =>
   import("./views/apps/freshlist/customer/CustomerList")
 );
+const CustomerRegistration = lazy(() =>
+  import("./views/apps/freshlist/customer/CustomerRegistration")
+);
 const ReviewTable = lazy(() =>
   import("./views/apps/freshlist/customer/ReviewTable")
 );
@@ -362,6 +365,64 @@ const AddSubCategory = lazy(() =>
 const EditSubCategory = lazy(() =>
   import("./views/apps/freshlist/subcategory/EditSubCategory")
 );
+
+// softnewmen
+// edit
+const EditProduct_Type = lazy(() =>
+  import("./views/apps/Softnemen Parts/EditParts/EditProduct_Type")
+);
+const Soft_ProductType = lazy(() =>
+  import("./views/apps/Softnemen Parts/ProductType")
+);
+
+const Addmodel = lazy(() => import("./views/apps/Softnemen Parts/Addmodel"));
+const ModalTypeList = lazy(() =>
+  import("./views/apps/Softnemen Parts/ModalTypeList")
+);
+
+const AddEngineType = lazy(() =>
+  import("./views/apps/Softnemen Parts/AddEngineType")
+);
+const EngineType = lazy(() =>
+  import("./views/apps/Softnemen Parts/EngineType")
+);
+
+// const AddValveType = lazy(() =>
+//   import("./views/apps/Softnemen Parts/AddValveType")
+// );
+const ValvesTypeList = lazy(() =>
+  import("./views/apps/Softnemen Parts/ValvesTypeList")
+);
+
+const AddBodyStyle = lazy(() =>
+  import("./views/apps/Softnemen Parts/AddBodyStyle")
+);
+const BodyStyleList = lazy(() =>
+  import("./views/apps/Softnemen Parts/BodyStyleList")
+);
+
+const AddColorList = lazy(() =>
+  import("./views/apps/Softnemen Parts/AddColorList")
+);
+const ColorList = lazy(() => import("./views/apps/Softnemen Parts/ColorList"));
+
+// softnewmen Product add
+const AddProductType = lazy(() =>
+  import("./views/apps/Softnemen Parts/AddProductType")
+);
+const ProductNamelist = lazy(() =>
+  import("./views/apps/Softnemen Parts/ProductNamelist")
+);
+const AddValveType = lazy(() =>
+  import("./views/apps/Softnemen Parts/AddValveType")
+);
+const VariantList = lazy(() =>
+  import("./views/apps/Softnemen Parts/VariantList")
+);
+const AddVarient = lazy(() =>
+  import("./views/apps/Softnemen Parts/AddVarient")
+);
+
 // Brand
 const BrandList = lazy(() => import("./views/apps/freshlist/brand/BrandList"));
 const AddBrand = lazy(() => import("./views/apps/freshlist/brand/AddBrand"));
@@ -750,10 +811,10 @@ const accessControl = lazy(() =>
 const RouteConfig = ({ component: Component, fullLayout, ...rest }) => (
   <Route
     {...rest}
-    render={props => {
+    render={(props) => {
       return (
         <ContextLayout.Consumer>
-          {context => {
+          {(context) => {
             let LayoutTag =
               fullLayout === true
                 ? context.fullLayout
@@ -773,7 +834,7 @@ const RouteConfig = ({ component: Component, fullLayout, ...rest }) => (
     }}
   />
 );
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     user: state.auth.login.userRole,
   };
@@ -806,12 +867,16 @@ class AppRouter extends React.Component {
             component={CustomerGroup}
           />
           <AppRoute
-            path="/app/SoftNumen/Customer/CreateCustomer"
+            path="/app/freshlist/customer/addCustomer"
             component={AddCustomer}
           />
           <AppRoute
             path="/app/freshlist/customer/customerList"
             component={CustomerList}
+          />
+          <AppRoute
+            path="/app/SoftNumen/Customer/Customer_Registration"
+            component={CustomerRegistration}
           />
           <AppRoute
             path="/app/freshlist/customer/viewCustomer/:id"
@@ -1239,6 +1304,60 @@ class AppRouter extends React.Component {
             path="/app/freshlist/brand/brandList"
             component={BrandList}
           />
+          {/* softnewmen */}
+          <AppRoute
+            path="/app/softnewmen/inhouse/EditProduct_Type/:id"
+            component={EditProduct_Type}
+          />
+          <AppRoute
+            path="/app/softnewmen/inhouse/productType"
+            component={Soft_ProductType}
+          />
+          <AppRoute
+            path="/app/Producttype/AddProductType"
+            component={AddProductType}
+          />
+          <AppRoute path="/app/Producttype/Addmodel" component={Addmodel} />
+          <AppRoute
+            path="/app/Producttype/ModalTypeList"
+            component={ModalTypeList}
+          />
+          <AppRoute
+            path="/app/Producttype/AddEngineType"
+            component={AddEngineType}
+          />
+          <AppRoute path="/app/Producttype/EngineType" component={EngineType} />
+          <AppRoute
+            path="/app/Producttype/AddValiveType"
+            component={AddValveType}
+          />
+          <AppRoute
+            path="/app/Producttype/ValvesTypeList"
+            component={ValvesTypeList}
+          />
+          <AppRoute
+            path="/app/Producttype/AddBodyStyle"
+            component={AddBodyStyle}
+          />
+          <AppRoute
+            path="/app/Producttype/BodyStyleList"
+            component={BodyStyleList}
+          />
+          <AppRoute
+            path="/app/Producttype/AddColorList"
+            component={AddColorList}
+          />
+          <AppRoute path="/app/Producttype/ColorList" component={ColorList} />
+          <AppRoute
+            path="/app/Producttype/VariantList"
+            component={VariantList}
+          />
+          <AppRoute path="/app/Producttype/AddVarient" component={AddVarient} />
+          <AppRoute
+            path="/app/Producttype/ProductNamelist"
+            component={ProductNamelist}
+          />
+          {/* end */}
           <AppRoute path="/app/freshlist/brand/addBrand" component={AddBrand} />
           <AppRoute
             path="/app/freshlist/brand/editBrand/:id"
