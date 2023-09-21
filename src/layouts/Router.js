@@ -444,6 +444,7 @@ class AppRouter extends React.Component {
             path="/app/customer/customerList"
             component={customerList}
           />
+          s
           <AppRoute path="/app/customer/addCustomer" component={addCustomer} />
           <AppRoute
             path="/app/customer/editCustomer/:id"

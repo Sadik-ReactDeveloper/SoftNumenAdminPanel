@@ -40,6 +40,11 @@ export class EditProductType extends Component {
   changeHandler = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
+
+  componentDidMount() {
+    let { id } = this.props?.match.params;
+    console.log(id);
+  }
   submitHandler = (e) => {
     e.preventDefault();
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
@@ -74,7 +79,7 @@ export class EditProductType extends Component {
           <Row className="m-2">
             <Col>
               <h1 col-sm-6 className="float-left">
-                Add Body Style
+                Edit Product Type
               </h1>
             </Col>
             <Col>
