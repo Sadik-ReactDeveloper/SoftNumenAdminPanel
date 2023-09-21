@@ -750,10 +750,10 @@ const accessControl = lazy(() =>
 const RouteConfig = ({ component: Component, fullLayout, ...rest }) => (
   <Route
     {...rest}
-    render={(props) => {
+    render={props => {
       return (
         <ContextLayout.Consumer>
-          {(context) => {
+          {context => {
             let LayoutTag =
               fullLayout === true
                 ? context.fullLayout
@@ -773,7 +773,7 @@ const RouteConfig = ({ component: Component, fullLayout, ...rest }) => (
     }}
   />
 );
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     user: state.auth.login.userRole,
   };
@@ -806,7 +806,7 @@ class AppRouter extends React.Component {
             component={CustomerGroup}
           />
           <AppRoute
-            path="/app/freshlist/customer/addCustomer"
+            path="/app/SoftNumen/Customer/CreateCustomer"
             component={AddCustomer}
           />
           <AppRoute
