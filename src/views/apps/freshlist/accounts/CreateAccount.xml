@@ -1,43 +1,111 @@
 
 <?xml version="1.0" encoding="UTF-8"?> 
-<CreateAccount>
+<ProductRgistration>
 
     <input>
-	<label>Sold BY</label>
-	<type type="text">text</type>
-    <name>SoldBy</name>
-    <placeholder>Enter Name</placeholder>
-	</input>
-
-    <input>
-	<label>Primary Phone</label>
+	<label>Phone No</label>
 	<type type="number">text</type>
-    <name>PrimaryPhone</name>
-    <placeholder>Enter Primary Phone No</placeholder>
+    <name>Phone_Number</name>
+    <placeholder>Enter Phone Number</placeholder>
 	</input>
 
     <input>
-	<label>Secondary Phone</label>
+	<label>Length</label>
 	<type type="number">text</type>
-    <name>SecondaryPhone</name>
-    <placeholder>Enter Secondary Phone No</placeholder>
+    <name>P_length</name>
+    <placeholder>Enter length </placeholder>
 	</input>
 
     <input>
-	<label>Primary Mobile No.</label>
+	<label>height</label>
 	<type type="number">text</type>
-    <name>Primarymobileno</name>
-    <placeholder>Enter Primary Mobile No.</placeholder>
+    <name>height</name>
+    <placeholder>Enter height</placeholder>
 	</input>
 
     <input>
-	<label>Secondary mobile No.</label>
+	<label>Width</label>
 	<type type="number">text</type>
-    <name>Secondarymobile</name>
-    <placeholder>Enter Secondary mobile No</placeholder>
+    <name>width</name>
+    <placeholder>Enter width</placeholder>
+	</input>
+
+    <input>
+	<label>WheelBase</label>
+	<type type="number">text</type>
+    <name>WheelBase</name>
+    <placeholder>Enter Wheelbase</placeholder>
+	</input>
+
+    <input>
+	<label>Ground Clearence</label>
+	<type type="number">text</type>
+    <name>groundClearence</name>
+    <placeholder>Enter Ground Clearnence</placeholder>
+	</input>
+
+    <input>
+	<label>Kerb Weight</label>
+	<type type="number">text</type>
+    <name>KerbWeight</name>
+    <placeholder>Enter Kerb Weight</placeholder>
+	</input>
+
+    <input>
+	<label>Number of Seating Row</label>
+	<type type="number">text</type>
+    <name>Seating_capacity</name>
+    <placeholder>Enter Seating capacity</placeholder>
 	</input>
 
 
+<checkboxmain>
+<checkboxhead>
+	<Heading>Over Speed Warning</Heading>
+
+	<input>
+	<label>Yes</label>
+	<type type="checkbox">text</type>
+    <name>OverSpeed_Yes</name>
+	</input>
+
+	<input>
+	<label>No</label>
+	<type type="checkbox">text</type>
+    <name>OverSpeed_No</name>
+	</input>
+</checkboxhead>
+<checkboxhead>
+	<Heading>Antilock Breaking System</Heading>
+	<input>
+	<label>Yes</label>
+	<type type="checkbox">text</type>
+    <name>ABS_Yes</name>
+	</input>
+
+	<input>
+	<label>No</label>
+	<type type="checkbox">text</type>
+    <name>AbS_No</name>
+	</input>
+    <!-- <placeholder>Enter Address</placeholder> -->
+</checkboxhead>
+<checkboxhead>
+	<Heading>Break Assist</Heading>
+	<input>
+	<label>Yes</label>
+	<type type="checkbox">text</type>
+    <name>BA_Yes</name>
+	</input>
+
+	<input>
+	<label>No</label>
+	<type type="checkbox">text</type>
+    <name>BA_No</name>
+	</input>
+    <!-- <placeholder>Enter Address</placeholder> -->
+</checkboxhead>
+</checkboxmain>
     <input>
 	<label>Address</label>
 	<type type="textarea">text</type>
@@ -149,4 +217,4 @@
 	</MyDropdown>
 	
  
-</CreateAccount>
+</ProductRgistration>
