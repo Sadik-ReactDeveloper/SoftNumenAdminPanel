@@ -1,6 +1,13 @@
 // import React, { useEffect } from "react";
-import { Create_User, Create_Role } from "./Api";
+import {
+  Create_User,
+  Create_Role,
+  Create_Account,
+  Create_Account_xmlView,
+} from "./Api";
 import axiosConfig from "../axiosConfig";
+import xml2js from "xml2js";
+
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -13,6 +20,12 @@ dotenv.config();
 export const CreateRole = async () => {
   let response = await axiosConfig
     .post(`/admin/getProduct`)
+    .then((res) => res.data);
+  return response;
+};
+export const CreateAccountView = async () => {
+  let response = await axiosConfig
+    .get(`${Create_Account_xmlView}`)
     .then((res) => res.data);
   return response;
 };

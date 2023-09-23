@@ -58,8 +58,8 @@ const navigationConfig = [
     icon: <FaUsers size={15} />,
     children: [
       {
-        id: "Create Customer",
-        title: "Create Customer",
+        id: "Create Account",
+        title: "Create Account",
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
@@ -126,14 +126,14 @@ const navigationConfig = [
     type: "collapse",
     icon: <FaProductHunt size={15} />,
     children: [
-      {
-        id: "Product Registration",
-        title: "Product Registration",
-        type: "item",
-        icon: <FaCircle size={8} />,
-        permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/house/AddProduct",
-      },
+      // {
+      //   id: "Product Registration",
+      //   title: "Product Registration",
+      //   type: "item",
+      //   icon: <FaCircle size={8} />,
+      //   permissions: ["admin", "editor"],
+      //   navLink: "/app/SoftNumen/house/ProductRegistration",
+      // },
       {
         id: "Spare Part",
         title: "Spare Part",
@@ -285,7 +285,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/house/AddProduct",
+        navLink: "/app/SoftNumen/house/ProductRegistration",
       },
       {
         id: "Product Search",
