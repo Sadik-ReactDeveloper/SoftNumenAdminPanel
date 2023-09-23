@@ -466,6 +466,9 @@ const HouseProductList = lazy(() =>
 const AddProduct = lazy(() =>
   import("./views/apps/freshlist/house/AddProduct")
 );
+const ProductRegistration = lazy(() =>
+  import("./views/apps/freshlist/house/ProductRegistration")
+);
 const EditMyProduct = lazy(() =>
   import("./views/apps/freshlist/house/EditProduct")
 );
@@ -1316,6 +1319,10 @@ class AppRouter extends React.Component {
           <AppRoute
             path="/app/Producttype/AddProductType"
             component={AddProductType}
+          />
+          <AppRoute
+            path="/app/SoftNumen/house/ProductRegistration"
+            component={ProductRegistration}
           />
           <AppRoute path="/app/Producttype/Addmodel" component={Addmodel} />
           <AppRoute
