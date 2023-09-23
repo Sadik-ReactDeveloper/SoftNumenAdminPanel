@@ -4,9 +4,9 @@ import {
   Create_Role,
   Create_Account,
   Create_Account_xmlView,
+  Customer_Regist,
 } from "./Api";
 import axiosConfig from "../axiosConfig";
-import xml2js from "xml2js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -20,12 +20,19 @@ dotenv.config();
 export const CreateRole = async () => {
   let response = await axiosConfig
     .post(`/admin/getProduct`)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
 export const CreateAccountView = async () => {
   let response = await axiosConfig
     .get(`${Create_Account_xmlView}`)
-    .then((res) => res.data);
+    .then(res => res.data);
+  return response;
+};
+
+export const Customer_Registration = async () => {
+  let response = await axiosConfig
+    .get(`${Customer_Regist}`)
+    .then(res => res.data);
   return response;
 };

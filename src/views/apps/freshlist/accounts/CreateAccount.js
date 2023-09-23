@@ -76,11 +76,11 @@ const CreateAccount = () => {
 
   useEffect(async () => {
     await CreateAccountView()
-      .then((res) => {
+      .then(res => {
         // console.log(res.data);
 
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        console.log(JSON.parse(jsonData));
+        // console.log(JSON.parse(jsonData));
         setCreatAccountView(JSON.parse(jsonData));
         xml2js.parseString(res?.data, (err, result) => {
           if (err) {
@@ -90,13 +90,13 @@ const CreateAccount = () => {
           }
         });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
 
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let newparmisson = pageparmission?.role?.find(
-      (value) => value?.pageName === "Create Account"
+      value => value?.pageName === "Create Account"
     );
     setViewpermisson(newparmisson?.permission.includes("View"));
     setCreatepermisson(newparmisson?.permission.includes("Create"));
@@ -107,7 +107,7 @@ const CreateAccount = () => {
     const formdata = new FormData();
     formdata.append("user_id", pageparmission?.Userinfo?.id);
     formdata.append("role", pageparmission?.Userinfo?.role);
-    axiosConfig.post("/getrolelistdropdown", formdata).then((response) => {
+    axiosConfig.post("/getrolelistdropdown", formdata).then(response => {
       // console.log(response);
       const propertyNames = Object.values(response.data?.data?.roles);
 
@@ -117,16 +117,16 @@ const CreateAccount = () => {
     // state List
     axiosConfig
       .get("/getallstates")
-      .then((response) => {
+      .then(response => {
         setStateList(response.data?.states);
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error.response.data);
       });
   }, []);
-  console.log(CreatAccountView);
+  // console.log(CreatAccountView);
 
-  const submitHandler = (e) => {
+  const submitHandler = e => {
     e.preventDefault();
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let uniqueChars = [...new Set(selectItem1)];
@@ -168,7 +168,7 @@ const CreateAccount = () => {
 
     axiosConfig
       .post("/createuser", formdata)
-      .then((response) => {
+      .then(response => {
         if (response.data?.success) {
           swal("Success!", "Submitted SuccessFull!", "success");
           setAssignRole("");
@@ -187,7 +187,7 @@ const CreateAccount = () => {
         }
         // this.props.history.push("/app/freshlist/order/all");
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   };
@@ -223,7 +223,7 @@ const CreateAccount = () => {
       }
     }
 
-    let arr = selectedList.map((ele) => ele.id);
+    let arr = selectedList.map(ele => ele.id);
     setmultiSelect(arr);
     // console.log(multiSelect);
 
@@ -235,10 +235,10 @@ const CreateAccount = () => {
       formdata.append("state_id", value);
       axiosConfig
         .post(`/getcity`, formdata)
-        .then((res) => {
+        .then(res => {
           setCityList(res?.data?.cities);
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
     } else {
@@ -251,7 +251,7 @@ const CreateAccount = () => {
     // console.log(selectedList);
     // setmultiSelect(selectedList);
 
-    let arr = selectedList.map((ele) => ele.id);
+    let arr = selectedList.map(ele => ele.id);
     // console.log(arr);
     setmultiSelect(arr);
     // console.log(multiSelect);
@@ -275,7 +275,7 @@ const CreateAccount = () => {
         <Card>
           <Row className="m-2">
             <Col>
-              <h1 className="float-left">Add Account</h1>
+              <h1 className="float-left">Create Account</h1>
             </Col>
           </Row>
           <div className="container ">
@@ -340,7 +340,7 @@ const CreateAccount = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={(e) => setAssignRole(e.target.value)}
+                      onChange={e => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Role--</option>
 
@@ -355,7 +355,9 @@ const CreateAccount = () => {
                 </Col>
                 {CreatAccountView &&
                   CreatAccountView?.CreateAccount?.input?.map((ele, i) => {
-                    console.log(ele);
+                    {
+                      /* console.log(ele); */
+                    }
                     return (
                       <Col key={i} lg="6" md="6" sm="12">
                         <FormGroup>
@@ -834,7 +836,7 @@ const CreateAccount = () => {
                   </Label>
                   <div
                     className="form-label-group"
-                    onChange={(e) => setstatus(e.target.value)}
+                    onChange={e => setstatus(e.target.value)}
                   >
                     <input
                       style={{ marginRight: "3px" }}
