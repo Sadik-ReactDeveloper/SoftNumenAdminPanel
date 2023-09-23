@@ -1,6 +1,7 @@
 // import React, { Component, useDebugValue } from "react";
 import React, { useEffect, useState } from "react";
-
+import XMLDisplay from "../customer/XMLDisplay";
+import xmlJs from "xml-js";
 import {
   Card,
   CardBody,
@@ -24,6 +25,8 @@ import "../../../../../src/layouts/assets/scss/pages/users.scss";
 import { Route } from "react-router-dom";
 import { CloudLightning } from "react-feather";
 import { timers } from "jquery";
+import xml2js from "xml2js";
+import { CreateAccountView } from "../../../../ApiEndPoint/ApiCalling";
 const selectItem1 = [];
 const selectstate2 = [];
 
@@ -32,6 +35,7 @@ const Selectedarray = [];
 
 const CreateAccount = () => {
   // const [Address, setAddress] = useState("");
+  const [CreatAccountView, setCreatAccountView] = useState({});
   const [Viewpermisson, setViewpermisson] = useState(null);
   const [Editpermisson, setEditpermisson] = useState(null);
   const [Createpermisson, setCreatepermisson] = useState(null);
@@ -70,7 +74,26 @@ const CreateAccount = () => {
   const [productName, setproductName] = useState([]);
   const [City, setCity] = useState("");
 
-  useEffect(() => {
+  useEffect(async () => {
+    await CreateAccountView()
+      .then((res) => {
+        // console.log(res.data);
+
+        const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
+        console.log(JSON.parse(jsonData));
+        setCreatAccountView(JSON.parse(jsonData));
+        xml2js.parseString(res?.data, (err, result) => {
+          if (err) {
+            console.error("Error parsing XML:", err);
+          } else {
+            console.log(result);
+          }
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let newparmisson = pageparmission?.role?.find(
       (value) => value?.pageName === "Create Account"
@@ -101,6 +124,7 @@ const CreateAccount = () => {
         console.log(error.response.data);
       });
   }, []);
+  console.log(CreatAccountView);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -329,7 +353,30 @@ const CreateAccount = () => {
                     </CustomInput>
                   </FormGroup>
                 </Col>
-                <Col lg="6" md="6" sm="12">
+                {CreatAccountView &&
+                  CreatAccountView?.CreateAccount?.input?.map((ele, i) => {
+                    console.log(ele);
+                    return (
+                      <Col key={i} lg="6" md="6" sm="12">
+                        <FormGroup>
+                          <Label>{ele?.label?._text}</Label>
+                          <Input
+                            required
+                            // onKeyDown={(e) => {
+                            //   ["e", "E", "+", "-"].includes(e.key) &&
+                            //     e.preventDefault();
+                            // }}
+                            type={ele?.type?._attributes?.type}
+                            placeholder={ele?.placeholder?._text}
+                            name={ele?.name?._text}
+                            // value={fullname}
+                            // onChange={(e) => setfullname(e.target.value)}
+                          />
+                        </FormGroup>
+                      </Col>
+                    );
+                  })}
+                {/* <Col lg="6" md="6" sm="12">
                   <FormGroup>
                     <Label>Name *</Label>
                     <Input
@@ -525,9 +572,9 @@ const CreateAccount = () => {
                     onRemove={onRemove} // Function will trigger on remove event
                     displayValue="name" // Property name to display in the dropdown options
                   />
-                </Col>
+                </Col> */}
 
-                {AssignRole === "supplier" ? (
+                {/* {AssignRole === "supplier" ? (
                   <>
                     <Col lg="6" md="6">
                       <FormGroup>
@@ -543,10 +590,10 @@ const CreateAccount = () => {
                       </FormGroup>
                     </Col>
                   </>
-                ) : null}
+                ) : null} */}
               </Row>
               <hr />
-              <Row>
+              {/* <Row>
                 <Col className="mt-2" lg="6" md="6" sm="12">
                   <h4 className="mt-5 pb-2">Billing Address :</h4>
 
@@ -574,20 +621,17 @@ const CreateAccount = () => {
                         onChange={(e) => {
                           console.log(e.target.value);
                           setB_State(e.target.value);
-                          // this.setState({ B_State: e.target.value });
                           const formdata = new FormData();
                           formdata.append("state_id", e.target.value);
                           axiosConfig
                             .post(`/getcity`, formdata)
                             .then((res) => {
                               setCityList(res?.data?.cities);
-                              // this.setState({ CityList: res?.data?.cities });
                             })
                             .catch((err) => {
                               console.log(err);
                             });
                         }}
-                        // onChange={this.changeHandler}
                         className="form-control"
                       >
                         <option value="volvo">--Select State--</option>
@@ -699,9 +743,7 @@ const CreateAccount = () => {
                         name="S_State"
                         value={S_State}
                         onChange={(e) => {
-                          // console.log(e.target.value);
                           setS_State(e.target.value);
-                          // this.setState({ S_State: e.target.value });
                           const formdata = new FormData();
                           formdata.append("state_id", e.target.value);
                           axiosConfig
@@ -709,13 +751,11 @@ const CreateAccount = () => {
                             .then((res) => {
                               console.log(res?.data?.cities);
                               setCityList(res?.data?.cities);
-                              // this.setState({ CityList: res?.data?.cities });
                             })
                             .catch((err) => {
                               console.log(err);
                             });
                         }}
-                        // onChange={this.changeHandler}
                         className="form-control"
                       >
                         <option value="volvo">--Select State--</option>
@@ -726,18 +766,7 @@ const CreateAccount = () => {
                             </option>
                           ))}
                       </select>
-                      {/* <select
-                        name="S_State"
-                        disabled={this.state.checkbox ? true : false}
-                        value={this.state.S_State}
-                        onChange={this.changeHandler}
-                        className="form-control"
-                      >
-                        <option value="volvo">--Select State--</option>
-                        <option value="Madhya Pradesh">Madhya Pradesh</option>
-                        <option value="Uttar Pradesh">Uttar Pradesh</option>
-                        <option value="Maharastra">Maharastra</option>
-                      </select> */}
+                      
                     </FormGroup>
                   </Col>
                   <Col lg="12" md="12" sm="12">
@@ -759,21 +788,7 @@ const CreateAccount = () => {
                             </option>
                           ))}
                       </select>
-                      {/* <FormGroup>
-                        <select
-                          disabled={this.state.checkbox ? true : false}
-                          placeholder="Enter City"
-                          name="S_City"
-                          value={this.state.S_City}
-                          onChange={this.changeHandler}
-                          className="form-control"
-                        >
-                          <option value="volvo">--Select City--</option>
-                          <option value="Indore">Indore</option>
-                          <option value="Panvel">Panvel</option>
-                          <option value="khandwa">khandwa</option>
-                        </select>
-                      </FormGroup> */}
+                     
                     </FormGroup>
                   </Col>
                   <Col lg="12" md="12" sm="12">
@@ -810,9 +825,8 @@ const CreateAccount = () => {
                     </FormGroup>
                   </Col>
                 </Col>
-              </Row>
+              </Row> */}
 
-              {/* {this.state.setuserList && ( */}
               <Row className="mt-2">
                 <Col lg="6" md="6" sm="6" className="mb-2">
                   <Label className="">
@@ -839,24 +853,7 @@ const CreateAccount = () => {
                     <span style={{ marginRight: "3px" }}>Deactive</span>
                   </div>
                 </Col>
-                {/* <Col lg="6" md="6">
-                  <Label className="mt-2  mb-2"> Select User</Label>
-
-                  <CustomInput
-                    type="select"
-                    placeholder=""
-                    name="Selectuser"
-                    value={this.state.Selectuser}
-                    onChange={this.changeHandler}
-                  >
-                    <option value="user1">user 1</option>
-                    <option value="user2">user2</option>
-                    <option value="user2">UPI</option>
-                    <option value="user2">Other</option>
-                  </CustomInput>
-                </Col> */}
               </Row>
-              {/* )} */}
 
               <Row>
                 <Button.Ripple
