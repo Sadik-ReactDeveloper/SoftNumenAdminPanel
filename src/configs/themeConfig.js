@@ -1,6 +1,8 @@
 // You can customize the theme with the help of this file
-
-//Template config options
+// import UserContext from "../context/Context";
+// import React, { useContext } from "react";
+// //Template config options
+// const themecontext = useContext(UserContext);
 const themeConfig = {
   // layout: "horizontal", // options[String]: "vertical"(default), "horizontal"
   // layout: "vertical", // options[String]: "vertical"(default), "horizontal"

@@ -1,6 +1,7 @@
 // import React, { Component, useDebugValue } from "react";
 import React, { useEffect, useState } from "react";
-
+import XMLDisplay from "../customer/XMLDisplay";
+import xmlJs from "xml-js";
 import {
   Card,
   CardBody,
@@ -24,6 +25,8 @@ import "../../../../../src/layouts/assets/scss/pages/users.scss";
 import { Route } from "react-router-dom";
 import { CloudLightning } from "react-feather";
 import { timers } from "jquery";
+import xml2js from "xml2js";
+import { CreateAccountView } from "../../../../ApiEndPoint/ApiCalling";
 const selectItem1 = [];
 const selectstate2 = [];
 
@@ -32,6 +35,7 @@ const Selectedarray = [];
 
 const CreateAccount = () => {
   // const [Address, setAddress] = useState("");
+  const [CreatAccountView, setCreatAccountView] = useState({});
   const [Viewpermisson, setViewpermisson] = useState(null);
   const [Editpermisson, setEditpermisson] = useState(null);
   const [Createpermisson, setCreatepermisson] = useState(null);
@@ -70,10 +74,29 @@ const CreateAccount = () => {
   const [productName, setproductName] = useState([]);
   const [City, setCity] = useState("");
 
-  useEffect(() => {
+  useEffect(async () => {
+    await CreateAccountView()
+      .then((res) => {
+        // console.log(res.data);
+
+        const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
+        console.log(JSON.parse(jsonData));
+        setCreatAccountView(JSON.parse(jsonData));
+        xml2js.parseString(res?.data, (err, result) => {
+          if (err) {
+            console.error("Error parsing XML:", err);
+          } else {
+            console.log(result);
+          }
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let newparmisson = pageparmission?.role?.find(
-      value => value?.pageName === "Create Account"
+      (value) => value?.pageName === "Create Account"
     );
     setViewpermisson(newparmisson?.permission.includes("View"));
     setCreatepermisson(newparmisson?.permission.includes("Create"));
@@ -84,7 +107,7 @@ const CreateAccount = () => {
     const formdata = new FormData();
     formdata.append("user_id", pageparmission?.Userinfo?.id);
     formdata.append("role", pageparmission?.Userinfo?.role);
-    axiosConfig.post("/getrolelistdropdown", formdata).then(response => {
+    axiosConfig.post("/getrolelistdropdown", formdata).then((response) => {
       // console.log(response);
       const propertyNames = Object.values(response.data?.data?.roles);
 
@@ -94,15 +117,16 @@ const CreateAccount = () => {
     // state List
     axiosConfig
       .get("/getallstates")
-      .then(response => {
+      .then((response) => {
         setStateList(response.data?.states);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error.response.data);
       });
   }, []);
+  console.log(CreatAccountView);
 
-  const submitHandler = e => {
+  const submitHandler = (e) => {
     e.preventDefault();
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let uniqueChars = [...new Set(selectItem1)];
@@ -144,7 +168,7 @@ const CreateAccount = () => {
 
     axiosConfig
       .post("/createuser", formdata)
-      .then(response => {
+      .then((response) => {
         if (response.data?.success) {
           swal("Success!", "Submitted SuccessFull!", "success");
           setAssignRole("");
@@ -163,7 +187,7 @@ const CreateAccount = () => {
         }
         // this.props.history.push("/app/freshlist/order/all");
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -199,7 +223,7 @@ const CreateAccount = () => {
       }
     }
 
-    let arr = selectedList.map(ele => ele.id);
+    let arr = selectedList.map((ele) => ele.id);
     setmultiSelect(arr);
     // console.log(multiSelect);
 
@@ -211,10 +235,10 @@ const CreateAccount = () => {
       formdata.append("state_id", value);
       axiosConfig
         .post(`/getcity`, formdata)
-        .then(res => {
+        .then((res) => {
           setCityList(res?.data?.cities);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     } else {
@@ -227,7 +251,7 @@ const CreateAccount = () => {
     // console.log(selectedList);
     // setmultiSelect(selectedList);
 
-    let arr = selectedList.map(ele => ele.id);
+    let arr = selectedList.map((ele) => ele.id);
     // console.log(arr);
     setmultiSelect(arr);
     // console.log(multiSelect);
@@ -316,7 +340,7 @@ const CreateAccount = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Role--</option>
 
@@ -329,7 +353,30 @@ const CreateAccount = () => {
                     </CustomInput>
                   </FormGroup>
                 </Col>
-                <Col lg="6" md="6" sm="12">
+                {CreatAccountView &&
+                  CreatAccountView?.CreateAccount?.input?.map((ele, i) => {
+                    console.log(ele);
+                    return (
+                      <Col key={i} lg="6" md="6" sm="12">
+                        <FormGroup>
+                          <Label>{ele?.label?._text}</Label>
+                          <Input
+                            required
+                            // onKeyDown={(e) => {
+                            //   ["e", "E", "+", "-"].includes(e.key) &&
+                            //     e.preventDefault();
+                            // }}
+                            type={ele?.type?._attributes?.type}
+                            placeholder={ele?.placeholder?._text}
+                            name={ele?.name?._text}
+                            // value={fullname}
+                            // onChange={(e) => setfullname(e.target.value)}
+                          />
+                        </FormGroup>
+                      </Col>
+                    );
+                  })}
+                {/* <Col lg="6" md="6" sm="12">
                   <FormGroup>
                     <Label>Name *</Label>
                     <Input
@@ -338,7 +385,7 @@ const CreateAccount = () => {
                       placeholder="Enter Your Name"
                       name="fullname"
                       value={fullname}
-                      onChange={e => setfullname(e.target.value)}
+                      onChange={(e) => setfullname(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -351,7 +398,7 @@ const CreateAccount = () => {
                       placeholder="Enter Your Name"
                       name="UserName"
                       value={UserName}
-                      onChange={e => setUserName(e.target.value)}
+                      onChange={(e) => setUserName(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -363,7 +410,7 @@ const CreateAccount = () => {
                       required
                       type="number"
                       maxLength={12}
-                      onKeyDown={e =>
+                      onKeyDown={(e) =>
                         ["e", "E", "+", "-"].includes(e.key) &&
                         e.preventDefault()
                       }
@@ -372,7 +419,7 @@ const CreateAccount = () => {
                       placeholder="0123456789"
                       name="Mobile_no"
                       value={Mobile_no}
-                      onChange={e => setMobile_no(e.target.value)}
+                      onChange={(e) => setMobile_no(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -386,7 +433,7 @@ const CreateAccount = () => {
                       placeholder="abcd@gmail.com..."
                       name="email"
                       value={email}
-                      onChange={e => setemail(e.target.value)}
+                      onChange={(e) => setemail(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -399,7 +446,7 @@ const CreateAccount = () => {
                       placeholder="Enter password"
                       name="password"
                       value={password}
-                      onChange={e => setpassword(e.target.value)}
+                      onChange={(e) => setpassword(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -412,7 +459,7 @@ const CreateAccount = () => {
                       placeholder="Enter CompanyName"
                       name="CompanyName"
                       value={CompanyName}
-                      onChange={e => setCompanyName(e.target.value)}
+                      onChange={(e) => setCompanyName(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -422,7 +469,7 @@ const CreateAccount = () => {
                     <Input
                       required
                       type="number"
-                      onKeyDown={e =>
+                      onKeyDown={(e) =>
                         ["e", "E", "+", "-"].includes(e.key) &&
                         e.preventDefault()
                       }
@@ -432,7 +479,7 @@ const CreateAccount = () => {
                       placeholder="0123456789"
                       name="Phone_no"
                       value={Phone_no}
-                      onChange={e => setPhone_no(e.target.value)}
+                      onChange={(e) => setPhone_no(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -445,7 +492,7 @@ const CreateAccount = () => {
                       placeholder="Enter Companytype"
                       name="Companytype"
                       value={Companytype}
-                      onChange={e => setCompanytype(e.target.value)}
+                      onChange={(e) => setCompanytype(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -458,7 +505,7 @@ const CreateAccount = () => {
                       placeholder="Enter GSTIN No."
                       name="GSTIN"
                       value={GSTIN}
-                      onChange={e => setGSTIN(e.target.value)}
+                      onChange={(e) => setGSTIN(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -485,18 +532,18 @@ const CreateAccount = () => {
                           required
                           name="SelectedState"
                           value={SelectedState}
-                          onChange={e => {
+                          onChange={(e) => {
                             const formdata = new FormData();
                             setSelectedState(e.target.value);
                             // this.setState({ SelectedState: e.target.value });
                             formdata.append("state_id", e.target.value);
                             axiosConfig
                               .post(`/getcity`, formdata)
-                              .then(res => {
+                              .then((res) => {
                                 setCityList(res?.data?.cities);
                                 // this.setState({ CityList: res?.data?.cities });
                               })
-                              .catch(err => {
+                              .catch((err) => {
                                 console.log(err);
                               });
                           }}
@@ -525,9 +572,9 @@ const CreateAccount = () => {
                     onRemove={onRemove} // Function will trigger on remove event
                     displayValue="name" // Property name to display in the dropdown options
                   />
-                </Col>
+                </Col> */}
 
-                {AssignRole === "supplier" ? (
+                {/* {AssignRole === "supplier" ? (
                   <>
                     <Col lg="6" md="6">
                       <FormGroup>
@@ -538,15 +585,15 @@ const CreateAccount = () => {
                           placeholder="Enter Place_of_Supply"
                           name="Place_of_Supply"
                           value={Place_of_Supply}
-                          onChange={e => setPlace_of_Supply(e.target.value)}
+                          onChange={(e) => setPlace_of_Supply(e.target.value)}
                         />
                       </FormGroup>
                     </Col>
                   </>
-                ) : null}
+                ) : null} */}
               </Row>
               <hr />
-              <Row>
+              {/* <Row>
                 <Col className="mt-2" lg="6" md="6" sm="12">
                   <h4 className="mt-5 pb-2">Billing Address :</h4>
 
@@ -557,7 +604,7 @@ const CreateAccount = () => {
                         placeholder="Enter City"
                         name="B_Country"
                         value={B_Country}
-                        onChange={e => setB_Country(e.target.value)}
+                        onChange={(e) => setB_Country(e.target.value)}
                         className="form-control"
                       >
                         <option value="volvo">--Select Country--</option>
@@ -571,23 +618,20 @@ const CreateAccount = () => {
                       <select
                         name="B_State"
                         value={B_State}
-                        onChange={e => {
+                        onChange={(e) => {
                           console.log(e.target.value);
                           setB_State(e.target.value);
-                          // this.setState({ B_State: e.target.value });
                           const formdata = new FormData();
                           formdata.append("state_id", e.target.value);
                           axiosConfig
                             .post(`/getcity`, formdata)
-                            .then(res => {
+                            .then((res) => {
                               setCityList(res?.data?.cities);
-                              // this.setState({ CityList: res?.data?.cities });
                             })
-                            .catch(err => {
+                            .catch((err) => {
                               console.log(err);
                             });
                         }}
-                        // onChange={this.changeHandler}
                         className="form-control"
                       >
                         <option value="volvo">--Select State--</option>
@@ -608,7 +652,7 @@ const CreateAccount = () => {
                           placeholder="Enter City"
                           name="B_City"
                           value={B_City}
-                          onChange={e => setB_City(e.target.value)}
+                          onChange={(e) => setB_City(e.target.value)}
                           className="form-control"
                         >
                           <option value="volvo">--Select City--</option>
@@ -631,7 +675,7 @@ const CreateAccount = () => {
                         placeholder="Enter Street"
                         name="B_Street"
                         value={B_Street}
-                        onChange={e => setB_Street(e.target.value)}
+                        onChange={(e) => setB_Street(e.target.value)}
                       />
                     </FormGroup>
                   </Col>
@@ -641,7 +685,7 @@ const CreateAccount = () => {
                       <Input
                         required
                         type="number"
-                        onKeyDown={e =>
+                        onKeyDown={(e) =>
                           ["e", "E", "+", "-"].includes(e.key) &&
                           e.preventDefault()
                         }
@@ -649,7 +693,7 @@ const CreateAccount = () => {
                         placeholder="Enter PinCode"
                         name="B_PinCode"
                         value={B_PinCode}
-                        onChange={e => setB_PinCode(e.target.value)}
+                        onChange={(e) => setB_PinCode(e.target.value)}
                       />
                     </FormGroup>
                   </Col>
@@ -660,7 +704,7 @@ const CreateAccount = () => {
                     <Col className="ml-2" lg="6" md="6" sm="12">
                       <Input
                         name="check"
-                        onChange={e => {
+                        onChange={(e) => {
                           handleMatchaddress(e, e.target.checked);
                         }}
                         style={{
@@ -684,7 +728,7 @@ const CreateAccount = () => {
                         name="S_Country"
                         disabled={checkbox ? true : false}
                         value={S_Country}
-                        onChange={e => setS_Country(e.target.value)}
+                        onChange={(e) => setS_Country(e.target.value)}
                         className="form-control"
                       >
                         <option value="volvo">--Select Country--</option>
@@ -698,24 +742,20 @@ const CreateAccount = () => {
                       <select
                         name="S_State"
                         value={S_State}
-                        onChange={e => {
-                          // console.log(e.target.value);
+                        onChange={(e) => {
                           setS_State(e.target.value);
-                          // this.setState({ S_State: e.target.value });
                           const formdata = new FormData();
                           formdata.append("state_id", e.target.value);
                           axiosConfig
                             .post(`/getcity`, formdata)
-                            .then(res => {
+                            .then((res) => {
                               console.log(res?.data?.cities);
                               setCityList(res?.data?.cities);
-                              // this.setState({ CityList: res?.data?.cities });
                             })
-                            .catch(err => {
+                            .catch((err) => {
                               console.log(err);
                             });
                         }}
-                        // onChange={this.changeHandler}
                         className="form-control"
                       >
                         <option value="volvo">--Select State--</option>
@@ -726,18 +766,7 @@ const CreateAccount = () => {
                             </option>
                           ))}
                       </select>
-                      {/* <select
-                        name="S_State"
-                        disabled={this.state.checkbox ? true : false}
-                        value={this.state.S_State}
-                        onChange={this.changeHandler}
-                        className="form-control"
-                      >
-                        <option value="volvo">--Select State--</option>
-                        <option value="Madhya Pradesh">Madhya Pradesh</option>
-                        <option value="Uttar Pradesh">Uttar Pradesh</option>
-                        <option value="Maharastra">Maharastra</option>
-                      </select> */}
+                      
                     </FormGroup>
                   </Col>
                   <Col lg="12" md="12" sm="12">
@@ -748,7 +777,7 @@ const CreateAccount = () => {
                         placeholder="Enter City"
                         name="S_City"
                         value={S_City}
-                        onChange={e => setS_City(e.target.value)}
+                        onChange={(e) => setS_City(e.target.value)}
                         className="form-control"
                       >
                         <option value="volvo">--Select City--</option>
@@ -759,21 +788,7 @@ const CreateAccount = () => {
                             </option>
                           ))}
                       </select>
-                      {/* <FormGroup>
-                        <select
-                          disabled={this.state.checkbox ? true : false}
-                          placeholder="Enter City"
-                          name="S_City"
-                          value={this.state.S_City}
-                          onChange={this.changeHandler}
-                          className="form-control"
-                        >
-                          <option value="volvo">--Select City--</option>
-                          <option value="Indore">Indore</option>
-                          <option value="Panvel">Panvel</option>
-                          <option value="khandwa">khandwa</option>
-                        </select>
-                      </FormGroup> */}
+                     
                     </FormGroup>
                   </Col>
                   <Col lg="12" md="12" sm="12">
@@ -786,7 +801,7 @@ const CreateAccount = () => {
                         placeholder="Enter Street"
                         name="S_Street"
                         value={S_Street}
-                        onChange={e => setS_Street(e.target.value)}
+                        onChange={(e) => setS_Street(e.target.value)}
                       />
                     </FormGroup>
                   </Col>
@@ -798,21 +813,20 @@ const CreateAccount = () => {
                         disabled={checkbox ? true : false}
                         type="number"
                         placeholder="Enter PinCode"
-                        onKeyDown={e =>
+                        onKeyDown={(e) =>
                           ["e", "E", "+", "-"].includes(e.key) &&
                           e.preventDefault()
                         }
                         min={0}
                         name="S_PinCode"
                         value={S_PinCode}
-                        onChange={e => setS_PinCode(e.target.value)}
+                        onChange={(e) => setS_PinCode(e.target.value)}
                       />
                     </FormGroup>
                   </Col>
                 </Col>
-              </Row>
+              </Row> */}
 
-              {/* {this.state.setuserList && ( */}
               <Row className="mt-2">
                 <Col lg="6" md="6" sm="6" className="mb-2">
                   <Label className="">
@@ -820,7 +834,7 @@ const CreateAccount = () => {
                   </Label>
                   <div
                     className="form-label-group"
-                    onChange={e => setstatus(e.target.value)}
+                    onChange={(e) => setstatus(e.target.value)}
                   >
                     <input
                       style={{ marginRight: "3px" }}
@@ -839,24 +853,7 @@ const CreateAccount = () => {
                     <span style={{ marginRight: "3px" }}>Deactive</span>
                   </div>
                 </Col>
-                {/* <Col lg="6" md="6">
-                  <Label className="mt-2  mb-2"> Select User</Label>
-
-                  <CustomInput
-                    type="select"
-                    placeholder=""
-                    name="Selectuser"
-                    value={this.state.Selectuser}
-                    onChange={this.changeHandler}
-                  >
-                    <option value="user1">user 1</option>
-                    <option value="user2">user2</option>
-                    <option value="user2">UPI</option>
-                    <option value="user2">Other</option>
-                  </CustomInput>
-                </Col> */}
               </Row>
-              {/* )} */}
 
               <Row>
                 <Button.Ripple
