@@ -58,8 +58,8 @@ const navigationConfig = [
     icon: <FaUsers size={15} />,
     children: [
       {
-        id: "Create Customer",
-        title: "Create Customers",
+        id: "Create Account",
+        title: "Create Account",
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],

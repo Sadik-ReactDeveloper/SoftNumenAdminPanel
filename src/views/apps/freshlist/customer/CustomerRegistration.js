@@ -12,10 +12,13 @@ import {
   CustomInput,
 } from "reactstrap";
 import Select from "react-select";
+import xmlJs from "xml-js";
+import xml2js from "xml2js";
 import { Country, State, City } from "country-state-city";
 import { history } from "../../../../history";
 import axiosConfig from "../../../../axiosConfig";
 import { Route } from "react-router-dom";
+import { Customer_Registration } from "../../../../ApiEndPoint/ApiCalling";
 
 const CustomerRegistration = () => {
   const [formData, setFormData] = useState({
@@ -29,28 +32,57 @@ const CustomerRegistration = () => {
     subcat: "",
     status: "",
   });
+
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
-  const changeHandler = (e) => {
+  const [CustomerRegistView, setCustomerRegistView] = useState({});
+  const [CustomerDropdown, setCustomerDropdown] = useState({});
+  const changeHandler = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  useEffect(async () => {
+    await Customer_Registration()
+      .then(res => {
+        // console.log(res.data);
+        const jsonAllData = xmlJs.xml2json(res.data, {
+          compact: true,
+          spaces: 2,
+        });
+        console.log(JSON.parse(jsonAllData));
+        setCustomerRegistView(JSON.parse(jsonAllData));
+        setCustomerDropdown(JSON.parse(jsonAllData));
+        xml2js.parseString(res?.data, (err, result) => {
+          if (err) {
+            console.error("Error parsing XML:", err);
+          } else {
+            console.log(result.ProductRgistration);
+          }
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, []);
+
   useEffect(() => {
     console.log(selectedCountry);
     console.log(selectedCountry?.isoCode);
     console.log(State?.getStatesOfCountry(selectedCountry?.isoCode));
   }, [selectedCountry]);
-  const submitHandler = (e) => {
+
+  const submitHandler = e => {
     e.preventDefault();
     console.log("submitHandler", formData);
 
     axiosConfig
       .post("/admin/addcategory", formData)
-      .then((response) => {
+      .then(response => {
         console.log(response);
         this.props.history.push("/app/freshlist/order/orderList");
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   };
@@ -68,41 +100,53 @@ const CustomerRegistration = () => {
         <CardBody>
           <Form className="m-1" onSubmit={submitHandler}>
             <Row className="mb-2">
-              <Col lg="6" md="6" sm="12">
-                <FormGroup>
-                  <Label>Registration Date</Label>
-                  <Input
-                    type="date"
-                    name="customer_name"
-                    // value={formData.customer_name}
-                    onChange={changeHandler}
-                  />
-                </FormGroup>
-              </Col>
+              {CustomerRegistView &&
+                CustomerRegistView.ProductRgistration?.input?.map((val, i) => {
+                  return (
+                    <Col key={i} lg="6" md="6" sm="12">
+                      <FormGroup>
+                        <Label>{val?.label?._text}</Label>
+                        <Input
+                          // type="date"
+                          type={val?.type?._attributes?.type}
+                          name={val?.name?._text}
+                          placeholder={val?.placeholder?._text}
+                          // onChange={changeHandler}
+                        />
+                      </FormGroup>
+                    </Col>
+                  );
+                })}
 
-              <Col lg="6" md="6">
-                <FormGroup>
-                  <Label>Product Delivered Date</Label>
-                  <Input
-                    type="date"
-                    name="customer_name"
-                    // value={formData.customer_name}
-                    onChange={changeHandler}
-                  />
-                </FormGroup>
-              </Col>
-              <Col lg="6" md="6">
-                <FormGroup>
-                  <Label>Shipped Date</Label>
-                  <Input
-                    type="date"
-                    name="customer_name"
-                    // value={formData.customer_name}
-                    onChange={changeHandler}
-                  />
-                </FormGroup>
-              </Col>
-              <Col lg="6" md="6">
+              {CustomerDropdown &&
+                CustomerDropdown?.ProductRgistration?.MyDropdown?.dropdown?.map(
+                  (val, i) => {
+                    console.log(val);
+                    return (
+                      <Col lg="6" md="6">
+                        <Label>{val?.label?._text}</Label>
+                        <select
+                          key={i}
+                          className="form-control"
+                          name={val?.name._text}
+                          // value={selectedOption}
+                          // onChange={handleOptionChange}
+                        >
+                          <option value="">Select an option</option>
+                          {val?.option.map((option, index) => (
+                            <option
+                              key={index}
+                              value={option?._attributes?.value}
+                            >
+                              {option?._text}
+                            </option>
+                          ))}
+                        </select>
+                      </Col>
+                    );
+                  }
+                )}
+              {/* <Col lg="6" md="6">
                 <FormGroup>
                   <Label>Order Date</Label>
                   <Input
@@ -112,8 +156,8 @@ const CustomerRegistration = () => {
                     onChange={changeHandler}
                   />
                 </FormGroup>
-              </Col>
-              <Col lg="6" md="6">
+              </Col> */}
+              {/* <Col lg="6" md="6">
                 <FormGroup>
                   <Label>Invoice Date</Label>
                   <Input
@@ -123,8 +167,8 @@ const CustomerRegistration = () => {
                     onChange={changeHandler}
                   />
                 </FormGroup>
-              </Col>
-              <Col lg="6" md="6">
+              </Col> */}
+              {/* <Col lg="6" md="6">
                 <FormGroup>
                   <Label>Registered To</Label>
                   <Input
@@ -218,7 +262,7 @@ const CustomerRegistration = () => {
                     // onChange={e => setB_PinCode(e.target.value)}
                   />
                 </FormGroup>
-              </Col>
+              </Col> */}
 
               {/* <Col lg="6" md="6">
                 <FormGroup>
@@ -231,27 +275,6 @@ const CustomerRegistration = () => {
                     onChange={changeHandler}
                   />
                 </FormGroup>
-              </Col> */}
-
-              {/* <Col lg="6" md="6" sm="6" className="mb-2 mt-1">
-                <Label className="mb-1">Status</Label>
-                <div className="form-label-group" onChange={changeHandler}>
-                  <input
-                    style={{ marginRight: "3px" }}
-                    type="radio"
-                    name="status"
-                    value="Active"
-                  />
-                  <span style={{ marginRight: "20px" }}>Active</span>
-
-                  <input
-                    style={{ marginRight: "3px" }}
-                    type="radio"
-                    name="status"
-                    value="Inactive"
-                  />
-                  <span style={{ marginRight: "3px" }}>Inactive</span>
-                </div>
               </Col> */}
             </Row>
 
