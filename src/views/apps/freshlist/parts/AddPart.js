@@ -20,7 +20,7 @@ import axiosConfig from "../../../../axiosConfig";
 import { Route } from "react-router-dom";
 import { CreateParts } from "../../../../ApiEndPoint/ApiCalling";
 
-const CustomerRegistration = () => {
+const AddPart = () => {
   const [formData, setFormData] = useState({
     hub_name: "",
     desc: "",
@@ -93,7 +93,7 @@ const CustomerRegistration = () => {
         <Row className="m-2">
           <Col>
             <h1 col-sm-6 className="float-left">
-              Customer Registration
+              Create Part
             </h1>
           </Col>
         </Row>
@@ -280,7 +280,7 @@ const CustomerRegistration = () => {
 
             <Row className="m-2">
               <Button color="primary" type="submit" className="mr-1 mb-1">
-                Customer Registration
+                Add Part
               </Button>
             </Row>
           </Form>
@@ -290,4 +290,4 @@ const CustomerRegistration = () => {
   );
 };
 
-export default CustomerRegistration;
+export default AddPart;

@@ -73,22 +73,35 @@ const CreateAccount = () => {
   const [UserName, setUserName] = useState("");
   const [productName, setproductName] = useState([]);
   const [City, setCity] = useState("");
+  const [formData, setFormData] = useState({});
+  const [dropdownValue, setdropdownValue] = useState({});
 
-  useEffect(async () => {
-    await CreateAccountView()
+  const handleInputChange = e => {
+    debugger;
+    // Handle input changes and update formData state
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  console.log(formData);
+  useEffect(() => {
+    CreateAccountView()
       .then(res => {
         // console.log(res.data);
 
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        // console.log(JSON.parse(jsonData));
+        console.log(JSON.parse(jsonData));
         setCreatAccountView(JSON.parse(jsonData));
-        xml2js.parseString(res?.data, (err, result) => {
-          if (err) {
-            console.error("Error parsing XML:", err);
-          } else {
-            console.log(result);
-          }
-        });
+        setdropdownValue(JSON.parse(jsonData));
+        // xml2js.parseString(res?.data, (err, result) => {
+        //   if (err) {
+        //     console.error("Error parsing XML:", err);
+        //   } else {
+        //     console.log(result);
+        //   }
+        // });
       })
       .catch(err => {
         console.log(err);
@@ -330,7 +343,7 @@ const CreateAccount = () => {
           <CardBody>
             <Form className="m-1" onSubmit={submitHandler}>
               <Row className="mb-2">
-                <Col lg="6" md="6">
+                {/* <Col lg="6" md="6">
                   <FormGroup>
                     <Label> Select Role*</Label>
                     <CustomInput
@@ -352,12 +365,70 @@ const CreateAccount = () => {
                         ))}
                     </CustomInput>
                   </FormGroup>
+                </Col> */}
+                <Col lg="6" md="6">
+                  <FormGroup>
+                    <Label>
+                      {
+                        dropdownValue.CreateAccount?.MyDropdown?.dropdown?.label
+                          ?._text
+                      }
+                    </Label>
+                    <CustomInput
+                      required
+                      // id="AssignRole"
+                      type="select"
+                      name={
+                        dropdownValue.CreateAccount?.MyDropdown?.dropdown?.name
+                          ?._text
+                      }
+                      value={AssignRole}
+                      // onChange={changeHandler}
+                      onChange={e => setAssignRole(e.target.value)}
+                    >
+                      <option value="">--Select Role--</option>
+                      {dropdownValue?.CreateAccount?.MyDropdown?.dropdown?.option.map(
+                        (option, index) => (
+                          <option
+                            key={index}
+                            value={option?._attributes?.value}
+                          >
+                            {option?._attributes?.value}
+                          </option>
+                        )
+                      )}
+                    </CustomInput>
+                  </FormGroup>
                 </Col>
+                {/* {CreatAccountView &&
+                  CreatAccountView?.CreateAccount?.input?.map((val, i) => {
+                    console.log(val);
+                    return (
+                      <Col lg="6" md="6">
+                        <Label>{val?.label?._text}</Label>
+                        <select
+                          key={i}
+                          className="form-control"
+                          name={val?.name._text}
+                          // value={selectedOption}
+                          // onChange={handleOptionChange}
+                        >
+                          <option value="">Select an option</option>
+                          {val?.option.map((option, index) => (
+                            <option
+                              key={index}
+                              value={option?._attributes?.value}
+                            >
+                              {option?._text}
+                            </option>
+                          ))}
+                        </select>
+                      </Col>
+                    );
+                  })} */}
+
                 {CreatAccountView &&
                   CreatAccountView?.CreateAccount?.input?.map((ele, i) => {
-                    {
-                      /* console.log(ele); */
-                    }
                     return (
                       <Col key={i} lg="6" md="6" sm="12">
                         <FormGroup>
@@ -371,6 +442,8 @@ const CreateAccount = () => {
                             type={ele?.type?._attributes?.type}
                             placeholder={ele?.placeholder?._text}
                             name={ele?.name?._text}
+                            value={formData[ele?.name?._text]}
+                            onChange={handleInputChange}
                             // value={fullname}
                             // onChange={(e) => setfullname(e.target.value)}
                           />
