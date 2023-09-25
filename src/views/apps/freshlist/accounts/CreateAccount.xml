@@ -194,28 +194,20 @@
 
 	</input>
 	<MyDropdown>
-	<dropdown>
-	<label>abc</label>
-	<name>first dropdown</name>
-	<option value="1st option">1st option</option>
-	<option value="2st option">2st option</option>
-	<option value="3st option">3st option</option>
-	<option value="4st option">4st option</option>
-	<option value="5st option">5st option</option>
-	<option value="6st option">6st option</option>
-	</dropdown>
-	
-	<dropdown>
-	<label>xyz</label>
-	<name>second dropdown</name>
-	<option value="1st option">1st option</option>
-	<option value="2st option">2st option</option>
-	<option value="3st option">3st option</option>
-	<option value="4st option">4st option</option>
-	<option value="5st option">5st option</option>
-	<option value="6st option">6st option</option>
-	</dropdown>
+		<dropdown>
+	<label>Role</label>
+	<name>Role</name>
+	<option value="OEM">OEM</option>
+	<option value="SUPERADMIN">SUPERADMIN</option>
+	<option value="DISTRIBUTOR ADMIN">DISTRIBUTOR ADMIN</option>
+	<option value="ADMIN">ADMIN</option>
+	<option value="DISTRIBUTOR">DISTRIBUTOR</option>
+	<option value="DEALER ADMIN">DEALER ADMIN</option>
+	<option value="DEALER">DEALER</option>
+	<option value=" WARRANTY SUPERVISER">WARRANTY SUPERVISER</option>
+	<option value=" WARRANTY APPROVER">WARRANTY APPROVER</option>
+	<option value=" WARRANTY REVIWER">WARRANTY REVIWER</option>
+	<option value="SUPERVISER">SUPERVISER</option>
+
 	</MyDropdown>
-	
- 
 </ProductRgistration>

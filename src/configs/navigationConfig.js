@@ -151,6 +151,7 @@ const navigationConfig = [
         permissions: ["admin", "editor"],
         navLink: "/app/freshlist/account/addRoleNew",
       },
+
       {
         id: "Parts Catelog",
         title: "Parts Catelog",
@@ -373,6 +374,14 @@ const navigationConfig = [
     type: "collapse",
     icon: <FaList size={15} />,
     children: [
+      {
+        id: "Parts List",
+        title: "Parts List",
+        type: "item",
+        icon: <FaCircle size={8} />,
+        permissions: ["admin", "editor"],
+        navLink: "/app/SoftNumen/parts/AddPart",
+      },
       {
         id: "Parts Catalogue",
         title: "Parts Catalogue",

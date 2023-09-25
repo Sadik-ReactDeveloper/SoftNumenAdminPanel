@@ -20,7 +20,7 @@ import axiosConfig from "../../../../axiosConfig";
 import { Route } from "react-router-dom";
 import { CreateParts } from "../../../../ApiEndPoint/ApiCalling";
 
-const CustomerRegistration = () => {
+const AddPart = () => {
   const [formData, setFormData] = useState({
     hub_name: "",
     desc: "",
@@ -38,15 +38,14 @@ const CustomerRegistration = () => {
   const [selectedCity, setSelectedCity] = useState(null);
   const [CustomerRegistView, setCustomerRegistView] = useState({});
   const [CustomerDropdown, setCustomerDropdown] = useState({});
-  const changeHandler = (e) => {
+  const changeHandler = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   useEffect(async () => {
-
     await CreateParts()
       .then(res => {
-  // console.log(res.data);
+        // console.log(res.data);
         const jsonAllData = xmlJs.xml2json(res.data, {
           compact: true,
           spaces: 2,
@@ -62,7 +61,7 @@ const CustomerRegistration = () => {
           }
         });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }, []);
@@ -73,17 +72,17 @@ const CustomerRegistration = () => {
     console.log(State?.getStatesOfCountry(selectedCountry?.isoCode));
   }, [selectedCountry]);
 
-  const submitHandler = (e) => {
+  const submitHandler = e => {
     e.preventDefault();
     console.log("submitHandler", formData);
 
     axiosConfig
       .post("/admin/addcategory", formData)
-      .then((response) => {
+      .then(response => {
         console.log(response);
         this.props.history.push("/app/freshlist/order/orderList");
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   };
@@ -94,7 +93,7 @@ const CustomerRegistration = () => {
         <Row className="m-2">
           <Col>
             <h1 col-sm-6 className="float-left">
-              Customer Registration
+              Create Part
             </h1>
           </Col>
         </Row>
@@ -126,11 +125,10 @@ const CustomerRegistration = () => {
                     return (
                       <Col lg="6" md="6">
                         <Label>{val?.label?._text}</Label>
-                        <CustomInput
-                          type="select"
+                        <select
                           key={i}
                           className="form-control"
-                          name={val?.name?._text}
+                          name={val?.name._text}
                           // value={selectedOption}
                           // onChange={handleOptionChange}
                         >
@@ -143,7 +141,7 @@ const CustomerRegistration = () => {
                               {option?._text}
                             </option>
                           ))}
-                        </CustomInput>
+                        </select>
                       </Col>
                     );
                   }
@@ -282,7 +280,7 @@ const CustomerRegistration = () => {
 
             <Row className="m-2">
               <Button color="primary" type="submit" className="mr-1 mb-1">
-                Customer Registration
+                Add Part
               </Button>
             </Row>
           </Form>
@@ -292,4 +290,4 @@ const CustomerRegistration = () => {
   );
 };
 
-export default CustomerRegistration;
+export default AddPart;

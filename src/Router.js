@@ -32,6 +32,9 @@ const CustomerList = lazy(() =>
 const CustomerRegistration = lazy(() =>
   import("./views/apps/freshlist/customer/CustomerRegistration")
 );
+
+// Parts
+const AddPart = lazy(() => import("./views/apps/freshlist/parts/AddPart"));
 const ReviewTable = lazy(() =>
   import("./views/apps/freshlist/customer/ReviewTable")
 );
@@ -814,10 +817,10 @@ const accessControl = lazy(() =>
 const RouteConfig = ({ component: Component, fullLayout, ...rest }) => (
   <Route
     {...rest}
-    render={(props) => {
+    render={props => {
       return (
         <ContextLayout.Consumer>
-          {(context) => {
+          {context => {
             let LayoutTag =
               fullLayout === true
                 ? context.fullLayout
@@ -837,7 +840,7 @@ const RouteConfig = ({ component: Component, fullLayout, ...rest }) => (
     }}
   />
 );
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     user: state.auth.login.userRole,
   };
@@ -881,6 +884,7 @@ class AppRouter extends React.Component {
             path="/app/SoftNumen/Customer/Customer_Registration"
             component={CustomerRegistration}
           />
+          <AppRoute path="/app/SoftNumen/parts/AddPart" component={AddPart} />
           <AppRoute
             path="/app/freshlist/customer/viewCustomer/:id"
             component={ViewCustomer}

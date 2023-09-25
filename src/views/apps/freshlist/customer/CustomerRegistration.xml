@@ -3,35 +3,35 @@
 
     <input>
 	<label>Registration Date</label>
-	<type type="date">text</type>
+	<data type="date">mm/dd/yyyy</type>
     <name>RegistDate</name>
     <placeholder>Registration Date</placeholder>
 	</input>
 
     <input>
 	<label>Product Delivered Date</label>
-	<type type="date">text</type>
+	<data type="date">mm/dd/yyyy</type>
     <name>ProductDeliDate</name>
     <placeholder>Product Delivered Date </placeholder>
 	</input>
 
     <input>
 	<label>Shipped Date</label>
-	<type type="date">text</type>
+	<data type="date">mm/dd/yyyy</type>
     <name>ShippedDate</name>
     <placeholder>Enter ShippedDate</placeholder>
 	</input>
 
     <input>
 	<label>Order Date</label>
-	<type type="date">text</type>
+	<data type="date">mm/dd/yyyy</type>
     <name>OrderDate</name>
     <placeholder>Enter Order Date</placeholder>
 	</input>
 
     <input>
 	<label>Invoice Date</label>
-	<type type="date">text</type>
+	<data type="date">mm/dd/yyyy</type>
     <name>InvoiceDate</name>
     <placeholder>Enter Invoice Date</placeholder>
 	</input>
@@ -61,14 +61,14 @@
 
     <input>
 	<label>Warranty Start Date</label>
-	<type type="date">text</type>
+	<data type="date">mm/dd/yyyy</type>
     <name>WarrantyStartDate</name>
     <placeholder> Warranty Start Date</placeholder>
 	</input>
 
     <input>
 	<label>Warranty End Date</label>
-	<type type="date">text</type>
+	<data type="date">mm/dd/yyyy</type>
     <name>WarrantyEndDate</name>
     <placeholder> Warranty End Date</placeholder>
 	</input>
