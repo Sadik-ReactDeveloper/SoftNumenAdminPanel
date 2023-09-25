@@ -1,6 +1,6 @@
 // import React, { Component, useDebugValue } from "react";
 import React, { useEffect, useState } from "react";
-import XMLDisplay from "../customer/XMLDisplay";
+// import XMLDisplay from "../customer/XMLDisplay";
 import xmlJs from "xml-js";
 import {
   Card,
@@ -36,48 +36,15 @@ const Selectedarray = [];
 const CreateAccount = () => {
   // const [Address, setAddress] = useState("");
   const [CreatAccountView, setCreatAccountView] = useState({});
-  const [Viewpermisson, setViewpermisson] = useState(null);
-  const [Editpermisson, setEditpermisson] = useState(null);
-  const [Createpermisson, setCreatepermisson] = useState(null);
-  const [Deletepermisson, setDeletepermisson] = useState(null);
-  const [fullname, setfullname] = useState("");
-  const [GSTIN, setGSTIN] = useState("");
-  const [StateList, setStateList] = useState([]);
-  const [CityList, setCityList] = useState([]);
-  const [SelectedSCity, setSelectedSCity] = useState([]);
-  const [SelectedState, setSelectedState] = useState([]);
-  const [B_City, setB_City] = useState("");
-  const [checkbox, setcheckbox] = useState("");
-  const [S_City, setS_City] = useState("");
-  const [Mobile_no, setMobile_no] = useState("");
-  const [B_Country, setB_Country] = useState("");
-  const [S_Country, setS_Country] = useState("");
-  const [Phone_no, setPhone_no] = useState("");
-  const [Place_of_Supply, setPlace_of_Supply] = useState("");
-  const [B_State, setB_State] = useState("");
-  const [S_State, setS_State] = useState("");
-  const [B_Street, setB_Street] = useState("");
-  const [S_Street, setS_Street] = useState("");
-  const [B_PinCode, setB_PinCode] = useState("");
-  const [S_PinCode, setS_PinCode] = useState("");
-  const [setuserList, setsetuserList] = useState(false);
+
   const [multiSelect, setmultiSelect] = useState([]);
   const [selectedOptions, setselectedOptions] = useState([]);
-  const [password, setpassword] = useState("");
-  const [email, setemail] = useState("");
-  const [status, setstatus] = useState("");
-  const [AssignRole, setAssignRole] = useState("");
-  const [CompanyName, setCompanyName] = useState("");
-  const [Companytype, setCompanytype] = useState("");
-  const [Selectuser, setSelectuser] = useState("");
-  const [UserName, setUserName] = useState("");
-  const [productName, setproductName] = useState([]);
-  const [City, setCity] = useState("");
+
   const [formData, setFormData] = useState({});
   const [dropdownValue, setdropdownValue] = useState({});
 
-  const handleInputChange = e => {
-    // debugger;
+  const handleInputChange = (e) => {
+    debugger;
     // Handle input changes and update formData state
     const { name, value } = e.target;
     setFormData({
@@ -88,7 +55,7 @@ const CreateAccount = () => {
   // console.log(formData);
   useEffect(() => {
     CreateAccountView()
-      .then(res => {
+      .then((res) => {
         // console.log(res.data);
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
         console.log(JSON.parse(jsonData));
@@ -102,30 +69,31 @@ const CreateAccount = () => {
         //   }
         // });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
 
     // state List
   }, []);
-  // console.log(CreatAccountView);
+  console.log(formData);
 
-  const submitHandler = e => {
+  const submitHandler = (e) => {
     e.preventDefault();
-    let pageparmission = JSON.parse(localStorage.getItem("userData"));
-    let uniqueChars = [...new Set(selectItem1)];
-    let selectedOption = [...new Set(selectedOptions)];
+    console.log(formData);
+    // let pageparmission = JSON.parse(localStorage.getItem("userData"));
+    // let uniqueChars = [...new Set(selectItem1)];
+    // let selectedOption = [...new Set(selectedOptions)];
 
     const formdata = new FormData();
 
     axiosConfig
       .post("/createuser", formdata)
-      .then(response => {
+      .then((response) => {
         if (response.data?.success) {
         }
         // this.props.history.push("/app/freshlist/order/all");
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -146,27 +114,11 @@ const CreateAccount = () => {
       }
     }
 
-    let arr = selectedList.map(ele => ele.id);
+    let arr = selectedList.map((ele) => ele.id);
     setmultiSelect(arr);
     // console.log(multiSelect);
 
     let uniqueChars = [...new Set(selectedOptions)];
-
-    if (uniqueChars.length === 1) {
-      let value = uniqueChars[0];
-      const formdata = new FormData();
-      formdata.append("state_id", value);
-      axiosConfig
-        .post(`/getcity`, formdata)
-        .then(res => {
-          setCityList(res?.data?.cities);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    } else {
-      setCityList([]);
-    }
   };
   const onRemove1 = (selectedList, removedItem) => {
     // debugger;
@@ -174,7 +126,7 @@ const CreateAccount = () => {
     // console.log(selectedList);
     // setmultiSelect(selectedList);
 
-    let arr = selectedList.map(ele => ele.id);
+    let arr = selectedList.map((ele) => ele.id);
     // console.log(arr);
     setmultiSelect(arr);
     // console.log(multiSelect);
@@ -201,9 +153,7 @@ const CreateAccount = () => {
               <h1 className="float-left">Create Account</h1>
             </Col>
           </Row>
-          <div className="container ">
-            {/* <h4 className="py-2">Select User Type :-</h4> */}
-          </div>
+          <div className="container "></div>
 
           <CardBody>
             <Form className="m-1" onSubmit={submitHandler}>
@@ -270,6 +220,7 @@ const CreateAccount = () => {
                       </Col>
                     );
                   })}
+
                 {/* <Col lg="6" md="6" sm="12">
                   <FormGroup>
                     <Label>Name *</Label>
@@ -487,6 +438,43 @@ const CreateAccount = () => {
                 ) : null} */}
               </Row>
               <hr />
+              <Row className="mt-2 ">
+                <Col lg="6" md="6" sm="6" className="mb-2">
+                  <Label className="">
+                    <h4>Status</h4>
+                  </Label>
+                  <div className="form-label-group mx-1">
+                    {CreatAccountView &&
+                      CreatAccountView?.CreateAccount?.Radiobutton?.input?.map(
+                        (ele, i) => {
+                          console.log(ele);
+                          return (
+                            <FormGroup>
+                              <Input
+                                style={{ marginRight: "3px" }}
+                                required
+                                // onKeyDown={(e) => {
+                                //   ["e", "E", "+", "-"].includes(e.key) &&
+                                //     e.preventDefault();
+                                // }}
+                                onChange={handleInputChange}
+                                type={ele?.type?._attributes?.type}
+                                // placeholder={ele?.placeholder?._text}
+                                name={ele?.name?._text}
+                                value={formData[ele?.name?._text]}
+                                // value={fullname}
+                                // onChange={(e) => setfullname(e.target.value)}
+                              />{" "}
+                              <span style={{ marginRight: "20px" }}>
+                                {ele?.label?._text}
+                              </span>
+                            </FormGroup>
+                          );
+                        }
+                      )}
+                  </div>
+                </Col>
+              </Row>
               {/* <Row>
                 <Col className="mt-2" lg="6" md="6" sm="12">
                   <h4 className="mt-5 pb-2">Billing Address :</h4>
@@ -720,34 +708,6 @@ const CreateAccount = () => {
                   </Col>
                 </Col>
               </Row> */}
-
-              <Row className="mt-2">
-                <Col lg="6" md="6" sm="6" className="mb-2">
-                  <Label className="">
-                    <h4>Status</h4>
-                  </Label>
-                  <div
-                    className="form-label-group"
-                    onChange={e => setstatus(e.target.value)}
-                  >
-                    <input
-                      style={{ marginRight: "3px" }}
-                      type="radio"
-                      name="status"
-                      value="Active"
-                    />
-                    <span style={{ marginRight: "20px" }}>Active</span>
-
-                    <input
-                      style={{ marginRight: "3px" }}
-                      type="radio"
-                      name="status"
-                      value="Deactive"
-                    />
-                    <span style={{ marginRight: "3px" }}>Deactive</span>
-                  </div>
-                </Col>
-              </Row>
 
               <Row>
                 <Button.Ripple

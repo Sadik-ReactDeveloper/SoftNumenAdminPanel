@@ -6,6 +6,7 @@ import {
   Create_Account_xmlView,
   Create_Parts,
   customerRegistration,
+  Product_Registration,
 } from "./Api";
 import axiosConfig from "../axiosConfig";
 
@@ -21,23 +22,31 @@ dotenv.config();
 export const CreateRole = async () => {
   let response = await axiosConfig
     .post(`/admin/getProduct`)
-    .then(res => res.data);
+    .then((res) => res.data);
   return response;
 };
 export const CreateAccountView = async () => {
   let response = await axiosConfig
     .get(`${Create_Account_xmlView}`)
-    .then(res => res.data);
+    .then((res) => res.data);
   return response;
 };
 
 export const CreateParts = async () => {
-  let response = await axiosConfig.get(`${Create_Parts}`).then(res => res.data);
+  let response = await axiosConfig
+    .get(`${Create_Parts}`)
+    .then((res) => res.data);
   return response;
 };
 export const Customer_Registration = async () => {
   let response = await axiosConfig
     .get(`${customerRegistration}`)
-    .then(res => res.data);
+    .then((res) => res.data);
+  return response;
+};
+export const ProductRegistration = async () => {
+  let response = await axiosConfig
+    .get(`${Product_Registration}`)
+    .then((res) => res.data);
   return response;
 };
