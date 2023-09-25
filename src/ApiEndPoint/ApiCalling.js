@@ -35,7 +35,7 @@ export const CreateParts = async () => {
   let response = await axiosConfig.get(`${Create_Parts}`).then(res => res.data);
   return response;
 };
-export const CustomerRegistration = async () => {
+export const Customer_Registration = async () => {
   let response = await axiosConfig
     .get(`${customerRegistration}`)
     .then(res => res.data);
