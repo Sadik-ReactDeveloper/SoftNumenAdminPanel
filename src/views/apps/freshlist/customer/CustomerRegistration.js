@@ -38,13 +38,13 @@ const CustomerRegistration = () => {
   const [selectedCity, setSelectedCity] = useState(null);
   const [CustomerRegistView, setCustomerRegistView] = useState({});
   const [CustomerDropdown, setCustomerDropdown] = useState({});
-  const changeHandler = e => {
+  const changeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   useEffect(async () => {
     await Customer_Registration()
-      .then(res => {
+      .then((res) => {
         // console.log(res.data);
         const jsonAllData = xmlJs.xml2json(res.data, {
           compact: true,
@@ -61,7 +61,7 @@ const CustomerRegistration = () => {
           }
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }, []);
@@ -72,17 +72,17 @@ const CustomerRegistration = () => {
     console.log(State?.getStatesOfCountry(selectedCountry?.isoCode));
   }, [selectedCountry]);
 
-  const submitHandler = e => {
+  const submitHandler = (e) => {
     e.preventDefault();
     console.log("submitHandler", formData);
 
     axiosConfig
       .post("/admin/addcategory", formData)
-      .then(response => {
+      .then((response) => {
         console.log(response);
         this.props.history.push("/app/freshlist/order/orderList");
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -125,10 +125,11 @@ const CustomerRegistration = () => {
                     return (
                       <Col lg="6" md="6">
                         <Label>{val?.label?._text}</Label>
-                        <select
+                        <CustomInput
+                          type="select"
                           key={i}
                           className="form-control"
-                          name={val?.name._text}
+                          name={val?.name?._text}
                           // value={selectedOption}
                           // onChange={handleOptionChange}
                         >
@@ -141,7 +142,7 @@ const CustomerRegistration = () => {
                               {option?._text}
                             </option>
                           ))}
-                        </select>
+                        </CustomInput>
                       </Col>
                     );
                   }
