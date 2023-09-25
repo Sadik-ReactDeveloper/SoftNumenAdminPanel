@@ -77,7 +77,7 @@ const CreateAccount = () => {
   const [dropdownValue, setdropdownValue] = useState({});
 
   const handleInputChange = e => {
-    debugger;
+    // debugger;
     // Handle input changes and update formData state
     const { name, value } = e.target;
     setFormData({
@@ -85,12 +85,11 @@ const CreateAccount = () => {
       [name]: value,
     });
   };
-  console.log(formData);
+  // console.log(formData);
   useEffect(() => {
     CreateAccountView()
       .then(res => {
         // console.log(res.data);
-
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
         console.log(JSON.parse(jsonData));
         setCreatAccountView(JSON.parse(jsonData));
@@ -107,35 +106,7 @@ const CreateAccount = () => {
         console.log(err);
       });
 
-    let pageparmission = JSON.parse(localStorage.getItem("userData"));
-    let newparmisson = pageparmission?.role?.find(
-      value => value?.pageName === "Create Account"
-    );
-    setViewpermisson(newparmisson?.permission.includes("View"));
-    setCreatepermisson(newparmisson?.permission.includes("Create"));
-    setEditpermisson(newparmisson?.permission.includes("Edit"));
-
-    setDeletepermisson(newparmisson?.permission.includes("Delete"));
-
-    const formdata = new FormData();
-    formdata.append("user_id", pageparmission?.Userinfo?.id);
-    formdata.append("role", pageparmission?.Userinfo?.role);
-    axiosConfig.post("/getrolelistdropdown", formdata).then(response => {
-      // console.log(response);
-      const propertyNames = Object.values(response.data?.data?.roles);
-
-      // console.log(propertyNames);
-      setproductName(propertyNames);
-    });
     // state List
-    axiosConfig
-      .get("/getallstates")
-      .then(response => {
-        setStateList(response.data?.states);
-      })
-      .catch(error => {
-        console.log(error.response.data);
-      });
   }, []);
   // console.log(CreatAccountView);
 
@@ -147,56 +118,10 @@ const CreateAccount = () => {
 
     const formdata = new FormData();
 
-    formdata.append("created_by", pageparmission?.Userinfo?.id);
-    formdata.append("password", password);
-    formdata.append("full_name", fullname);
-    formdata.append("gstin_no", GSTIN);
-    formdata.append("username", UserName);
-    formdata.append("city", B_City);
-    formdata.append("mobile", Mobile_no);
-    formdata.append("email", email);
-    formdata.append("status", status);
-    formdata.append("role", AssignRole);
-    formdata.append("company_name", CompanyName);
-    formdata.append("company_type", Companytype);
-    formdata.append("place_supply", Place_of_Supply);
-    formdata.append("billing_street", B_Street);
-    formdata.append("billing_city", B_City);
-    formdata.append("billing_state", B_State);
-    formdata.append("billing_country", B_Country);
-    formdata.append("billing_pincode", B_PinCode);
-    formdata.append("shipping_street", S_Street);
-    formdata.append("shipping_city", S_City);
-    formdata.append("shipping_state", S_State);
-    formdata.append("shipping_country", S_Country);
-    formdata.append("shipping_pincode", S_PinCode);
-    formdata.append("phone_no", Phone_no);
-    if (selectedOption.length > 0) {
-      formdata.append("state_id", multiSelect.toString());
-    } else {
-      formdata.append("state_id", SelectedState);
-    }
-
-    formdata.append("city_id", uniqueChars);
-
     axiosConfig
       .post("/createuser", formdata)
       .then(response => {
         if (response.data?.success) {
-          swal("Success!", "Submitted SuccessFull!", "success");
-          setAssignRole("");
-          setstatus("");
-          setemail("");
-          setCity("");
-          setPhone_no("");
-          setUserName("");
-          setfullname("");
-          setpassword("");
-          setS_Country("");
-          setS_State("");
-          setS_City("");
-          setS_Street("");
-          setS_PinCode("");
         }
         // this.props.history.push("/app/freshlist/order/all");
       })
@@ -204,22 +129,7 @@ const CreateAccount = () => {
         console.log(error);
       });
   };
-  const handleMatchaddress = (e, value) => {
-    setcheckbox(value);
-    if (value) {
-      setS_Country(B_Country);
-      setS_State(B_State);
-      setS_City(B_City);
-      setS_Street(B_Street);
-      setS_PinCode(B_PinCode);
-    } else {
-      setS_Country("");
-      setS_State("");
-      setS_City("");
-      setS_Street("");
-      setS_PinCode("");
-    }
-  };
+
   const onSelect = (selectedList, selectedItem) => {
     console.log(selectedList);
 
@@ -277,10 +187,10 @@ const CreateAccount = () => {
     // console.log(uniqueChars);
   };
 
-  const onRemove = (selectedList, removedItem) => {
-    console.log(selectedList);
-    console.log(removedItem);
-  };
+  // const onRemove = (selectedList, removedItem) => {
+  //   console.log(selectedList);
+  //   console.log(removedItem);
+  // };
 
   return (
     <div>
@@ -293,79 +203,11 @@ const CreateAccount = () => {
           </Row>
           <div className="container ">
             {/* <h4 className="py-2">Select User Type :-</h4> */}
-            {/* <Row>
-              <Col lg="2" md="2">
-                <FormGroup>
-                  <h3>
-                    Client{" "}
-                    <span>
-                      <Input
-                        required
-                        className="mx-2"
-                        type="radio"
-                        name="City"
-                        value="Client"
-                        onChange={(e) => {
-                          this.setState({ setuserList: false });
-                          this.setState({ AssignRole: "Client" });
-                        }}
-                      />
-                    </span>
-                  </h3>
-                </FormGroup>
-              </Col>
-
-              <Col lg="2" md="2">
-                <FormGroup>
-                  <h3>
-                    User{" "}
-                    <span>
-                      <Input
-                        required
-                        height="21px"
-                        width="41px"
-                        className="mx-2"
-                        type="radio"
-                        name="City"
-                        value="User"
-                        onChange={(e) => {
-                          this.setState({ setuserList: true });
-                          this.setState({ AssignRole: "User" });
-                        }}
-                      />
-                    </span>
-                  </h3>
-                </FormGroup>
-              </Col>
-            </Row> */}
           </div>
 
           <CardBody>
             <Form className="m-1" onSubmit={submitHandler}>
               <Row className="mb-2">
-                {/* <Col lg="6" md="6">
-                  <FormGroup>
-                    <Label> Select Role*</Label>
-                    <CustomInput
-                      required
-                      id="AssignRole"
-                      type="select"
-                      name="AssignRole"
-                      value={AssignRole}
-                      // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
-                    >
-                      <option value="">--Select Role--</option>
-
-                      {productName &&
-                        productName?.map((value, index) => (
-                          <option key={index} value={value}>
-                            {value}
-                          </option>
-                        ))}
-                    </CustomInput>
-                  </FormGroup>
-                </Col> */}
                 <Col lg="6" md="6">
                   <FormGroup>
                     <Label>
@@ -376,15 +218,18 @@ const CreateAccount = () => {
                     </Label>
                     <CustomInput
                       required
-                      // id="AssignRole"
                       type="select"
                       name={
                         dropdownValue.CreateAccount?.MyDropdown?.dropdown?.name
                           ?._text
                       }
-                      value={AssignRole}
-                      // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      value={
+                        formData[
+                          dropdownValue.CreateAccount?.MyDropdown?.dropdown
+                            ?.name?._text
+                        ]
+                      }
+                      onChange={handleInputChange}
                     >
                       <option value="">--Select Role--</option>
                       {dropdownValue?.CreateAccount?.MyDropdown?.dropdown?.option.map(
@@ -400,32 +245,6 @@ const CreateAccount = () => {
                     </CustomInput>
                   </FormGroup>
                 </Col>
-                {/* {CreatAccountView &&
-                  CreatAccountView?.CreateAccount?.input?.map((val, i) => {
-                    console.log(val);
-                    return (
-                      <Col lg="6" md="6">
-                        <Label>{val?.label?._text}</Label>
-                        <select
-                          key={i}
-                          className="form-control"
-                          name={val?.name._text}
-                          // value={selectedOption}
-                          // onChange={handleOptionChange}
-                        >
-                          <option value="">Select an option</option>
-                          {val?.option.map((option, index) => (
-                            <option
-                              key={index}
-                              value={option?._attributes?.value}
-                            >
-                              {option?._text}
-                            </option>
-                          ))}
-                        </select>
-                      </Col>
-                    );
-                  })} */}
 
                 {CreatAccountView &&
                   CreatAccountView?.CreateAccount?.input?.map((ele, i) => {

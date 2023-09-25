@@ -18,7 +18,7 @@ import { Country, State, City } from "country-state-city";
 import { history } from "../../../../history";
 import axiosConfig from "../../../../axiosConfig";
 import { Route } from "react-router-dom";
-import { CreateParts } from "../../../../ApiEndPoint/ApiCalling";
+import { Customer_Registration } from "../../../../ApiEndPoint/ApiCalling";
 
 const CustomerRegistration = () => {
   const [formData, setFormData] = useState({
@@ -38,15 +38,14 @@ const CustomerRegistration = () => {
   const [selectedCity, setSelectedCity] = useState(null);
   const [CustomerRegistView, setCustomerRegistView] = useState({});
   const [CustomerDropdown, setCustomerDropdown] = useState({});
-  const changeHandler = (e) => {
+  const changeHandler = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   useEffect(async () => {
-
-    await CreateParts()
+    await Customer_Registration()
       .then(res => {
-  // console.log(res.data);
+        // console.log(res.data);
         const jsonAllData = xmlJs.xml2json(res.data, {
           compact: true,
           spaces: 2,
@@ -62,7 +61,7 @@ const CustomerRegistration = () => {
           }
         });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }, []);
@@ -73,17 +72,17 @@ const CustomerRegistration = () => {
     console.log(State?.getStatesOfCountry(selectedCountry?.isoCode));
   }, [selectedCountry]);
 
-  const submitHandler = (e) => {
+  const submitHandler = e => {
     e.preventDefault();
     console.log("submitHandler", formData);
 
     axiosConfig
       .post("/admin/addcategory", formData)
-      .then((response) => {
+      .then(response => {
         console.log(response);
         this.props.history.push("/app/freshlist/order/orderList");
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   };

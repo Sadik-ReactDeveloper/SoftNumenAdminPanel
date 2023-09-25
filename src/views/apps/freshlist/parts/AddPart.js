@@ -42,6 +42,14 @@ const AddPart = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  //   const handleInputChange = e => {
+  //     // Handle input changes and update formData state
+  //     const { name, value } = e.target;
+  //     setFormData({
+  //       ...formData,
+  //       [name]: value,
+  //     });
+  //   };
   useEffect(async () => {
     await CreateParts()
       .then(res => {
