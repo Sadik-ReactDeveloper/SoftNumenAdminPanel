@@ -75,7 +75,7 @@ const ProductRegistration = () => {
   useEffect(() => {
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let newparmisson = pageparmission?.role?.find(
-      value => value?.pageName === "Create Account"
+      (value) => value?.pageName === "Create Account"
     );
     setViewpermisson(newparmisson?.permission.includes("View"));
     setCreatepermisson(newparmisson?.permission.includes("Create"));
@@ -86,7 +86,7 @@ const ProductRegistration = () => {
     const formdata = new FormData();
     formdata.append("user_id", pageparmission?.Userinfo?.id);
     formdata.append("role", pageparmission?.Userinfo?.role);
-    axiosConfig.post("/getrolelistdropdown", formdata).then(response => {
+    axiosConfig.post("/getrolelistdropdown", formdata).then((response) => {
       // console.log(response);
       const propertyNames = Object.values(response.data?.data?.roles);
 
@@ -96,15 +96,15 @@ const ProductRegistration = () => {
     // state List
     axiosConfig
       .get("/getallstates")
-      .then(response => {
+      .then((response) => {
         setStateList(response.data?.states);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error.response.data);
       });
   }, []);
 
-  const submitHandler = e => {
+  const submitHandler = (e) => {
     e.preventDefault();
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let uniqueChars = [...new Set(selectItem1)];
@@ -146,7 +146,7 @@ const ProductRegistration = () => {
 
     axiosConfig
       .post("/createuser", formdata)
-      .then(response => {
+      .then((response) => {
         if (response.data?.success) {
           swal("Success!", "Submitted SuccessFull!", "success");
           setAssignRole("");
@@ -165,7 +165,7 @@ const ProductRegistration = () => {
         }
         // this.props.history.push("/app/freshlist/order/all");
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -201,7 +201,7 @@ const ProductRegistration = () => {
       }
     }
 
-    let arr = selectedList.map(ele => ele.id);
+    let arr = selectedList.map((ele) => ele.id);
     setmultiSelect(arr);
     // console.log(multiSelect);
 
@@ -213,10 +213,10 @@ const ProductRegistration = () => {
       formdata.append("state_id", value);
       axiosConfig
         .post(`/getcity`, formdata)
-        .then(res => {
+        .then((res) => {
           setCityList(res?.data?.cities);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     } else {
@@ -229,7 +229,7 @@ const ProductRegistration = () => {
     // console.log(selectedList);
     // setmultiSelect(selectedList);
 
-    let arr = selectedList.map(ele => ele.id);
+    let arr = selectedList.map((ele) => ele.id);
     // console.log(arr);
     setmultiSelect(arr);
     // console.log(multiSelect);
@@ -257,13 +257,13 @@ const ProductRegistration = () => {
     setFormValues([...formValues, { name: "", partseriel: "", quantity: "" }]);
   };
 
-  let removeFormFields = i => {
+  let removeFormFields = (i) => {
     let newFormValues = [...formValues];
     newFormValues.splice(i, 1);
     setFormValues(newFormValues);
   };
 
-  let handleSubmit = event => {
+  let handleSubmit = (event) => {
     event.preventDefault();
     alert(JSON.stringify(formValues));
   };
@@ -277,7 +277,7 @@ const ProductRegistration = () => {
               <h1 className="float-left">Product Registration</h1>
             </Col>
           </Row>
-          <div className="container ">
+          {/* <div className="container ">
             <form onSubmit={handleSubmit}>
               {formValues.map((element, index) => (
                 <div className="form-inline my-2" key={index}>
@@ -337,7 +337,7 @@ const ProductRegistration = () => {
                 </Button>
               </div>
             </form>
-          </div>
+          </div> */}
 
           <CardBody>
             <Form className="m-1" onSubmit={submitHandler}>
@@ -458,7 +458,7 @@ const ProductRegistration = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Role--</option>
 
@@ -481,7 +481,7 @@ const ProductRegistration = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Variant--</option>
 
@@ -504,7 +504,7 @@ const ProductRegistration = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Product Type--</option>
 
@@ -527,7 +527,7 @@ const ProductRegistration = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Product Name--</option>
 
@@ -551,7 +551,7 @@ const ProductRegistration = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Fuel Type--</option>
                       <option>Diesel</option>
@@ -577,7 +577,7 @@ const ProductRegistration = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Engine--</option>
                       <option>2000</option>
@@ -602,7 +602,7 @@ const ProductRegistration = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Engine Type--</option>
                       <option>1.5 ltr kry</option>
@@ -629,7 +629,7 @@ const ProductRegistration = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Cylinders--</option>
                       <option>2 Cylinders</option>
@@ -654,7 +654,7 @@ const ProductRegistration = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Volves--</option>
                       <option>2 Volves </option>
@@ -679,7 +679,7 @@ const ProductRegistration = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Transmition--</option>
                       <option>Manual </option>
@@ -700,7 +700,7 @@ const ProductRegistration = () => {
                   </Label>
                   <div
                     className="form-label-group"
-                    onChange={e => setstatus(e.target.value)}
+                    onChange={(e) => setstatus(e.target.value)}
                   >
                     <input
                       style={{ marginRight: "3px" }}
@@ -729,7 +729,7 @@ const ProductRegistration = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Emission Standards--</option>
                       <option>BS IV (Euro 4) </option>
@@ -784,7 +784,7 @@ const ProductRegistration = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select No. Of Doors--</option>
                       <option>2 Door </option>
@@ -802,7 +802,7 @@ const ProductRegistration = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Seating Capacity--</option>
                       <option>4 </option>
@@ -829,7 +829,7 @@ const ProductRegistration = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Body Style--</option>
                       <option>Suv</option>
@@ -849,7 +849,7 @@ const ProductRegistration = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select Body Style--</option>
                       <option>White</option>
@@ -974,7 +974,7 @@ const ProductRegistration = () => {
                       name="AssignRole"
                       value={AssignRole}
                       // onChange={changeHandler}
-                      onChange={e => setAssignRole(e.target.value)}
+                      onChange={(e) => setAssignRole(e.target.value)}
                     >
                       <option value="">--Select AirBags--</option>
                       <option>2 AirBags</option>
