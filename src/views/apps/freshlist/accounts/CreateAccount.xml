@@ -194,7 +194,7 @@
 
 	</input>
 	<MyDropdown>
-		<dropdown>
+	<dropdown>
 	<label>Role</label>
 	<name>Role</name>
 	<option value="OEM">OEM</option>
@@ -208,6 +208,6 @@
 	<option value=" WARRANTY APPROVER">WARRANTY APPROVER</option>
 	<option value=" WARRANTY REVIWER">WARRANTY REVIWER</option>
 	<option value="SUPERVISER">SUPERVISER</option>
-
+	<option value="SUPERVISER">SUPERVISER</option>
 	</MyDropdown>
 </ProductRgistration>
