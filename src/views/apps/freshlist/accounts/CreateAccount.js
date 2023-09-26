@@ -53,7 +53,9 @@ const CreateAccount = () => {
     console.log(formData);
     CreateAccountSave(formData)
       .then((res) => {
-        console.log(res.data);
+        if (res.status) {
+          swal("Acccont Created Successfully");
+        }
       })
       .catch((err) => {
         console.log(err);
