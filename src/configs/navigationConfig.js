@@ -750,7 +750,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaProductHunt size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/house/inventory",
+        navLink: "/app/softNumen/report/stockReport",
       },
 
       {
@@ -759,7 +759,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaProductHunt size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/house/inventory",
+        navLink: "/app/softNumen/report/StockTransfer",
       },
     ],
   },
@@ -781,7 +781,7 @@ const navigationConfig = [
         type: "item",
         icon: <BsImage size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/cart/DateWiseReport",
+        navLink: "/app/softNumen/ticketing/ServiceRequest",
       },
       {
         id: "Draft Service",
@@ -789,7 +789,7 @@ const navigationConfig = [
         type: "item",
         icon: <BsImage size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/cart/DateWiseReport",
+        navLink: "/app/softNumen/ticketing/DraftService",
       },
       {
         id: "Pending Service",
@@ -797,7 +797,7 @@ const navigationConfig = [
         type: "item",
         icon: <BsImage size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/cart/DateWiseReport",
+        navLink: "/app/softNumen/ticketing/PendingService",
       },
       {
         id: "Completed Service",
@@ -805,7 +805,7 @@ const navigationConfig = [
         type: "item",
         icon: <BsImage size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/cart/DateWiseReport",
+        navLink: "/app/softNumen/ticketing/CompletedService",
       },
       {
         id: "Transfer Service",
@@ -813,7 +813,7 @@ const navigationConfig = [
         type: "item",
         icon: <BsImage size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/cart/DateWiseReport",
+        navLink: "/app/softNumen/ticketing/TransferService",
       },
       {
         id: "Cancelled Service",
@@ -821,7 +821,7 @@ const navigationConfig = [
         type: "item",
         icon: <BsImage size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/cart/DateWiseReport",
+        navLink: "/app/softNumen/ticketing/CancelledService",
       },
       {
         id: "Rejected Service",
@@ -829,7 +829,7 @@ const navigationConfig = [
         type: "item",
         icon: <BsImage size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/cart/DateWiseReport",
+        navLink: "/app/softNumen/ticketing/RejectedService",
       },
     ],
   },
@@ -859,7 +859,7 @@ const navigationConfig = [
         type: "item",
         icon: <BsImage size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/cart/DateWiseReport",
+        navLink: "/app/softNumen/report/CustomerReports",
       },
       {
         id: "Staff Report",
@@ -867,7 +867,7 @@ const navigationConfig = [
         type: "item",
         icon: <BsImage size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/cart/DateWiseReport",
+        navLink: "/app/softNumen/report/StaffReport",
       },
       // {
       //   id: "Client Wise",
@@ -891,7 +891,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaProductHunt size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/cart/ProductWise",
+        navLink: "/app/softNumen/report/ProductReports",
       },
       {
         id: "Earning Report",
@@ -899,7 +899,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaProductHunt size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/cart/ProductWise",
+        navLink: "/app/softNumen/report/EarningReport",
       },
     ],
   },
@@ -920,7 +920,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCode size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/code/UniqueCode",
+        navLink: "/app/softNumen/promotion/Promotion",
       },
       {
         id: "Discount&Coupon",
@@ -928,7 +928,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCode size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/code/UniqueCode",
+        navLink: "/app/softNumen/promotion/DiscountCoupon",
       },
     ],
   },
@@ -950,7 +950,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCode size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/code/UniqueCode",
+        navLink: "/app/softNumen/media/Livestreamstatus",
       },
       {
         id: "ChatStatus",
@@ -958,7 +958,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCode size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/code/UniqueCode",
+        navLink: "/app/softNumen/media/ChatStatus",
       },
     ],
   },
@@ -1525,7 +1525,7 @@ const navigationConfig = [
     type: "item",
     icon: <FaQuestionCircle size={15} />,
     permissions: ["admin", "editor"],
-    navLink: "/app/freshlist/helpAndSupport/helpAndSupport",
+    navLink: "/app/softNumen/support/HelpandSupports",
   },
   {
     id: "logout",

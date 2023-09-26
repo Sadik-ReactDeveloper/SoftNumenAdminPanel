@@ -38,7 +38,7 @@ const AddPart = () => {
   const [selectedCity, setSelectedCity] = useState(null);
   const [CustomerRegistView, setCustomerRegistView] = useState({});
   const [CustomerDropdown, setCustomerDropdown] = useState({});
-  const changeHandler = e => {
+  const changeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -50,9 +50,9 @@ const AddPart = () => {
   //       [name]: value,
   //     });
   //   };
-  useEffect(async () => {
-    await CreateParts()
-      .then(res => {
+  useEffect(() => {
+    CreateParts()
+      .then((res) => {
         // console.log(res.data);
         const jsonAllData = xmlJs.xml2json(res.data, {
           compact: true,
@@ -69,7 +69,7 @@ const AddPart = () => {
           }
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }, []);
@@ -80,17 +80,17 @@ const AddPart = () => {
     console.log(State?.getStatesOfCountry(selectedCountry?.isoCode));
   }, [selectedCountry]);
 
-  const submitHandler = e => {
+  const submitHandler = (e) => {
     e.preventDefault();
     console.log("submitHandler", formData);
 
     axiosConfig
       .post("/admin/addcategory", formData)
-      .then(response => {
+      .then((response) => {
         console.log(response);
         this.props.history.push("/app/freshlist/order/orderList");
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };

@@ -14,22 +14,22 @@ import {
   CardText,
   Label,
 } from "reactstrap";
-import axiosConfig from "../../../../axiosConfig";
+import axiosConfig from "../../../../../axiosConfig";
 import ReactHtmlParser from "react-html-parser";
-import { ContextLayout } from "../../../../utility/context/Layout";
+import { ContextLayout } from "../../../../../utility/context/Layout";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import { Trash2, ChevronDown, Edit } from "react-feather";
-import { history } from "../../../../history";
-import "../../../../assets/scss/plugins/tables/_agGridStyleOverride.scss";
-import "../../../../assets/scss/pages/users.scss";
+import { history } from "../../../../../history";
+import "../../../../../assets/scss/plugins/tables/_agGridStyleOverride.scss";
+import "../../../../../assets/scss/pages/users.scss";
 import Moment from "react-moment";
 import { FaLock } from "react-icons/fa";
 import "moment-timezone";
 import { Route } from "react-router-dom";
 import swal from "sweetalert";
 
-class ProductType extends React.Component {
+class Orders extends React.Component {
   state = {
     rowData: [],
     Viewpermisson: null,
@@ -233,6 +233,10 @@ class ProductType extends React.Component {
               {/* {this.state.billing_street && ( */}
               <div className="">
                 <span>{params?.data?.billing_street} </span>
+                <span>{params?.data?.billing_city},</span>
+                <span>{params?.data?.billing_state},</span>
+                <span>{params?.data?.billing_country}, </span>
+                <span>{params?.data?.billing_pincode}</span>
               </div>
               {/* )} */}
             </div>
@@ -251,6 +255,10 @@ class ProductType extends React.Component {
                 {/* {this.state.shipping_city && ( */}
                 <div>
                   <span>{params?.data?.shipping_street},</span>
+                  <span>{params?.data?.shipping_state},</span>
+                  <span>{params?.data?.shipping_city},</span>
+                  <span>{params?.data?.shipping_country},</span>
+                  <span>{params?.data?.shipping_pincode}</span>
                 </div>
                 {/* )} */}
               </div>
@@ -313,44 +321,50 @@ class ProductType extends React.Component {
         cellRendererFramework: (params) => {
           return (
             <div className="actions cursor-pointer">
-              <Trash2
-                className="mr-50"
-                size="25px"
-                color="Red"
-                onClick={() => {
-                  this.runthisfunction(params?.data?.id);
-                }}
-              />
+              {this.state.Deletepermisson && (
+                <Trash2
+                  className="mr-50"
+                  size="25px"
+                  color="Red"
+                  onClick={() => {
+                    this.runthisfunction(params?.data?.id);
+                  }}
+                />
+              )}
 
-              <Route
-                render={({ history }) => (
-                  <Edit
-                    className="mr-50"
-                    size="25px"
-                    color="green"
-                    onClick={() =>
-                      history.push(
-                        `/app/freshlist/house/editProductType/${params?.data?.id}`
-                      )
-                    }
-                  />
-                )}
-              />
+              {this.state.Editpermisson && (
+                <Route
+                  render={({ history }) => (
+                    <Edit
+                      className="mr-50"
+                      size="25px"
+                      color="green"
+                      onClick={() =>
+                        history.push(
+                          `/app/freshlist/house/editProductType/${params?.data?.id}`
+                        )
+                      }
+                    />
+                  )}
+                />
+              )}
 
-              <Route
-                render={({ history }) => (
-                  <FaLock
-                    className="mr-50"
-                    size="25px"
-                    color="blue"
-                    onClick={() =>
-                      history.push(
-                        `/app/freshlist/account/UpdateExistingRole/${params?.data?.role}`
-                      )
-                    }
-                  />
-                )}
-              />
+              {this.state.Createpermisson && (
+                <Route
+                  render={({ history }) => (
+                    <FaLock
+                      className="mr-50"
+                      size="25px"
+                      color="blue"
+                      onClick={() =>
+                        history.push(
+                          `/app/freshlist/account/UpdateExistingRole/${params?.data?.role}`
+                        )
+                      }
+                    />
+                  )}
+                />
+              )}
             </div>
           );
         },
@@ -687,4 +701,4 @@ class ProductType extends React.Component {
     );
   }
 }
-export default ProductType;
+export default Orders;

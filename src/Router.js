@@ -316,9 +316,9 @@ const CreateAttribute = lazy(() =>
   import("./views/apps/freshlist/options/CreateAttribute")
 );
 // report
-const StockReport = lazy(() =>
-  import("./views/apps/freshlist/report/StockReport")
-);
+// const StockReport = lazy(() =>
+//   import("./views/apps/freshlist/report/StockReport")
+// );
 const ProductReport = lazy(() =>
   import("./views/apps/freshlist/report/ProductReport")
 );
@@ -375,8 +375,68 @@ const EditSubCategory = lazy(() =>
 
 // softNumen
 
+const CancelledService = lazy(() =>
+  import("./views/apps/freshlist/customer/Ticketing/CancelledService")
+);
+const CompletedService = lazy(() =>
+  import("./views/apps/freshlist/customer/Ticketing/CompletedService")
+);
+const DraftService = lazy(() =>
+  import("./views/apps/freshlist/customer/Ticketing/DraftService")
+);
+const PendingService = lazy(() =>
+  import("./views/apps/freshlist/customer/Ticketing/PendingService")
+);
+const RejectedService = lazy(() =>
+  import("./views/apps/freshlist/customer/Ticketing/RejectedService")
+);
+const ServiceRequest = lazy(() =>
+  import("./views/apps/freshlist/customer/Ticketing/ServiceRequest")
+);
+const TransferService = lazy(() =>
+  import("./views/apps/freshlist/customer/Ticketing/TransferService")
+);
+const AdminReport = lazy(() =>
+  import("./views/apps/freshlist/customer/ReportManagement/Admin")
+);
+const CustomerReports = lazy(() =>
+  import("./views/apps/freshlist/customer/ReportManagement/CustomerReport")
+);
+const EarningReport = lazy(() =>
+  import("./views/apps/freshlist/customer/ReportManagement/EarningReport")
+);
+const ProductReports = lazy(() =>
+  import("./views/apps/freshlist/customer/ReportManagement/ProductReport")
+);
+const StaffReport = lazy(() =>
+  import("./views/apps/freshlist/customer/ReportManagement/StaffReport")
+);
+const TransactionReport = lazy(() =>
+  import("./views/apps/freshlist/customer/ReportManagement/TransactionReport")
+);
+const DiscountCoupon = lazy(() =>
+  import("./views/apps/freshlist/customer/PromotionManagement/DiscountCoupon")
+);
+const Promotion = lazy(() =>
+  import("./views/apps/freshlist/customer/PromotionManagement/Promotion")
+);
+const ChatStatus = lazy(() =>
+  import("./views/apps/freshlist/customer/MediaStatus/ChatStatus")
+);
+const Livestreamstatus = lazy(() =>
+  import("./views/apps/freshlist/customer/MediaStatus/Livestreamstatus")
+);
+const HelpandSupports = lazy(() =>
+  import("./views/apps/freshlist/customer/Help&Support/Help&Support")
+);
 const OemWarranty = lazy(() =>
   import("./views/apps/freshlist/customer/WarrantyCLaims/OemWarranty")
+);
+const StockReport = lazy(() =>
+  import("./views/apps/freshlist/customer/StockManagement/StockReport")
+);
+const StockTransfer = lazy(() =>
+  import("./views/apps/freshlist/customer/StockManagement/StockTransfer")
 );
 const SupplierWarranty = lazy(() =>
   import("./views/apps/freshlist/customer/WarrantyCLaims/SupplierWarranty")
@@ -1315,10 +1375,6 @@ class AppRouter extends React.Component {
           />
           {/* Report */}
           <AppRoute
-            path="/app/freshlist/report/stockReport"
-            component={StockReport}
-          />
-          <AppRoute
             path="/app/freshlist/report/productReport"
             component={ProductReport}
           />
@@ -1391,6 +1447,86 @@ class AppRouter extends React.Component {
             component={BrandList}
           />
           {/* softNumen */}
+          <AppRoute
+            path="/app/softNumen/ticketing/CancelledService"
+            component={CancelledService}
+          />
+          <AppRoute
+            path="/app/softNumen/ticketing/CompletedService"
+            component={CompletedService}
+          />
+          <AppRoute
+            path="/app/softNumen/ticketing/DraftService"
+            component={DraftService}
+          />
+          <AppRoute
+            path="/app/softNumen/ticketing/PendingService"
+            component={PendingService}
+          />
+          <AppRoute
+            path="/app/softNumen/ticketing/RejectedService"
+            component={RejectedService}
+          />
+          <AppRoute
+            path="/app/softNumen/ticketing/ServiceRequest"
+            component={ServiceRequest}
+          />
+          <AppRoute
+            path="/app/softNumen/ticketing/TransferService"
+            component={TransferService}
+          />
+          <AppRoute
+            path="/app/softNumen/report/CustomerReports"
+            component={CustomerReports}
+          />
+          <AppRoute
+            path="/app/softNumen/report/EarningReport"
+            component={EarningReport}
+          />
+          <AppRoute
+            path="/app/softNumen/report/ProductReports"
+            component={ProductReports}
+          />
+          <AppRoute
+            path="/app/softNumen/report/StaffReport"
+            component={StaffReport}
+          />
+          <AppRoute
+            path="/app/softNumen/promotion/DiscountCoupon"
+            component={DiscountCoupon}
+          />
+          <AppRoute
+            path="/app/softNumen/media/ChatStatus"
+            component={ChatStatus}
+          />
+          <AppRoute
+            path="/app/softNumen/media/Livestreamstatus"
+            component={Livestreamstatus}
+          />
+          <AppRoute
+            path="/app/softNumen/support/HelpandSupports"
+            component={HelpandSupports}
+          />
+          <AppRoute
+            path="/app/softNumen/promotion/Promotion"
+            component={Promotion}
+          />
+          <AppRoute
+            path="/app/softNumen/report/TransactionReport"
+            component={TransactionReport}
+          />
+          <AppRoute
+            path="/app/softNumen/report/AdminReport"
+            component={AdminReport}
+          />
+          <AppRoute
+            path="/app/softNumen/report/stockReport"
+            component={StockReport}
+          />
+          <AppRoute
+            path="/app/softNumen/report/StockTransfer"
+            component={StockTransfer}
+          />
           <AppRoute
             path="/app/softNumen/warranty/SupplierWarranty"
             component={SupplierWarranty}
