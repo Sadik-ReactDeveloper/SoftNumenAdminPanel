@@ -35,22 +35,26 @@ const CustomerRegistration = () => {
 
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
+  const [formDataList, setFormDataList] = useState({});
+
   const [selectedCity, setSelectedCity] = useState(null);
   const [CustomerRegistView, setCustomerRegistView] = useState({});
   const [CustomerDropdown, setCustomerDropdown] = useState({});
-  const changeHandler = e => {
+
+  const changeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   useEffect(async () => {
     await Customer_Registration()
-      .then(res => {
+      .then((res) => {
         // console.log(res.data);
         const jsonAllData = xmlJs.xml2json(res.data, {
           compact: true,
           spaces: 2,
         });
         console.log(JSON.parse(jsonAllData));
+        debugger;
         setCustomerRegistView(JSON.parse(jsonAllData));
         setCustomerDropdown(JSON.parse(jsonAllData));
         xml2js.parseString(res?.data, (err, result) => {
@@ -61,7 +65,7 @@ const CustomerRegistration = () => {
           }
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }, []);
@@ -72,19 +76,26 @@ const CustomerRegistration = () => {
     console.log(State?.getStatesOfCountry(selectedCountry?.isoCode));
   }, [selectedCountry]);
 
-  const submitHandler = e => {
+  const submitHandler = (e) => {
     e.preventDefault();
     console.log("submitHandler", formData);
 
     axiosConfig
       .post("/admin/addcategory", formData)
-      .then(response => {
+      .then((response) => {
         console.log(response);
         this.props.history.push("/app/freshlist/order/orderList");
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
+  };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormDataList({
+      ...formDataList,
+      [name]: value,
+    });
   };
 
   return (
@@ -101,25 +112,60 @@ const CustomerRegistration = () => {
           <Form className="m-1" onSubmit={submitHandler}>
             <Row className="mb-2">
               {CustomerRegistView &&
-                CustomerRegistView.ProductRgistration?.input?.map((val, i) => {
-                  return (
-                    <Col key={i} lg="6" md="6" sm="12">
-                      <FormGroup>
-                        <Label>{val?.label?._text}</Label>
-                        <Input
-                          // type="date"
-                          type={val?.type?._attributes?.type}
-                          name={val?.name?._text}
-                          placeholder={val?.placeholder?._text}
-                          // onChange={changeHandler}
-                        />
-                      </FormGroup>
-                    </Col>
-                  );
-                })}
+                CustomerRegistView.CustomerRegistration?.input?.map(
+                  (val, i) => {
+                    return (
+                      <Col key={i} lg="6" md="6" sm="12">
+                        <FormGroup>
+                          <Label>{val?.label?._text}</Label>
+                          <Input
+                            // type="date"
+                            type={val?._attributes?.type}
+                            name={val?.name?._text}
+                            value={formDataList[val?.name?._text]}
+                            placeholder={val?.placeholder?._text}
+                            onChange={handleInputChange}
+                          />
+                        </FormGroup>
+                      </Col>
+                    );
+                  }
+                )}
 
-              {CustomerDropdown &&
-                CustomerDropdown?.ProductRgistration?.MyDropdown?.dropdown?.map(
+              <Col lg="6" md="6">
+                <Label>
+                  {CustomerDropdown &&
+                    CustomerDropdown?.CustomerRegistration?.MyDropdown?.dropdown
+                      ?.label?._text}
+                </Label>
+                <CustomInput
+                  type="select"
+                  className="form-control"
+                  name={
+                    CustomerDropdown?.CustomerRegistration?.MyDropdown?.dropdown
+                      ?.name?._text
+                  }
+                  value={
+                    formDataList[
+                      CustomerDropdown?.CustomerRegistration?.MyDropdown
+                        ?.dropdown?.name?._text
+                    ]
+                  }
+                  onChange={handleInputChange}
+                >
+                  <option value="">Select an option</option>
+                  {CustomerDropdown?.CustomerRegistration?.MyDropdown?.dropdown?.option.map(
+                    (option, index) => (
+                      <option key={index} value={option?._attributes?.value}>
+                        {/* {option?._text} */}
+                        {option?._attributes?.value}
+                      </option>
+                    )
+                  )}
+                </CustomInput>
+              </Col>
+              {/* {CustomerDropdown &&
+                CustomerDropdown?.CustomerRegistration?.MyDropdown?.dropdown?.map(
                   (val, i) => {
                     console.log(val);
                     return (
@@ -130,8 +176,8 @@ const CustomerRegistration = () => {
                           key={i}
                           className="form-control"
                           name={val?.name?._text}
-                          // value={selectedOption}
-                          // onChange={handleOptionChange}
+                          value={formDataList[val?.name?._text]}
+                          onChange={handleInputChange}
                         >
                           <option value="">Select an option</option>
                           {val?.option.map((option, index) => (
@@ -146,7 +192,7 @@ const CustomerRegistration = () => {
                       </Col>
                     );
                   }
-                )}
+                )} */}
               {/* <Col lg="6" md="6">
                 <FormGroup>
                   <Label>Order Date</Label>
