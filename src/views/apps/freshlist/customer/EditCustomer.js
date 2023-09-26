@@ -33,15 +33,15 @@ class EditCustomer extends React.Component {
     };
   }
 
-  onChangeHandler = event => {
+  onChangeHandler = (event) => {
     this.setState({ selectedFile: event.target.files[0] });
     this.setState({ selectedName: event.target.files[0].name });
     console.log(event.target.files[0]);
   };
-  changeHandler = e => {
+  changeHandler = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({ status: e.target.value });
   };
 
@@ -50,7 +50,7 @@ class EditCustomer extends React.Component {
     let { id } = this.props.match.params;
     axiosConfig
       .get(`/user/getviewone/${id}`)
-      .then(response => {
+      .then((response) => {
         console.log(response.data.data);
         this.setState({
           data: response.data.data,
@@ -59,12 +59,12 @@ class EditCustomer extends React.Component {
           phone: response.data.data.mobile,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   }
 
-  submitHandler = e => {
+  submitHandler = (e) => {
     e.preventDefault();
     console.log(this.props.match.params, this.state);
     const data = new FormData();
@@ -81,11 +81,11 @@ class EditCustomer extends React.Component {
     let { id } = this.props.match.params;
     axiosConfig
       .post(`/user/edituser/${id}`, data)
-      .then(response => {
+      .then((response) => {
         console.log(response);
         this.props.history.push("/app/freshlist/customer/editCustomer");
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -436,7 +436,7 @@ export default EditCustomer;
 //       .post(`/admin/edit_order/${id}`, this.state)
 //       .then((response) => {
 //         console.log(response);
-//         this.props.history.push("/app/freshlist/order/all");
+//         this.props.history.push("/app/softNumen/order/placeorder");
 //       })
 //       .catch((error) => {
 //         console.log(error.response.data);

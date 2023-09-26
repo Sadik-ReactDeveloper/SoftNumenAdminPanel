@@ -101,7 +101,7 @@ export class AddExorder extends Component {
       .then((response) => {
         console.log(response.data.data);
         swal("Success!", "Submitted SuccessFull!", "success");
-        this.props.history.push("/app/freshlist/order/all");
+        this.props.history.push("/app/softNumen/order/placeorder");
       })
       .catch((error) => {
         console.log(error);

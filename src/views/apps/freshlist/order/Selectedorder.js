@@ -545,7 +545,7 @@ class Selectedorder extends React.Component {
             toast.success(`Product Assigned`);
             swal("Order Created Succesfully");
             this.setState({ SelectedData: [] });
-            this.props.history.push("/app/freshlist/order/all");
+            this.props.history.push("/app/softNumen/order/placeorder");
           }
         })
         .catch((err) => {
@@ -587,7 +587,7 @@ class Selectedorder extends React.Component {
                           "SelectedProduct",
                           JSON.stringify(this.state.SelectedProduct)
                         );
-                        // history.push("/app/freshlist/order/all");
+                        // history.push("/app/softNumen/order/placeorder");
                       }}
                     >
                       Add

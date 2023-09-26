@@ -444,7 +444,7 @@ class ViewOneReport extends React.Component {
                       color="danger"
                       onClick={
                         () => history.goBack()
-                        // () => history.push("/app/freshlist/order/delivered")
+                        // () => history.push("/app/softNumen/order/completed")
                         // history.push("/app/freshlist/order/addOrder")
                       }
                     >

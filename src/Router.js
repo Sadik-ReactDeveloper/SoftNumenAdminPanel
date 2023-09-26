@@ -246,7 +246,7 @@ const Delivered = lazy(() => import("./views/apps/freshlist/order/Delivered"));
 const ViewDelivered = lazy(() =>
   import("./views/apps/freshlist/order/ViewDelivered")
 );
-const Returned = lazy(() => import("./views/apps/freshlist/order/Returned"));
+
 const ViewReturned = lazy(() =>
   import("./views/apps/freshlist/order/ViewReturned")
 );
@@ -257,8 +257,15 @@ const ViewFailedtodeliver = lazy(() =>
   import("./views/apps/freshlist/order/ViewFailedtodeliver")
 );
 const Canceled = lazy(() => import("./views/apps/freshlist/order/Canceled"));
+const Returned = lazy(() => import("./views/apps/freshlist/order/Returned"));
 const ViewCanceled = lazy(() =>
   import("./views/apps/freshlist/order/ViewCanceled")
+);
+const OrderTracking = lazy(() =>
+  import("./views/apps/freshlist/order/OrderTracking")
+);
+const PaymentGateway = lazy(() =>
+  import("./views/apps/freshlist/order/PaymentGateway")
 );
 //Refund Request
 
@@ -344,9 +351,6 @@ const SubCategoryList = lazy(() =>
   import("./views/apps/freshlist/subcategory/SubCategoryList")
 );
 const Bills = lazy(() => import("./views/apps/freshlist/subcategory/Bills"));
-const InvoiceGenerator = lazy(() =>
-  import("./views/apps/freshlist/subcategory/InvoiceGenerator")
-);
 
 const inVoiceRegenerator = lazy(() =>
   import("./views/apps/freshlist/subcategory/inVoiceRegenerator")
@@ -369,8 +373,62 @@ const EditSubCategory = lazy(() =>
   import("./views/apps/freshlist/subcategory/EditSubCategory")
 );
 
-// softnewmen
-// edit
+// softNumen
+
+const OemWarranty = lazy(() =>
+  import("./views/apps/freshlist/customer/WarrantyCLaims/OemWarranty")
+);
+const SupplierWarranty = lazy(() =>
+  import("./views/apps/freshlist/customer/WarrantyCLaims/SupplierWarranty")
+);
+const InvoiceGenerator = lazy(() =>
+  import("./views/apps/freshlist/subcategory/InvoiceGenerator")
+);
+const AddTaxSoft = lazy(() =>
+  import("./views/apps/freshlist/subcategory/AddTax")
+);
+const CourierShipping = lazy(() =>
+  import("./views/apps/freshlist/subcategory/CourierShipping")
+);
+const AddSupplier = lazy(() =>
+  import("./views/apps/freshlist/customer/Quotation/AddSupplier")
+);
+const CreateQuote = lazy(() =>
+  import("./views/apps/freshlist/customer/Quotation/CreateQuote")
+);
+const DebitNotes = lazy(() =>
+  import("./views/apps/freshlist/customer/Quotation/DebitNotes")
+);
+const EditNotes = lazy(() =>
+  import("./views/apps/freshlist/customer/Quotation/EditNotes")
+);
+const WareHouseListSoft = lazy(() =>
+  import("./views/apps/freshlist/customer/warehouse/WareHouseList")
+);
+const CreateWareHouse = lazy(() =>
+  import("./views/apps/freshlist/customer/warehouse/CreateWareHouse")
+);
+const InVoiceSystem = lazy(() =>
+  import("./views/apps/freshlist/customer/SystemManagement/InVoice")
+);
+const OrdersSystem = lazy(() =>
+  import("./views/apps/freshlist/customer/SystemManagement/Orders")
+);
+const PartsCatelogueSystem = lazy(() =>
+  import("./views/apps/freshlist/customer/SystemManagement/PartsCatelogue")
+);
+const ScrutinySystem = lazy(() =>
+  import("./views/apps/freshlist/customer/SystemManagement/Scrutiny")
+);
+const ServiceSystem = lazy(() =>
+  import("./views/apps/freshlist/customer/SystemManagement/Service")
+);
+const SparePartsSystem = lazy(() =>
+  import("./views/apps/freshlist/customer/SystemManagement/SpareParts")
+);
+const SupportsSystem = lazy(() =>
+  import("./views/apps/freshlist/customer/SystemManagement/Supports")
+);
 const EditProduct_Type = lazy(() =>
   import("./views/apps/Softnemen Parts/EditParts/EditProduct_Type")
 );
@@ -409,7 +467,7 @@ const AddColorList = lazy(() =>
 );
 const ColorList = lazy(() => import("./views/apps/Softnemen Parts/ColorList"));
 
-// softnewmen Product add
+// softNumen Product add
 const AddProductType = lazy(() =>
   import("./views/apps/Softnemen Parts/AddProductType")
 );
@@ -470,7 +528,15 @@ const AddProduct = lazy(() =>
   import("./views/apps/freshlist/house/AddProduct")
 );
 const ProductRegistration = lazy(() =>
-  import("./views/apps/freshlist/house/ProductRegistration")
+  import(
+    "./views/apps/freshlist/customer/ProductManagement/ProductRegistration"
+  )
+);
+const ProductSearch = lazy(() =>
+  import("./views/apps/freshlist/customer/ProductManagement/ProductSearch")
+);
+const ProductAttribute = lazy(() =>
+  import("./views/apps/freshlist/customer/ProductManagement/Attribute")
 );
 const EditMyProduct = lazy(() =>
   import("./views/apps/freshlist/house/EditProduct")
@@ -1078,7 +1144,7 @@ class AppRouter extends React.Component {
             component={AddGallery}
           />
           {/* order */}
-          <AppRoute path="/app/freshlist/order/all" component={All} />
+          <AppRoute path="/app/softNumen/order/placeorder" component={All} />
           <AppRoute
             path="/app/freshlist/order/Placeorder"
             component={Placeorder}
@@ -1108,7 +1174,7 @@ class AppRouter extends React.Component {
             component={ViewOneReceivedOrder}
           />
           <AppRoute
-            path="/app/freshlist/order/purchasedorder"
+            path="/app/softnumen/order/purchaseinvoices"
             component={PurchasedOrder}
           />
           <AppRoute path="/app/freshlist/order/AddOrder" component={AddOrder} />
@@ -1120,13 +1186,13 @@ class AppRouter extends React.Component {
             path="/app/freshlist/order/viewAll/:id"
             component={ViewAll}
           />
-          <AppRoute path="/app/freshlist/order/pending" component={Pending} />
+          <AppRoute path="/app/softNumen/order/pending" component={Pending} />
           <AppRoute
             path="/app/freshlist/order/viewPending"
             component={ViewPending}
           />
           <AppRoute
-            path="/app/freshlist/order/confirmed"
+            path="/app/softNumen/order/received"
             component={Confirmed}
           />
           <AppRoute
@@ -1150,14 +1216,14 @@ class AppRouter extends React.Component {
             component={ViewOutfordelivery}
           />
           <AppRoute
-            path="/app/freshlist/order/delivered"
+            path="/app/softNumen/order/completed"
             component={Delivered}
           />
           <AppRoute
             path="/app/freshlist/order/viewDelivered"
             component={ViewDelivered}
           />
-          <AppRoute path="/app/freshlist/order/returned" component={Returned} />
+          <AppRoute path="/app/softNumen/order/returned" component={Returned} />
           <AppRoute
             path="/app/freshlist/order/viewReturned"
             component={ViewReturned}
@@ -1170,12 +1236,29 @@ class AppRouter extends React.Component {
             path="/app/freshlist/order/viewFailedtodeliver"
             component={ViewFailedtodeliver}
           />
-          <AppRoute path="/app/freshlist/order/canceled" component={Canceled} />
+          <AppRoute path="/app/softNumen/order/canceled" component={Canceled} />
           <AppRoute
             path="/app/freshlist/order/viewCanceled"
             component={ViewCanceled}
           />
+          <AppRoute
+            path="/app/SoftNumen/order/OrderTracking"
+            component={OrderTracking}
+          />
+          <AppRoute
+            path="/app/SoftNumen/order/PaymentGateway"
+            component={PaymentGateway}
+          />
           {/* Refund Request */}
+          <AppRoute
+            path="/app/softnumen/InvoiceGenerator"
+            component={InvoiceGenerator}
+          />
+          <AppRoute path="/app/softnumen/AddTaxSoft" component={AddTaxSoft} />
+          <AppRoute
+            path="/app/softnumen/CourierShipping"
+            component={CourierShipping}
+          />
           <AppRoute
             path="/app/freshlist/refundrequest/addrefund"
             component={AddRefund}
@@ -1197,7 +1280,7 @@ class AppRouter extends React.Component {
             component={ViewApprovedRequest}
           />
           <AppRoute
-            path="/app/freshlist/refundrequest/rejectedRequest"
+            path="/app/softnumen/rejectedRequest"
             component={RejectedRequest}
           />
           <AppRoute
@@ -1279,10 +1362,6 @@ class AppRouter extends React.Component {
           />
           <AppRoute path="/app/freshlist/subcategory/Bills" component={Bills} />
           <AppRoute
-            path="/app/freshlist/subcategory/InvoiceGenerator"
-            component={InvoiceGenerator}
-          />
-          <AppRoute
             path="/app/freshlist/subcategory/inVoices"
             component={inVoices}
           />
@@ -1311,13 +1390,73 @@ class AppRouter extends React.Component {
             path="/app/freshlist/brand/brandList"
             component={BrandList}
           />
-          {/* softnewmen */}
+          {/* softNumen */}
           <AppRoute
-            path="/app/softnewmen/inhouse/EditProduct_Type/:id"
+            path="/app/softNumen/warranty/SupplierWarranty"
+            component={SupplierWarranty}
+          />
+          <AppRoute
+            path="/app/softNumen/warranty/OEMWarranty"
+            component={OemWarranty}
+          />
+          <AppRoute
+            path="/app/softNumen/system/AddSupplier"
+            component={AddSupplier}
+          />
+          <AppRoute
+            path="/app/softNumen/system/CreateQuote"
+            component={CreateQuote}
+          />
+          <AppRoute
+            path="/app/softNumen/system/DebitNotes"
+            component={DebitNotes}
+          />
+          <AppRoute
+            path="/app/softNumen/system/EditNotes"
+            component={EditNotes}
+          />
+          <AppRoute
+            path="/app/softNumen/system/WareHouseListSoft"
+            component={WareHouseListSoft}
+          />
+          <AppRoute
+            path="/app/softNumen/system/CreateWareHouse"
+            component={CreateWareHouse}
+          />
+          <AppRoute
+            path="/app/softNumen/system/SupportsSystem"
+            component={SupportsSystem}
+          />
+          <AppRoute
+            path="/app/softNumen/system/SparePartsSystem"
+            component={SparePartsSystem}
+          />
+          <AppRoute
+            path="/app/softNumen/system/ServiceSystem"
+            component={ServiceSystem}
+          />
+          <AppRoute
+            path="/app/softNumen/system/ScrutinySystem"
+            component={ScrutinySystem}
+          />
+          <AppRoute
+            path="/app/softNumen/system/PartsCatelogueSystem"
+            component={PartsCatelogueSystem}
+          />
+          <AppRoute
+            path="/app/softNumen/system/InVoiceSystem"
+            component={InVoiceSystem}
+          />
+          <AppRoute
+            path="/app/softNumen/system/OrdersSystem"
+            component={OrdersSystem}
+          />
+          <AppRoute
+            path="/app/softNumen/inhouse/EditProduct_Type/:id"
             component={EditProduct_Type}
           />
           <AppRoute
-            path="/app/softnewmen/inhouse/productType"
+            path="/app/softNumen/inhouse/productType"
             component={Soft_ProductType}
           />
           <AppRoute
@@ -1325,8 +1464,16 @@ class AppRouter extends React.Component {
             component={AddProductType}
           />
           <AppRoute
-            path="/app/SoftNumen/house/ProductRegistration"
+            path="/app/SoftNumen/product/ProductRegistration"
             component={ProductRegistration}
+          />
+          <AppRoute
+            path="/app/SoftNumen/product/ProductSearch"
+            component={ProductSearch}
+          />
+          <AppRoute
+            path="/app/SoftNumen/product/ProductAttribute"
+            component={ProductAttribute}
           />
           <AppRoute path="/app/Producttype/Addmodel" component={Addmodel} />
           <AppRoute

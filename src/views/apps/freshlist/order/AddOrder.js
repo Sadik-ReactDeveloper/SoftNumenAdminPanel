@@ -95,7 +95,7 @@ export default AddOrder;
 //       .post(`/admin/edit_order/${id}`, this.state)
 //       .then((response) => {
 //         console.log(response);
-//         this.props.history.push("/app/freshlist/order/all");
+//         this.props.history.push("/app/softNumen/order/placeorder");
 //       })
 //       .catch((error) => {
 //         console.log(error.response.data);
@@ -141,7 +141,7 @@ export default AddOrder;
 //                 render={({ history }) => (
 //                   <Button
 //                     className=" btn btn-danger float-right"
-//                     onClick={() => history.push("/app/freshlist/order/all")}
+//                     onClick={() => history.push("/app/softNumen/order/placeorder")}
 //                   >
 //                     Back
 //                   </Button>

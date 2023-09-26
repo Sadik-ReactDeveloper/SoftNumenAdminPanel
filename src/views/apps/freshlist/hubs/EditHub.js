@@ -62,7 +62,7 @@ export default class EditHub extends Component {
       .post(`/admin/edit_order/${id}`, this.state)
       .then((response) => {
         console.log(response);
-        this.props.history.push("/app/freshlist/order/all");
+        this.props.history.push("/app/softNumen/order/placeorder");
       })
       .catch((error) => {
         console.log(error.response.data);

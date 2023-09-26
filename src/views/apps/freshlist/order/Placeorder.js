@@ -599,7 +599,9 @@ class Placeorder extends React.Component {
                       <Button
                         className="float-right mt-1 "
                         color="primary"
-                        onClick={() => history.push("/app/freshlist/order/all")}
+                        onClick={() =>
+                          history.push("/app/softNumen/order/placeorder")
+                        }
                       >
                         Back
                       </Button>

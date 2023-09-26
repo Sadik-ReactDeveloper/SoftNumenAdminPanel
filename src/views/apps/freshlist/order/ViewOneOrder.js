@@ -1020,7 +1020,7 @@ class ViewOneOrder extends React.Component {
                       className=" float-right"
                       color="primary"
                       onClick={
-                        () => history.push("/app/freshlist/order/pending")
+                        () => history.push("/app/softNumen/order/pending")
                         // history.push("/app/freshlist/order/addOrder")
                       }
                     >

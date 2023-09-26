@@ -163,7 +163,7 @@ const ProductRegistration = () => {
           setS_Street("");
           setS_PinCode("");
         }
-        // this.props.history.push("/app/freshlist/order/all");
+        // this.props.history.push("/app/softNumen/order/placeorder");
       })
       .catch((error) => {
         console.log(error);

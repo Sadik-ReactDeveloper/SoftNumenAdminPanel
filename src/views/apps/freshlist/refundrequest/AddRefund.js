@@ -90,7 +90,7 @@ export class AddRefund extends Component {
       .then((response) => {
         console.log(response.data.data);
         swal("Success!", "Submitted SuccessFull!", "success");
-        this.props.history.push("/app/freshlist/order/all");
+        this.props.history.push("/app/softNumen/order/placeorder");
       })
       .catch((error) => {
         console.log(error);
@@ -112,7 +112,9 @@ export class AddRefund extends Component {
                 render={({ history }) => (
                   <Button
                     className=" btn btn-danger float-right"
-                    onClick={() => history.push("/app/freshlist/order/all")}
+                    onClick={() =>
+                      history.push("/app/softNumen/order/placeorder")
+                    }
                   >
                     Back
                   </Button>
