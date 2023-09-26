@@ -7,6 +7,7 @@ import {
   Create_Parts,
   customerRegistration,
   Product_Registration,
+  Create_Account_save,
 } from "./Api";
 import axiosConfig from "../axiosConfig";
 
@@ -28,6 +29,12 @@ export const CreateRole = async () => {
 export const CreateAccountView = async () => {
   let response = await axiosConfig
     .get(`${Create_Account_xmlView}`)
+    .then((res) => res.data);
+  return response;
+};
+export const CreateAccountSave = async (data) => {
+  let response = await axiosConfig
+    .post(`${Create_Account_save}`, data)
     .then((res) => res.data);
   return response;
 };
