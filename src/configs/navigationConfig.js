@@ -140,7 +140,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/house/userlist",
+        navLink: "/app/softNumen/system/SparePartsSystem",
       },
 
       {
@@ -149,7 +149,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/account/addRoleNew",
+        navLink: "/app/softNumen/system/OrdersSystem",
       },
 
       {
@@ -158,7 +158,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/Trupee/account/RoleList",
+        navLink: "/app/softNumen/system/PartsCatelogueSystem",
       },
       {
         id: "Scrutiny/inspections",
@@ -166,7 +166,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/Trupee/account/RoleList",
+        navLink: "/app/softNumen/system/ScrutinySystem",
       },
       {
         id: "Invoice/Billing",
@@ -174,7 +174,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/Trupee/account/RoleList",
+        navLink: "/app/softNumen/system/InVoiceSystem",
       },
       {
         id: "supports",
@@ -182,7 +182,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/Trupee/account/RoleList",
+        navLink: "/app/softNumen/system/SupportsSystem",
       },
       {
         id: "service",
@@ -190,7 +190,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/Trupee/account/RoleList",
+        navLink: "/app/softNumen/system/ServiceSystem",
       },
       // {
       //   id: "service",
@@ -219,7 +219,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/house/ProductDashboard",
+        navLink: "/app/softNumen/system/WareHouseListSoft",
       },
     ],
   },
@@ -241,7 +241,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/house/ProductDashboard",
+        navLink: "/app/softNumen/system/AddSupplier",
       },
       {
         id: "Create Quote",
@@ -249,7 +249,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/house/ProductDashboard",
+        navLink: "/app/softNumen/system/CreateQuote",
       },
       {
         id: "Edit Notes",
@@ -257,7 +257,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/house/ProductDashboard",
+        navLink: "/app/softNumen/system/EditNotes",
       },
       {
         id: "Debit Notes",
@@ -265,7 +265,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/house/ProductDashboard",
+        navLink: "/app/softNumen/system/DebitNotes",
       },
     ],
   },
@@ -286,7 +286,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/SoftNumen/house/ProductRegistration",
+        navLink: "/app/SoftNumen/product/ProductRegistration",
       },
       {
         id: "Product Search",
@@ -294,7 +294,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/house/ProductDashboard",
+        navLink: "/app/SoftNumen/product/ProductSearch",
       },
       // {
       //   id: "type",
@@ -351,7 +351,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/options/AttributeList",
+        navLink: "/app/SoftNumen/product/ProductAttribute",
       },
       // {
       //   id: "productlist",
@@ -396,7 +396,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/softnewmen/inhouse/productType",
+        navLink: "/app/softNumen/inhouse/productType",
         // navLink: "/app/freshlist/category/categoryList",
       },
       {
@@ -503,7 +503,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/order/all",
+        navLink: "/app/softNumen/order/placeorder",
       },
       {
         id: "pending ",
@@ -511,7 +511,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/order/pending",
+        navLink: "/app/softNumen/order/pending",
       },
       {
         id: "confirmed",
@@ -519,7 +519,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/order/confirmed",
+        navLink: "/app/softNumen/order/received",
       },
       // {
       //   id: "inprocess ",
@@ -543,7 +543,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/order/delivered",
+        navLink: "/app/softNumen/order/completed",
       },
       {
         id: "Rejected",
@@ -551,7 +551,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/order/returned",
+        navLink: "/app/softnumen/rejectedRequest",
       },
       // {
       //   id: "failedtodeliver",
@@ -567,7 +567,8 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/order/canceled",
+        navLink: "/app/softNumen/order/returned",
+        // navLink: "/app/softNumen/order/canceled",
       },
       {
         id: "canceled",
@@ -575,7 +576,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/order/canceled",
+        navLink: "/app/softNumen/order/canceled",
       },
       {
         id: "PaymentGateway",
@@ -583,7 +584,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/order/canceled",
+        navLink: "/app/SoftNumen/order/PaymentGateway",
       },
       {
         id: "ordertracking",
@@ -591,7 +592,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/order/canceled",
+        navLink: "/app/SoftNumen/order/OrderTracking",
       },
     ],
   },
@@ -612,7 +613,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/order/purchasedorder",
+        navLink: "/app/softnumen/order/purchaseinvoices",
       },
       // {
       //   id: "Bills",
@@ -628,7 +629,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/subcategory/InvoiceGenerator",
+        navLink: "/app/softnumen/InvoiceGenerator",
       },
       {
         id: "addtax",
@@ -636,7 +637,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/subcategory/InvoiceGenerator",
+        navLink: "/app/softnumen/AddTaxSoft",
       },
       {
         id: "Courier/Shipping Charges",
@@ -644,7 +645,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/subcategory/InvoiceGenerator",
+        navLink: "/app/softnumen/CourierShipping",
       },
       // {
       //   id: "invoice Re-Generator",
@@ -719,7 +720,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/cart/budgetlist",
+        navLink: "/app/softNumen/warranty/OEMWarranty",
       },
       {
         id: "Suppier Warranty",
@@ -727,7 +728,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={15} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/cart/budgetlist",
+        navLink: "/app/softNumen/warranty/SupplierWarranty",
       },
     ],
   },

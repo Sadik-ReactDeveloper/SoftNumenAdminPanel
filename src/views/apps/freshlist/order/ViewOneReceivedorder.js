@@ -910,7 +910,7 @@ class ViewOneReceivedorder extends React.Component {
       .then((res) => {
         console.log(res.data);
         if (res.data.success) {
-          this.props.history.push("/app/freshlist/order/confirmed");
+          this.props.history.push("/app/softNumen/order/received");
           swal("order Dispatched Successfully");
         }
       })
@@ -1005,7 +1005,7 @@ class ViewOneReceivedorder extends React.Component {
                       className=" float-right"
                       color="danger"
                       onClick={() =>
-                        history.push("/app/freshlist/order/confirmed")
+                        history.push("/app/softNumen/order/received")
                       }
                     >
                       Back

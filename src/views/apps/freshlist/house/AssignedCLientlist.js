@@ -525,7 +525,7 @@ class AssignedCLientlist extends React.Component {
   //             toast.success(`Product Assigned`);
   //             swal("Order Created Succesfully");
   //             this.setState({ SelectedData: [] });
-  //             this.props.history.push("/app/freshlist/order/all");
+  //             this.props.history.push("/app/softNumen/order/placeorder");
   //           }
   //         })
   //         .catch((err) => {

@@ -13,31 +13,25 @@ import {
   CardTitle,
   CardText,
   Label,
-  FormGroup,
 } from "reactstrap";
-import axios from "axios";
-import axiosConfig from "../../../../axiosConfig";
+import axiosConfig from "../../../../../axiosConfig";
 import ReactHtmlParser from "react-html-parser";
-import { ContextLayout } from "../../../../utility/context/Layout";
+import { ContextLayout } from "../../../../../utility/context/Layout";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
-import { Eye, Trash2, ChevronDown, Edit, CloudLightning } from "react-feather";
-
-import { history } from "../../../../history";
-import "../../../../assets/scss/plugins/tables/_agGridStyleOverride.scss";
-import "../../../../assets/scss/pages/users.scss";
-import { FaWallet, Facart, FaCartArrowDown, FaBoxOpen } from "react-icons/fa";
+import { Trash2, ChevronDown, Edit } from "react-feather";
+import { history } from "../../../../../history";
+import "../../../../../assets/scss/plugins/tables/_agGridStyleOverride.scss";
+import "../../../../../assets/scss/pages/users.scss";
+import Moment from "react-moment";
+import { FaLock } from "react-icons/fa";
 import "moment-timezone";
 import { Route } from "react-router-dom";
-import { timers } from "jquery";
+import swal from "sweetalert";
 
-class AddedPlaceorder extends React.Component {
+class PartsCatelogue extends React.Component {
   state = {
-    product: [],
     rowData: [],
-    Typelist: [],
-    SelectedProduct: [],
-    Type: "",
     Viewpermisson: null,
     Editpermisson: null,
     Createpermisson: null,
@@ -47,9 +41,8 @@ class AddedPlaceorder extends React.Component {
     getPageSize: "",
     defaultColDef: {
       sortable: true,
-      editable: true,
+      // editable: true,
       resizable: true,
-      rowSelection: "multiple",
       suppressMenu: true,
     },
     columnDefs: [
@@ -58,33 +51,49 @@ class AddedPlaceorder extends React.Component {
         valueGetter: "node.rowIndex + 1",
         field: "node.rowIndex + 1",
         // checkboxSelection: true,
-        width: 150,
+        width: 100,
         filter: true,
+      },
+      {
+        headerName: "Role",
+        field: "role",
+        filter: "agSetColumnFilter",
+        width: 120,
         cellRendererFramework: (params) => {
           return (
             <div className="d-flex align-items-center cursor-pointer">
               <div className="">
-                <input
-                  className="addinarray"
-                  onClick={(e) => {
-                    console.log(e.target.checked);
-                    if (e.target.checked) {
-                      console.log(this.state.SelectedProduct);
-                      this.setState({
-                        SelectedProduct: this.state.SelectedProduct.concat(
-                          params.data
-                        ),
-                      });
-                    } else {
-                      let data = this.state.SelectedProduct.filter((ele, i) => {
-                        if (ele?.id === params?.data?.id) {
-                          this.state.SelectedProduct.splice(i, 1);
-                        }
-                      });
-                    }
-                  }}
-                  type="checkbox"
-                />
+                <span>{params?.data?.role}</span>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        headerName: "FullName",
+        field: "full_name",
+        filter: "agSetColumnFilter",
+        width: 150,
+        cellRendererFramework: (params) => {
+          return (
+            <div className="d-flex align-items-center cursor-pointer">
+              <div className="">
+                <span>{params?.data?.full_name}</span>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        headerName: "Username",
+        field: "username",
+        filter: "agSetColumnFilter",
+        width: 150,
+        cellRendererFramework: (params) => {
+          return (
+            <div className="d-flex align-items-center cursor-pointer">
+              <div className="">
+                <span>{params?.data?.username}</span>
               </div>
             </div>
           );
@@ -92,224 +101,214 @@ class AddedPlaceorder extends React.Component {
       },
 
       {
-        headerName: "PRODUCT Image",
-        field: "product",
+        headerName: "created by",
+        field: "created_by",
         filter: "agSetColumnFilter",
         width: 150,
         cellRendererFramework: (params) => {
+          // console.log(params?.data);
           return (
             <div className="d-flex align-items-center cursor-pointer">
               <div className="">
-                {/* <span>{params.data?.title}</span> */}
-                {params?.data?.product_images ? (
-                  <img
-                    style={{ borderRadius: "12px" }}
-                    width="60px"
-                    height="40px"
-                    src={params?.data?.product_images[0]}
-                    alt="image"
-                  />
-                ) : (
-                  "No Image "
-                )}
+                <span>{params?.data?.created_by_name}</span>
               </div>
             </div>
           );
         },
       },
-      {
-        headerName: "brand_name",
-        field: "brand_name",
-        filter: "agSetColumnFilter",
-        width: 150,
-        cellRendererFramework: (params) => {
-          return (
-            <div className="d-flex align-items-center cursor-pointer">
-              <div className="">
-                <span>{params.data?.brand_name}</span>
-              </div>
-            </div>
-          );
-        },
-      },
-      {
-        headerName: "product_type",
-        field: "product_type",
-        filter: "agSetColumnFilter",
-        width: 150,
-        cellRendererFramework: (params) => {
-          return (
-            <div className="d-flex align-items-center cursor-pointer">
-              <div className="">
-                <span>{params.data?.product_type}</span>
-              </div>
-            </div>
-          );
-        },
-      },
-      {
-        headerName: "PRODUCT",
-        field: "title",
-        filter: "agSetColumnFilter",
-        width: 150,
-        cellRendererFramework: (params) => {
-          return (
-            <div className="d-flex align-items-center cursor-pointer">
-              <div className="">
-                <span>{params.data?.title}</span>
-              </div>
-            </div>
-          );
-        },
-      },
-      {
-        headerName: "CATEGORY",
-        field: "category_name",
-        filter: "agSetColumnFilter",
-        width: 150,
-        cellRendererFramework: (params) => {
-          return (
-            <div className="d-flex align-items-center cursor-pointer">
-              <div className="">
-                <span>{params.data?.category_name}</span>
-              </div>
-            </div>
-          );
-        },
-      },
-      {
-        headerName: "Description",
-        field: "description",
-        filter: "agSetColumnFilter",
-        width: 120,
-        cellRendererFramework: (params) => {
-          return (
-            <div className="d-flex align-items-center cursor-pointer">
-              <div className="">
-                <span>{ReactHtmlParser(params.data?.description)}</span>
-              </div>
-            </div>
-          );
-        },
-      },
-      {
-        headerName: "PRICE",
-        field: "price",
-        filter: "agSetColumnFilter",
-        width: 120,
-        cellRendererFramework: (params) => {
-          return (
-            <div className="d-flex align-items-center cursor-pointer">
-              <div className="">
-                <span>{params.data?.price}</span>
-              </div>
-            </div>
-          );
-        },
-      },
-      {
-        headerName: "DiscountPrice",
-        field: "discountprice",
-        filter: "agSetColumnFilter",
-        width: 120,
-        cellRendererFramework: (params) => {
-          return (
-            <div className="d-flex align-items-center cursor-pointer">
-              <div className="">
-                <span>{params.data?.discountprice}</span>
-              </div>
-            </div>
-          );
-        },
-      },
-      {
-        headerName: "Shipping Fee",
-        field: "shipping_fee",
-        filter: "agSetColumnFilter",
-        width: 120,
-        cellRendererFramework: (params) => {
-          return (
-            <div className="d-flex align-items-center cursor-pointer">
-              <div className="">
-                <span>{params.data?.shipping_fee}</span>
-              </div>
-            </div>
-          );
-        },
-      },
-      {
-        headerName: "Tax Rate",
-        field: "tax_rate",
-        filter: "agSetColumnFilter",
-        width: 120,
-        cellRendererFramework: (params) => {
-          return (
-            <div className="d-flex align-items-center cursor-pointer">
-              <div className="">
-                <span>{params.data?.tax_rate}</span>
-              </div>
-            </div>
-          );
-        },
-      },
-      {
-        headerName: "Tags",
-        field: "tags",
-        filter: "agSetColumnFilter",
-        width: 120,
-        cellRendererFramework: (params) => {
-          return (
-            <div className="d-flex align-items-center cursor-pointer">
-              <div className="">
-                <span>{params.data?.tags}</span>
-              </div>
-            </div>
-          );
-        },
-      },
-      {
-        headerName: "STOCK",
-        field: "stock",
 
+      {
+        headerName: "Email",
+        field: "email",
         filter: "agSetColumnFilter",
-        width: 150,
+        width: 230,
         cellRendererFramework: (params) => {
           return (
             <div className="d-flex align-items-center cursor-pointer">
               <div className="">
-                <span>{ReactHtmlParser(params.data?.stock)}</span>
+                <span>{params?.data?.email}</span>
               </div>
             </div>
           );
         },
       },
       {
-        headerName: "Created ",
-        field: "created_date",
+        headerName: "Mobile No.",
+        field: "mobile",
         filter: "agSetColumnFilter",
-        width: 120,
+        width: 150,
         cellRendererFramework: (params) => {
           return (
             <div className="d-flex align-items-center cursor-pointer">
               <div className="">
-                <span>
-                  {ReactHtmlParser(params.data?.created_date?.split(" ")[0])}
-                </span>
+                <span>{params?.data?.mobile}</span>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        headerName: "Phone No.",
+        field: "phone_no",
+        filter: "agSetColumnFilter",
+        width: 150,
+        cellRendererFramework: (params) => {
+          return (
+            <div className="d-flex align-items-center cursor-pointer">
+              <div className="">
+                <span>{params?.data?.phone_no}</span>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        headerName: "companyname.",
+        field: "company_name",
+        filter: "agSetColumnFilter",
+        width: 150,
+        cellRendererFramework: (params) => {
+          return (
+            <div className="d-flex align-items-center cursor-pointer">
+              <div className="">
+                <span>{params?.data?.company_name}</span>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        headerName: "companytype.",
+        field: "company_type",
+        filter: "agSetColumnFilter",
+        width: 150,
+        cellRendererFramework: (params) => {
+          return (
+            <div className="d-flex align-items-center cursor-pointer">
+              <div className="">
+                <span>{params?.data?.company_type}</span>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        headerName: "GSTIN",
+        field: "company_type",
+        filter: "agSetColumnFilter",
+        width: 150,
+        cellRendererFramework: (params) => {
+          return (
+            <div className="d-flex align-items-center cursor-pointer">
+              <div className="">
+                <span>{params?.data?.gstin_no}</span>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        headerName: "place of supply.",
+        field: "place_supply",
+        filter: "agSetColumnFilter",
+        width: 180,
+        cellRendererFramework: (params) => {
+          return (
+            <div className="d-flex align-items-center cursor-pointer">
+              <div className="">
+                <span>{params?.data?.place_supply}</span>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        headerName: "billing Address.",
+        field: "billing_city",
+        filter: "agSetColumnFilter",
+        width: 180,
+        cellRendererFramework: (params) => {
+          return (
+            <div className="d-flex align-items-center cursor-pointer">
+              {/* {this.state.billing_street && ( */}
+              <div className="">
+                <span>{params?.data?.billing_street} </span>
+                <span>{params?.data?.billing_city},</span>
+                <span>{params?.data?.billing_state},</span>
+                <span>{params?.data?.billing_country}, </span>
+                <span>{params?.data?.billing_pincode}</span>
+              </div>
+              {/* )} */}
+            </div>
+          );
+        },
+      },
+      {
+        headerName: "Shipping Address.",
+        field: "billing_city",
+        filter: "agSetColumnFilter",
+        width: 180,
+        cellRendererFramework: (params) => {
+          return (
+            <div className="d-flex align-items-center cursor-pointer">
+              <div className="">
+                {/* {this.state.shipping_city && ( */}
+                <div>
+                  <span>{params?.data?.shipping_street},</span>
+                  <span>{params?.data?.shipping_state},</span>
+                  <span>{params?.data?.shipping_city},</span>
+                  <span>{params?.data?.shipping_country},</span>
+                  <span>{params?.data?.shipping_pincode}</span>
+                </div>
+                {/* )} */}
+              </div>
+            </div>
+          );
+        },
+      },
+
+      {
+        headerName: "Status",
+        field: "status",
+        filter: "agSetColumnFilter",
+        width: 150,
+        cellRendererFramework: (params) => {
+          return (
+            <div className="d-flex align-items-center cursor-pointer">
+              <div className="">
+                <span>{params?.data?.status}</span>
               </div>
             </div>
           );
         },
       },
       // {
-      //   headerName: "SALES",
+      //   headerName: "ORDER",
       //   field: "pisces",
+
       //   filter: "agSetColumnFilter",
       //   width: 120,
       //   cellRendererFramework: (params) => {
       //     return (
       //       <div className="d-flex align-items-center cursor-pointer">
       //         <div className="">
-      //           <span>{ReactHtmlParser(params.data.pisces)}</span>
+      //           <span>vfdsvsd</span>
+      //         </div>
+      //       </div>
+      //     );
+      //   },
+      // },
+      // {
+      //   headerName: "SALES",
+      //   field: "pisces",
+
+      //   filter: "agSetColumnFilter",
+      //   width: 120,
+      //   cellRendererFramework: (params) => {
+      //     return (
+      //       <div className="d-flex align-items-center cursor-pointer">
+      //         <div className="">
+      //           <span>vfdsvds</span>
       //         </div>
       //       </div>
       //     );
@@ -322,42 +321,48 @@ class AddedPlaceorder extends React.Component {
         cellRendererFramework: (params) => {
           return (
             <div className="actions cursor-pointer">
-              {/* {this.state.Viewpermisson && (
-                <Eye
-                  className="mr-50"
-                  size="25px"
-                  color="green"
-                  onClick={() =>
-                    history.push(
-                      `/app/freshlist/order/viewAll/${params.data.id}`
-                    )
-                  }
-                />
-              )} */}
-              {this.state.Editpermisson && (
-                <Edit
-                  className="mr-50"
-                  size="25px"
-                  color="blue"
-                  onClick={() =>
-                    this.props.history.push({
-                      pathname: `/app/freshlist/house/editmyproduct/${params.data?.id}`,
-                      state: params.data,
-                    })
-                  }
-                />
-              )}
               {this.state.Deletepermisson && (
                 <Trash2
                   className="mr-50"
                   size="25px"
                   color="Red"
                   onClick={() => {
-                    let selectedData = this.gridApi.getSelectedRows();
-
-                    this.runthisfunction(params.data?.id);
-                    this.gridApi.updateRowData({ remove: selectedData });
+                    this.runthisfunction(params?.data?.id);
                   }}
+                />
+              )}
+
+              {this.state.Editpermisson && (
+                <Route
+                  render={({ history }) => (
+                    <Edit
+                      className="mr-50"
+                      size="25px"
+                      color="green"
+                      onClick={() =>
+                        history.push(
+                          `/app/freshlist/house/editProductType/${params?.data?.id}`
+                        )
+                      }
+                    />
+                  )}
+                />
+              )}
+
+              {this.state.Createpermisson && (
+                <Route
+                  render={({ history }) => (
+                    <FaLock
+                      className="mr-50"
+                      size="25px"
+                      color="blue"
+                      onClick={() =>
+                        history.push(
+                          `/app/freshlist/account/UpdateExistingRole/${params?.data?.role}`
+                        )
+                      }
+                    />
+                  )}
                 />
               )}
             </div>
@@ -366,16 +371,12 @@ class AddedPlaceorder extends React.Component {
       },
     ],
   };
-  componentDidUpdate() {
-    console.log(this.state.SelectedProduct);
-  }
+
   async componentDidMount() {
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
-
     let newparmisson = pageparmission?.role?.find(
-      (value) => value?.pageName === "Place Order"
+      (value) => value?.pageName === "User List"
     );
-
     this.setState({ Viewpermisson: newparmisson?.permission.includes("View") });
     this.setState({
       Createpermisson: newparmisson?.permission.includes("Create"),
@@ -390,41 +391,44 @@ class AddedPlaceorder extends React.Component {
     const formdata = new FormData();
     formdata.append("user_id", pageparmission?.Userinfo?.id);
     formdata.append("role", pageparmission?.Userinfo?.role);
-
-    await axiosConfig
-      .post("/productlistapi", formdata)
-      .then((response) => {
-        this.setState({ rowData: response.data.data });
-        // console.log(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
-
-    axiosConfig.post("/producttypelistview", formdata).then((response) => {
-      let Typelist = response.data.data;
-      // console.log(Typelist);
-      this.setState({ Typelist });
+    await axiosConfig.post("/getuserlist", formdata).then((response) => {
+      // console.log(response);
+      let rowData = response?.data?.data?.users;
+      this.setState({ rowData });
     });
   }
-
-  async runthisfunction(id) {
-    console.log(id);
-    let data = new FormData();
-    data.append("id", id);
-    await axiosConfig
-      .post("/deleteproduct", data)
-      .then((resp) => {
-        console.log(resp);
-      })
-      .then((response) => {
-        console.log(response);
-      });
+  getUserList = async () => {
+    const formdata = new FormData();
+    formdata.append("user_id", pageparmission?.Userinfo?.id);
+    formdata.append("role", pageparmission?.Userinfo?.role);
+    await axiosConfig.post("/getuserlist", formdata).then((response) => {
+      console.log(response);
+      let rowData = response?.data?.data?.users;
+      this.setState({ rowData });
+    });
+  };
+  runthisfunction(id) {
+    swal("Warning", "Sure You Want to Delete it", {
+      buttons: {
+        cancel: "cancel",
+        catch: { text: "Delete ", value: "delete" },
+      },
+    }).then((value) => {
+      switch (value) {
+        case "delete":
+          const formData = new FormData();
+          formData.append("user_id", id);
+          axiosConfig.post(`/userdelete`, formData).then((response) => {
+            this.getUserList();
+          });
+          break;
+        default:
+      }
+    });
   }
 
   onGridReady = (params) => {
     this.gridApi = params.api;
-    // console.log(params.api);
     this.gridColumnApi = params.columnApi;
     this.setState({
       currenPageSize: this.gridApi.paginationGetCurrentPage() + 1,
@@ -450,47 +454,152 @@ class AddedPlaceorder extends React.Component {
     const { rowData, columnDefs, defaultColDef } = this.state;
     return (
       <>
+        {/* <Row>
+          <Col lg="4" md="12">
+            <Card
+              className="bg-secondary  py-3 "
+              body
+              inverse
+              style={{ borderColor: "white" }}
+            >
+              <CardTitle
+                className="fntweight"
+                tag="h3"
+                style={{ color: "black", fontSize: "16px" }}
+              >
+                <FaBoxOpen style={{ color: "orange" }} />
+                &nbsp;&nbsp; Total Products
+              </CardTitle>
+              <CardText
+                className="wt-text"
+                tag="span"
+                style={{ color: "black", marginLeft: "4px" }}
+              >
+                {this.state.product}
+              </CardText>
+            </Card>
+          </Col>
+          <Col lg="4" md="12">
+            <Card
+              className="bg-secondary  py-3"
+              body
+              inverse
+              style={{ borderColor: "white" }}
+            >
+              <CardTitle
+                className="fntweight"
+                tag="h3"
+                style={{ color: "black", fontSize: "16px" }}
+              >
+                <FaBoxOpen style={{ color: "orange" }} />
+                &nbsp;&nbsp; Total Categories
+              </CardTitle>
+              <CardText
+                className="wt-text"
+                tag="span"
+                style={{ color: "black", marginLeft: "4px" }}
+              >
+                {this.state.product}
+              </CardText>
+            </Card>
+          </Col>
+          <Col lg="4" md="12">
+            <Card
+              className="bg-secondary  py-3"
+              body
+              inverse
+              style={{ borderColor: "white" }}
+            >
+              <CardTitle
+                className="fntweight"
+                tag="h3"
+                style={{ color: "black", fontSize: "16px" }}
+              >
+                <FaBoxOpen style={{ color: "orange" }} />
+                &nbsp;&nbsp; Total Barnds
+              </CardTitle>
+              <CardText
+                className="wt-text"
+                tag="span"
+                style={{ color: "black", marginLeft: "4px" }}
+              >
+                {this.state.product}
+              </CardText>
+            </Card>
+          </Col>
+        </Row> */}
         <Row className="app-user-list">
+          <Col sm="12"></Col>
           <Col sm="12">
             <Card>
+              {/* <Row className="pt-1 mx-1">
+                <Col lg="3" md="3" className="mb-1 ">
+                  <Label>SHOW BY</Label>
+                  <Input
+                    required
+                    type="select"
+                    name="weight"
+                    placeholder="Enter Iden Type"
+                    // value={this.state.weight}
+                    // onChange={this.changeHandler}
+                  >
+                    <option value="12ROW">12 ROW</option>
+                    <option value="24ROW">24 ROW</option>
+                    <option value="36ROW">36 ROW</option>
+                  </Input>
+                </Col>
+                <Col lg="3" md="3" className="mb-1">
+                  <Label>RATING BY</Label>
+                  <Input
+                    required
+                    type="select"
+                    name="weight"
+                    placeholder="Enter Iden Type"
+                    // value={this.state.weight}
+                    // onChange={this.changeHandler}
+                  >
+                    <option value="1Star">1 Star</option>
+                    <option value="2Star">2 Star</option>
+                    <option value="3Star">3 Star</option>
+                    <option value="4Star">4 Star</option>
+                    <option value="5Star">5 Star</option>
+                  </Input>
+                </Col>
+                <Col lg="3" md="3" className="mb-1">
+                  <Label>CATEGORY BY</Label>
+                  <Input
+                    required
+                    type="select"
+                    name="weight"
+                    placeholder="Enter Iden Type"
+                    // value={this.state.weight}
+                    // onChange={this.changeHandler}
+                  >
+                    <option value="Mans">Mans</option>
+                    <option value="Womans">Womans</option>
+                    <option value="Kids">Kids</option>
+                    <option value="Accessory">Accessory</option>
+                  </Input>
+                </Col>
+                <Col lg="3" md="3" className="mb-1">
+                  <Label>BRAND BY</Label>
+                  <Input
+                    required
+                    type="select"
+                    name="weight"
+                    placeholder="Enter Iden Type"
+                    // value={this.state.weight}
+                    // onChange={this.changeHandler}
+                  >
+                    <option value="Ecstasy">Ecstasy</option>
+                    <option value="Freeland">Freeland</option>
+                    <option value="Rongdhonu">Rongdhonu</option>
+                  </Input>
+                </Col>
+              </Row> */}
               <Row className="m-2">
                 <Col>
-                  <h1 col-sm-6 className="float-left">
-                    Place Order
-                  </h1>
-                </Col>
-
-                <Col lg="3">
-                  {this.state.SelectedProduct &&
-                  this.state.SelectedProduct.length > 0 ? (
-                    <Route
-                      render={({ history }) => (
-                        <Button
-                          // className="float-right "
-                          color="primary"
-                          onClick={() =>
-                            history.push("/app/softNumen/order/placeorder")
-                          }
-                        >
-                          Add
-                        </Button>
-                      )}
-                    />
-                  ) : null}
-
-                  <Route
-                    render={({ history }) => (
-                      <Button
-                        className="float-right mx-2"
-                        color="primary"
-                        onClick={() =>
-                          history.push("/app/softNumen/order/placeorder")
-                        }
-                      >
-                        Back
-                      </Button>
-                    )}
-                  />
+                  <h1 className="float-left">User List with Role</h1>
                 </Col>
               </Row>
               <CardBody>
@@ -544,32 +653,6 @@ class AddedPlaceorder extends React.Component {
                         </UncontrolledDropdown>
                       </div>
                       <div className="d-flex flex-wrap justify-content-between mb-1">
-                        <div className=" mr-1">
-                          <FormGroup>
-                            <label className=""> Choose Type *</label>
-                          </FormGroup>
-                        </div>
-                        <div className=" mr-1">
-                          <FormGroup>
-                            <select
-                              onChange={(e) => {
-                                this.setState({ Type: e.target.value });
-                                this.updateSearchQuery(e.target.value);
-                              }}
-                              className="form-control"
-                              name="Select"
-                              id="Select"
-                            >
-                              <option value="">--Select Type--</option>
-                              {this.state.Typelist &&
-                                this.state.Typelist?.map((val, i) => (
-                                  <option key={i} value={val?.product_type}>
-                                    {val?.product_type}
-                                  </option>
-                                ))}
-                            </select>
-                          </FormGroup>
-                        </div>
                         <div className="table-input mr-1">
                           <Input
                             placeholder="search..."
@@ -618,4 +701,4 @@ class AddedPlaceorder extends React.Component {
     );
   }
 }
-export default AddedPlaceorder;
+export default PartsCatelogue;

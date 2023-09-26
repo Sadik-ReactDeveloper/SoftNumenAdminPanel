@@ -24,13 +24,7 @@ import { history } from "../../../../history";
 import "../../../../assets/scss/plugins/tables/_agGridStyleOverride.scss";
 import "../../../../assets/scss/pages/users.scss";
 import Moment from "react-moment";
-import {
-  FaWallet,
-  Facart,
-  FaCartArrowDown,
-  FaBoxOpen,
-  FaLock,
-} from "react-icons/fa";
+import { FaLock } from "react-icons/fa";
 import "moment-timezone";
 import { Route } from "react-router-dom";
 import swal from "sweetalert";
@@ -605,25 +599,8 @@ class ProductType extends React.Component {
               </Row> */}
               <Row className="m-2">
                 <Col>
-                  <h1 col-sm-6 className="float-left">
-                    User List with Role
-                  </h1>
+                  <h1 className="float-left">User List with Role</h1>
                 </Col>
-                {/* <Col>
-                  <Route
-                    render={({ history }) => (
-                      <Button
-                        className="float-right"
-                        color="primary"
-                        onClick={() =>
-                          history.push("/app/freshlist/options/ProductType")
-                        }
-                      >
-                        Add Type
-                      </Button>
-                    )}
-                  />
-                </Col> */}
               </Row>
               <CardBody>
                 {this.state.rowData === null ? null : (

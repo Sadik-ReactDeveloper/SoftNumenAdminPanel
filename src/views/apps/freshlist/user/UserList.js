@@ -50,7 +50,7 @@ class EmployeesList extends React.Component {
         cellRendererFramework: (params) => {
           return (
             <div>
-              <span>{params.data.firstname}</span>
+              <span>{params.data?.firstname}</span>
             </div>
           );
         },
@@ -63,7 +63,7 @@ class EmployeesList extends React.Component {
         cellRendererFramework: (params) => {
           return (
             <div className="d-flex align-items-center cursor-pointer">
-              <span>{params.data.email}</span>
+              <span>{params.data?.email}</span>
             </div>
           );
         },
@@ -77,7 +77,7 @@ class EmployeesList extends React.Component {
         cellRendererFramework: (params) => {
           return (
             <div>
-              <span>{params.data.lastname}</span>
+              <span>{params.data?.lastname}</span>
             </div>
           );
         },
@@ -90,7 +90,7 @@ class EmployeesList extends React.Component {
         cellRendererFramework: (params) => {
           return (
             <div>
-              <span>{params.data.mobile}</span>
+              <span>{params.data?.mobile}</span>
             </div>
           );
         },
@@ -103,11 +103,11 @@ class EmployeesList extends React.Component {
         cellRendererFramework: (params) => {
           return params.value === "Block" ? (
             <div className="badge badge-pill badge-success">
-              {params.data.status}
+              {params.data?.status}
             </div>
           ) : params.value === "Unblock" ? (
             <div className="badge badge-pill badge-warning">
-              {params.data.status}
+              {params.data?.status}
             </div>
           ) : null;
         },
