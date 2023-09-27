@@ -75,3 +75,46 @@ input.addinarray {
 //   opacity: 0; /* Initially hide the tooltip */
 //   transition: opacity 0.3s ease;
 // }
+div.ex1 {
+  background-color: rgb(240, 240, 240);
+  height: 280px;
+  // width: 200px;
+  overflow-y: scroll;
+}
+.mycustomtag:hover{
+  background-color: #1877f2;
+  border-radius: "12px";
+}
+.mycustomtag {
+  padding: 0px 5px;
+}
+.colarrowbtn {
+  padding: 125px 60px;
+  display: flex;
+  justify-content: center;
+}
+.modalbodyhead {
+  padding: 6rem;
+}
+input.mx-1 {
+  width: 23px;
+  height: 19px;
+}
+.arrowassign{
+  color: #055761;
+}
+.arrowassign:hover{
+  color: green;
+}
+.dropdownmy{
+  border: 1px dotted;
+  border-radius: 5px;
+  width: 117px;
+  right: 0px;
+  top: 28px;
+  // background-color: #f5f1f1;
+}
+.myactive:hover{
+  color: rgb(255, 255, 255);
+  background-color: blue;
+}
