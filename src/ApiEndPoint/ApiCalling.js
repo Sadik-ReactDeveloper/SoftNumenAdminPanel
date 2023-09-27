@@ -1,13 +1,11 @@
 // import React, { useEffect } from "react";
 import {
-  Create_User,
-  Create_Role,
-  Create_Account,
   Create_Account_xmlView,
   Create_Parts,
   customerRegistration,
   Product_Registration,
   Create_Account_save,
+  Create_Account_List,
 } from "./Api";
 import axiosConfig from "../axiosConfig";
 
@@ -35,6 +33,12 @@ export const CreateAccountView = async () => {
 export const CreateAccountSave = async (data) => {
   let response = await axiosConfig
     .post(`${Create_Account_save}`, data)
+    .then((res) => res.data);
+  return response;
+};
+export const CreateAccountList = async (data) => {
+  let response = await axiosConfig
+    .get(`${Create_Account_List}`, data)
     .then((res) => res.data);
   return response;
 };
