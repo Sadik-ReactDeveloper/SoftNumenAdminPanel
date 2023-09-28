@@ -34,6 +34,7 @@ import "../../../../assets/scss/plugins/tables/_agGridStyleOverride.scss";
 import "../../../../assets/scss/pages/users.scss";
 import Moment from "react-moment";
 import { Route } from "react-router-dom";
+import xmlJs from "xml-js";
 
 import { IoMdRemoveCircleOutline } from "react-icons/io";
 
@@ -48,8 +49,13 @@ import "moment-timezone";
 import swal from "sweetalert";
 import {
   CreateAccountList,
+  CreateAccountView,
   DeleteAccount,
 } from "../../../../ApiEndPoint/ApiCalling";
+import {
+  BsFillArrowDownSquareFill,
+  BsFillArrowUpSquareFill,
+} from "react-icons/bs";
 // import * as XLSX from "xlsx";
 
 const SelectedCols = [];
@@ -61,6 +67,7 @@ class ProductType extends React.Component {
     // this.gridApi = null;
     this.state = {
       isOpen: false,
+      Arrindex: "",
       rowData: [],
       setMySelectedarr: [],
       Viewpermisson: null,
@@ -89,10 +96,21 @@ class ProductType extends React.Component {
       modal: !prevState.modal,
     }));
   };
+
   async componentDidMount() {
+    CreateAccountView()
+      .then((res) => {
+        debugger;
+        const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
+        console.log(JSON.parse(jsonData?.CreateAccount));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     await CreateAccountList()
       .then((res) => {
         let value = res?.CreateAccount;
+        console.log(value);
         let Product = [
           {
             headerName: "Actions",
@@ -187,16 +205,6 @@ class ProductType extends React.Component {
     // Toggle the isOpen state when the button is clicked
     this.setState((prevState) => ({ isOpen: !prevState.isOpen }));
   };
-  // getUserList = async () => {
-  //   const formdata = new FormData();
-  //   formdata.append("user_id", pageparmission?.Userinfo?.id);
-  //   formdata.append("role", pageparmission?.Userinfo?.role);
-  //   await axiosConfig.post("/getuserlist", formdata).then((response) => {
-  //     console.log(response);
-  //     let rowData = response?.data?.data?.users;
-  //     this.setState({ rowData });
-  //   });
-  // };
 
   runthisfunction(id) {
     swal("Warning", "Sure You Want to Delete it", {
@@ -262,7 +270,7 @@ class ProductType extends React.Component {
     // console.log(this.state.setMySelectedarr);
   };
   exportToPDF = () => {
-    const doc = new jsPDF("landscape", "mm", "a4", false);
+    const doc = new jsPDF("landscape", "mm", "a1", false);
     const contentWidth = doc.internal.pageSize.getWidth();
     const contentHeight = doc.internal.pageSize.getHeight();
     // const tableHeight = this.gridApi.getRowHeight();
@@ -270,14 +278,74 @@ class ProductType extends React.Component {
     const tableWidth = contentWidth;
     const tableX = 10;
     const tableY = 10;
-    const data = this.gridApi.getDataAsCsv({
+    const data1 = this.gridApi.getDataAsCsv({
       processCellCallback: this.processCell,
     });
-    const dataa = this.gridApi.getDataAsExcel({
-      processCellCallback: this.processCell,
-    });
+    const data = [
+      [
+        "Actions",
+        "SoldBy",
+        "SecondaryPhone",
+        "Primarymobileno",
+        "Secondarymobile",
+        "Address",
+        "ShowroomAddress",
+        "StreetAddress1",
+        "StreetAddress2",
+        "Landmark",
+        "name",
+        "UserName",
+        "email",
+        "Password",
+        "B_name",
+        "Status",
+        "Role",
+      ],
+      [
+        "",
+        "Akshay",
+        "7000420819",
+        "789654123",
+        "785412369",
+        "23 Roshan bag colony near kushwaha nagar",
+        "near sukhliye",
+        "new area mumbai",
+        "madras",
+        "sunil kirna store",
+        "suresh",
+        "arpit",
+        "arun@gmail.com",
+        "123654",
+        "sveltose company",
+        "Active",
+        "SUPERADMIN",
+      ],
+      [
+        "",
+        "Akshaykashid",
+        "74151468043",
+        "8521479631",
+        "785412369",
+        "near vijay nagar indore",
+        "near sukhliye fadslffd asddf",
+        "panwel mumbai",
+        "i am in mumbai",
+        "sunil kirna store",
+        "suresh",
+        "arpit",
+        "arun@gmail.com",
+        "123654",
+        "sveltose company",
+        "Active",
+        "ADMIN",
+      ],
+    ];
+    // const dataa = this.gridApi.getDataAsExcel({
+    //   processCellCallback: this.processCell,
+    // });
+    debugger;
     console.log(data);
-    console.log(dataa);
+    console.log(data1);
 
     doc.text("User Data Table", 10, 10);
 
@@ -305,6 +373,7 @@ class ProductType extends React.Component {
     doc.save("agGrid.pdf");
   };
   processCell = (params) => {
+    // console.log(params);
     // Customize cell content as needed
     return params.value;
   };
@@ -335,6 +404,28 @@ class ProductType extends React.Component {
     };
 
     this.gridApi.exportDataAsExcel(params, exportParams);
+  };
+
+  shiftElementUp = () => {
+    let currentIndex = this.state.Arrindex;
+    if (currentIndex > 0) {
+      const myArrayCopy = [...this.state.SelectedcolumnDefs];
+      const elementToMove = myArrayCopy.splice(currentIndex, 1)[0];
+      this.setState({ Arrindex: currentIndex - 1 });
+      myArrayCopy.splice(currentIndex - 1, 0, elementToMove);
+      this.setState({ SelectedcolumnDefs: myArrayCopy });
+    }
+  };
+
+  shiftElementDown = () => {
+    let currentIndex = this.state.Arrindex;
+    if (currentIndex < this.state.SelectedcolumnDefs.length - 1) {
+      const myArrayCopy = [...this.state.SelectedcolumnDefs];
+      const elementToMove = myArrayCopy.splice(currentIndex, 1)[0];
+      this.setState({ Arrindex: currentIndex + 1 });
+      myArrayCopy.splice(currentIndex + 1, 0, elementToMove);
+      this.setState({ SelectedcolumnDefs: myArrayCopy });
+    }
   };
 
   render() {
@@ -615,7 +706,17 @@ class ProductType extends React.Component {
                                 <div key={i} className="mycustomtag mt-1">
                                   <span className="mt-1">
                                     <h4
-                                      style={{ cursor: "pointer" }}
+                                      onClick={() =>
+                                        this.setState({ Arrindex: i })
+                                      }
+                                      style={{
+                                        cursor: "pointer",
+                                        backgroundColor: `${
+                                          this.state.Arrindex === i
+                                            ? "#1877f2"
+                                            : ""
+                                        }`,
+                                      }}
                                       className="allfields"
                                     >
                                       <IoMdRemoveCircleOutline
@@ -648,7 +749,24 @@ class ProductType extends React.Component {
                       </div>
                     </div>
                   </Col>
-                  <Col lg="4" md="4" sm="4" xs="12"></Col>
+                  <Col lg="4" md="4" sm="4" xs="12">
+                    <div className="updownbtn justify-content-center">
+                      <div>
+                        <BsFillArrowUpSquareFill
+                          className="arrowassign mb-1"
+                          size="30px"
+                          onClick={() => this.shiftElementUp()}
+                        />
+                      </div>
+                      <div>
+                        <BsFillArrowDownSquareFill
+                          onClick={() => this.shiftElementDown()}
+                          className="arrowassign"
+                          size="30px"
+                        />
+                      </div>
+                    </div>
+                  </Col>
                 </Row>
               </Col>
             </Row>

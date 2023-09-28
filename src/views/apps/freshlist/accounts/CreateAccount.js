@@ -33,12 +33,12 @@ const CreateAccount = () => {
       [name]: value,
     });
   };
-  console.log(formData);
+  // console.log(formData);
   useEffect(() => {
     CreateAccountView()
       .then((res) => {
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        console.log(JSON.parse(jsonData));
+        // console.log(JSON.parse(jsonData));
         setCreatAccountView(JSON.parse(jsonData));
         setdropdownValue(JSON.parse(jsonData));
       })
@@ -53,6 +53,8 @@ const CreateAccount = () => {
     CreateAccountSave(formData)
       .then((res) => {
         if (res.status) {
+          setFormData({});
+          window.location.reload();
           swal("Acccont Created Successfully");
         }
       })
@@ -70,7 +72,6 @@ const CreateAccount = () => {
               <h1 className="float-left">Create Account</h1>
             </Col>
           </Row>
-          <div className="container "></div>
 
           <CardBody>
             <Form className="m-1" onSubmit={submitHandler}>
