@@ -13,7 +13,6 @@ import {
   CustomInput,
 } from "reactstrap";
 import { history } from "../../../../history";
-
 import swal from "sweetalert";
 import "../../../../../src/layouts/assets/scss/pages/users.scss";
 
