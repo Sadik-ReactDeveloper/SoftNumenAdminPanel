@@ -14,8 +14,13 @@ import {
   Form,
   ModalHeader,
   ModalBody,
+  CustomInput,
+  FormGroup,
 } from "reactstrap";
 import axiosConfig from "../../../../axiosConfig";
+// import Switch from "@mui/material/Switch";
+// import FormGroup from "@mui/material/FormGroup";
+// import FormControlLabel from "@mui/material/FormControlLabel";
 import ReactHtmlParser from "react-html-parser";
 import { ContextLayout } from "../../../../utility/context/Layout";
 import { AgGridReact } from "ag-grid-react";
@@ -35,15 +40,16 @@ import { IoMdRemoveCircleOutline } from "react-icons/io";
 import {
   FaArrowAltCircleLeft,
   FaArrowAltCircleRight,
-  FaArrowLeft,
-  FaArrowRight,
   FaFileDownload,
   FaFilter,
   FaLock,
 } from "react-icons/fa";
 import "moment-timezone";
 import swal from "sweetalert";
-import { CreateAccountList } from "../../../../ApiEndPoint/ApiCalling";
+import {
+  CreateAccountList,
+  DeleteAccount,
+} from "../../../../ApiEndPoint/ApiCalling";
 // import * as XLSX from "xlsx";
 
 const SelectedCols = [];
@@ -86,18 +92,29 @@ class ProductType extends React.Component {
   async componentDidMount() {
     await CreateAccountList()
       .then((res) => {
-        console.log(res?.CreateAccount);
         let value = res?.CreateAccount;
         let Product = [
           {
             headerName: "Actions",
             field: "sortorder",
             field: "transactions",
-            width: 120,
+            width: 190,
             cellRendererFramework: (params) => {
-              console.log(params.data);
               return (
                 <div className="actions cursor-pointer">
+                  {/* <CustomInput
+                    className=""
+                    type="switch"
+                    id="exampleCustomSwitch"
+                    Reactstrap
+                    Switch
+                    Colors
+                    name="customSwitch"
+                    inline
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                    }}
+                  ></CustomInput> */}
                   <Route
                     render={({ history }) => (
                       <Eye
@@ -106,7 +123,7 @@ class ProductType extends React.Component {
                         color="green"
                         onClick={() =>
                           history.push(
-                            `/app/freshlist/order/EditCompletedorders/${params.data?.order_id}`
+                            `/app/freshlist/order/EditCompletedorders/${params.data?._id}`
                           )
                         }
                       />
@@ -120,7 +137,7 @@ class ProductType extends React.Component {
                         color="blue"
                         onClick={() =>
                           history.push(
-                            `/app/freshlist/order/editplaceorder/${params.data?.order_id}`
+                            `/app/freshlist/order/editplaceorder/${params.data?._id}`
                           )
                         }
                       />
@@ -134,9 +151,7 @@ class ProductType extends React.Component {
                         size="25px"
                         color="red"
                         onClick={() => {
-                          let selectedData = this.gridApi.getSelectedRows();
-                          this.runthisfunction(params.data.id);
-                          this.gridApi.updateRowData({ remove: selectedData });
+                          this.runthisfunction(params.data._id);
                         }}
                       />
                     )}
@@ -147,13 +162,17 @@ class ProductType extends React.Component {
           },
         ];
         for (const [key, value] of Object.entries(res?.CreateAccount[0])) {
-          Product.push({
-            headerName: key, // Use the property name as the column header
-            field: key, // Use the property name as the field name
-            // width: auto, // Set the desired width
-            filter: true,
-            sortable: true,
-          });
+          if (key == "_id") {
+          } else if (key == "__v") {
+          } else {
+            Product.push({
+              headerName: key, // Use the property name as the column header
+              field: key, // Use the property name as the field name
+              // width: auto, // Set the desired width
+              filter: true,
+              sortable: true,
+            });
+          }
         }
 
         this.setState({ columnDefs: Product });
@@ -168,16 +187,17 @@ class ProductType extends React.Component {
     // Toggle the isOpen state when the button is clicked
     this.setState((prevState) => ({ isOpen: !prevState.isOpen }));
   };
-  getUserList = async () => {
-    const formdata = new FormData();
-    formdata.append("user_id", pageparmission?.Userinfo?.id);
-    formdata.append("role", pageparmission?.Userinfo?.role);
-    await axiosConfig.post("/getuserlist", formdata).then((response) => {
-      console.log(response);
-      let rowData = response?.data?.data?.users;
-      this.setState({ rowData });
-    });
-  };
+  // getUserList = async () => {
+  //   const formdata = new FormData();
+  //   formdata.append("user_id", pageparmission?.Userinfo?.id);
+  //   formdata.append("role", pageparmission?.Userinfo?.role);
+  //   await axiosConfig.post("/getuserlist", formdata).then((response) => {
+  //     console.log(response);
+  //     let rowData = response?.data?.data?.users;
+  //     this.setState({ rowData });
+  //   });
+  // };
+
   runthisfunction(id) {
     swal("Warning", "Sure You Want to Delete it", {
       buttons: {
@@ -187,11 +207,16 @@ class ProductType extends React.Component {
     }).then((value) => {
       switch (value) {
         case "delete":
-          const formData = new FormData();
-          formData.append("user_id", id);
-          axiosConfig.post(`/userdelete`, formData).then((response) => {
-            this.getUserList();
-          });
+          console.log(id);
+          DeleteAccount(id)
+            .then((res) => {
+              let selectedData = this.gridApi.getSelectedRows();
+              this.gridApi.updateRowData({ remove: selectedData });
+              console.log(res);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
           break;
         default:
       }
@@ -201,6 +226,7 @@ class ProductType extends React.Component {
   onGridReady = (params) => {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
+
     this.setState({
       currenPageSize: this.gridApi.paginationGetCurrentPage() + 1,
       getPageSize: this.gridApi.paginationGetPageSize(),
@@ -236,22 +262,69 @@ class ProductType extends React.Component {
     // console.log(this.state.setMySelectedarr);
   };
   exportToPDF = () => {
-    // let id = document.getElementById("myAgGrid");
-    // const gridApi = this.gridRef.current.api;
-    // console.log(id);
-    // console.log(cid);
-    if (this.gridApi) {
-      const doc = new jsPDF("landscape", "mm", "a4", false);
-      doc.autoTable({ html: "#myAgGrid" });
-      // doc.autoTable({ html: ".ag-root-wrapper ag-layout-auto-height ag-ltr" });
+    const doc = new jsPDF("landscape", "mm", "a4", false);
+    const contentWidth = doc.internal.pageSize.getWidth();
+    const contentHeight = doc.internal.pageSize.getHeight();
+    // const tableHeight = this.gridApi.getRowHeight();
+    // console.log(tableHeight);
+    const tableWidth = contentWidth;
+    const tableX = 10;
+    const tableY = 10;
+    const data = this.gridApi.getDataAsCsv({
+      processCellCallback: this.processCell,
+    });
+    const dataa = this.gridApi.getDataAsExcel({
+      processCellCallback: this.processCell,
+    });
+    console.log(data);
+    console.log(dataa);
 
-      // doc.text("Hello, Landscape PDF!", 10, 10);
-      doc.save("landscape-pdf.pdf");
-      // const doc = new jsPDF("landscape", "mm", "a4", false);
+    doc.text("User Data Table", 10, 10);
 
-      // doc.save("mypdf.pdf");
-    }
+    // Define columns and rows for the table
+    const columns = data[0];
+    const rows = data.slice(1);
+
+    // Create the table
+    doc.autoTable({
+      head: [columns],
+      body: rows,
+      startY: 20,
+    });
+
+    // if (tableHeight < contentHeight) {
+    //   doc.autoTable({ html: "#myAgGrid" });
+    // } else {
+    //   doc.text(
+    //     "Table too large for one page, implement pagination or adjust layout.",
+    //     20,
+    //     20
+    //   );
+    // }
+
+    doc.save("agGrid.pdf");
   };
+  processCell = (params) => {
+    // Customize cell content as needed
+    return params.value;
+  };
+  // exportToPDF = () => {
+  //   // let id = document.getElementById("myAgGrid");
+  //   // const gridApi = this.gridRef.current.api;
+  //   // console.log(id);
+  //   // console.log(cid);
+  //   if (this.gridApi) {
+  //     const doc = new jsPDF("landscape", "mm", "a4", false);
+  //     doc.autoTable({ html: "#myAgGrid" });
+  //     // doc.autoTable({ html: ".ag-root-wrapper ag-layout-auto-height ag-ltr" });
+
+  //     // doc.text("Hello, Landscape PDF!", 10, 10);
+  //     doc.save("landscape-pdf.pdf");
+  //     // const doc = new jsPDF("landscape", "mm", "a4", false);
+
+  //     // doc.save("mypdf.pdf");
+  //   }
+  // };
   exportToExcel = () => {
     const params = {
       fileName: "my-exported-data.xlsx", // Set the desired file name
@@ -331,11 +404,18 @@ class ProductType extends React.Component {
                             CSV
                           </h5>
                           <h5
-                            onClick={() => this.exportToExcel()}
+                            onClick={() => this.gridApi.exportDataAsExcel()}
                             style={{ cursor: "pointer" }}
                             className=" mx-1 myactive"
                           >
                             XLS
+                          </h5>
+                          <h5
+                            onClick={() => this.exportToExcel()}
+                            style={{ cursor: "pointer" }}
+                            className=" mx-1 myactive"
+                          >
+                            XML
                           </h5>
                         </div>
                       )}
@@ -420,7 +500,6 @@ class ProductType extends React.Component {
                           id="myAgGrid"
                           gridOptions={{
                             domLayout: "autoHeight", // or other layout options
-                            // id: "myAgGrid",
                           }}
                           // gridOptions={this.gridOptions}
                           rowSelection="multiple"
