@@ -23,11 +23,12 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 // import "ag-grid-community/styles/ag-theme-alpine.css";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { Trash2, ChevronDown, Edit, CloudLightning } from "react-feather";
+import { Eye, Trash2, ChevronDown, Edit, CloudLightning } from "react-feather";
 import { history } from "../../../../history";
 import "../../../../assets/scss/plugins/tables/_agGridStyleOverride.scss";
 import "../../../../assets/scss/pages/users.scss";
 import Moment from "react-moment";
+import { Route } from "react-router-dom";
 
 import { IoMdRemoveCircleOutline } from "react-icons/io";
 
@@ -41,323 +42,12 @@ import {
   FaLock,
 } from "react-icons/fa";
 import "moment-timezone";
-import { Route } from "react-router-dom";
 import swal from "sweetalert";
-import * as XLSX from "xlsx"; // Import the xlsx library
 import { CreateAccountList } from "../../../../ApiEndPoint/ApiCalling";
+// import * as XLSX from "xlsx";
 
 const SelectedCols = [];
-const columnDef = [
-  {
-    headerName: "UID",
-    valueGetter: "node.rowIndex + 1",
-    field: "node.rowIndex + 1",
-    // checkboxSelection: true,
-    width: 100,
-    filter: true,
-  },
-  {
-    headerName: "Role",
-    field: "role",
-    filter: "agSetColumnFilter",
-    width: 120,
-    cellRendererFramework: (params) => {
-      return (
-        <div className="d-flex align-items-center cursor-pointer">
-          <div className="">
-            <span>params?.data?.role</span>
-          </div>
-        </div>
-      );
-    },
-  },
-  {
-    headerName: "FullName",
-    field: "full_name",
-    filter: "agSetColumnFilter",
-    width: 150,
-    cellRendererFramework: (params) => {
-      return (
-        <div className="d-flex align-items-center cursor-pointer">
-          <div className="">
-            <span>params?.data?.full_name</span>
-          </div>
-        </div>
-      );
-    },
-  },
-  {
-    headerName: "Username",
-    field: "username",
-    filter: "agSetColumnFilter",
-    width: 150,
-    cellRendererFramework: (params) => {
-      return (
-        <div className="d-flex align-items-center cursor-pointer">
-          <div className="">
-            <span>params?.data?.username</span>
-          </div>
-        </div>
-      );
-    },
-  },
 
-  {
-    headerName: "created by",
-    field: "created_by",
-    filter: "agSetColumnFilter",
-    width: 150,
-    cellRendererFramework: (params) => {
-      // console.log(params?.data);
-      return (
-        <div className="d-flex align-items-center cursor-pointer">
-          <div className="">
-            <span>params?.data?.created_by_name</span>
-          </div>
-        </div>
-      );
-    },
-  },
-
-  {
-    headerName: "Email",
-    field: "email",
-    filter: "agSetColumnFilter",
-    width: 230,
-    cellRendererFramework: (params) => {
-      return (
-        <div className="d-flex align-items-center cursor-pointer">
-          <div className="">
-            <span>{params?.data?.email}</span>
-          </div>
-        </div>
-      );
-    },
-  },
-  {
-    headerName: "Mobile No.",
-    field: "mobile",
-    filter: "agSetColumnFilter",
-    width: 150,
-    cellRendererFramework: (params) => {
-      return (
-        <div className="d-flex align-items-center cursor-pointer">
-          <div className="">
-            <span>{params?.data?.mobile}</span>
-          </div>
-        </div>
-      );
-    },
-  },
-  {
-    headerName: "Phone No.",
-    field: "phone_no",
-    filter: "agSetColumnFilter",
-    width: 150,
-    cellRendererFramework: (params) => {
-      return (
-        <div className="d-flex align-items-center cursor-pointer">
-          <div className="">
-            <span>{params?.data?.phone_no}</span>
-          </div>
-        </div>
-      );
-    },
-  },
-  {
-    headerName: "companyname.",
-    field: "company_name",
-    filter: "agSetColumnFilter",
-    width: 150,
-    cellRendererFramework: (params) => {
-      return (
-        <div className="d-flex align-items-center cursor-pointer">
-          <div className="">
-            <span>{params?.data?.company_name}</span>
-          </div>
-        </div>
-      );
-    },
-  },
-  {
-    headerName: "companytype.",
-    field: "company_type",
-    filter: "agSetColumnFilter",
-    width: 150,
-    cellRendererFramework: (params) => {
-      return (
-        <div className="d-flex align-items-center cursor-pointer">
-          <div className="">
-            <span>{params?.data?.company_type}</span>
-          </div>
-        </div>
-      );
-    },
-  },
-  {
-    headerName: "GSTIN",
-    field: "company_type",
-    filter: "agSetColumnFilter",
-    width: 150,
-    cellRendererFramework: (params) => {
-      return (
-        <div className="d-flex align-items-center cursor-pointer">
-          <div className="">
-            <span>{params?.data?.gstin_no}</span>
-          </div>
-        </div>
-      );
-    },
-  },
-  {
-    headerName: "place of supply.",
-    field: "place_supply",
-    filter: "agSetColumnFilter",
-    width: 180,
-    cellRendererFramework: (params) => {
-      return (
-        <div className="d-flex align-items-center cursor-pointer">
-          <div className="">
-            <span>{params?.data?.place_supply}</span>
-          </div>
-        </div>
-      );
-    },
-  },
-  {
-    headerName: "billing Address.",
-    field: "billing_city",
-    filter: "agSetColumnFilter",
-    width: 180,
-    cellRendererFramework: (params) => {
-      return (
-        <div className="d-flex align-items-center cursor-pointer">
-          {/* {this.state.billing_street && ( */}
-          <div className="">
-            <span>{params?.data?.billing_street} </span>
-          </div>
-          {/* )} */}
-        </div>
-      );
-    },
-  },
-  {
-    headerName: "Shipping Address.",
-    field: "billing_city",
-    filter: "agSetColumnFilter",
-    width: 180,
-    cellRendererFramework: (params) => {
-      return (
-        <div className="d-flex align-items-center cursor-pointer">
-          <div className="">
-            {/* {this.state.shipping_city && ( */}
-            <div>
-              <span>{params?.data?.shipping_street},</span>
-            </div>
-            {/* )} */}
-          </div>
-        </div>
-      );
-    },
-  },
-
-  {
-    headerName: "Status",
-    field: "status",
-    filter: "agSetColumnFilter",
-    width: 150,
-    cellRendererFramework: (params) => {
-      return (
-        <div className="d-flex align-items-center cursor-pointer">
-          <div className="">
-            <span>{params?.data?.status}</span>
-          </div>
-        </div>
-      );
-    },
-  },
-  // {
-  //   headerName: "ORDER",
-  //   field: "pisces",
-
-  //   filter: "agSetColumnFilter",
-  //   width: 120,
-  //   cellRendererFramework: (params) => {
-  //     return (
-  //       <div className="d-flex align-items-center cursor-pointer">
-  //         <div className="">
-  //           <span>vfdsvsd</span>
-  //         </div>
-  //       </div>
-  //     );
-  //   },
-  // },
-  // {
-  //   headerName: "SALES",
-  //   field: "pisces",
-
-  //   filter: "agSetColumnFilter",
-  //   width: 120,
-  //   cellRendererFramework: (params) => {
-  //     return (
-  //       <div className="d-flex align-items-center cursor-pointer">
-  //         <div className="">
-  //           <span>vfdsvds</span>
-  //         </div>
-  //       </div>
-  //     );
-  //   },
-  // },
-  {
-    headerName: "Actions",
-    field: "transactions",
-    width: 150,
-    cellRendererFramework: (params) => {
-      return (
-        <div className="actions cursor-pointer">
-          <Trash2
-            className="mr-50"
-            size="25px"
-            color="Red"
-            onClick={() => {
-              this.runthisfunction(params?.data?.id);
-            }}
-          />
-
-          <Route
-            render={({ history }) => (
-              <Edit
-                className="mr-50"
-                size="25px"
-                color="green"
-                onClick={() =>
-                  history.push(
-                    `/app/freshlist/house/editProductType/${params?.data?.id}`
-                  )
-                }
-              />
-            )}
-          />
-
-          <Route
-            render={({ history }) => (
-              <FaLock
-                className="mr-50"
-                size="25px"
-                color="blue"
-                onClick={() =>
-                  history.push(
-                    `/app/freshlist/account/UpdateExistingRole/${params?.data?.role}`
-                  )
-                }
-              />
-            )}
-          />
-        </div>
-      );
-    },
-  },
-];
 class ProductType extends React.Component {
   constructor(props) {
     super(props);
@@ -394,54 +84,85 @@ class ProductType extends React.Component {
     }));
   };
   async componentDidMount() {
-    const rowData = [
-      { name: "John", age: 30 },
-      { name: "Jddane", age: 25 },
-      // Add more rows as needed
-    ];
-    this.setState({ rowData: rowData });
-
-    this.setState({ columnDefs: columnDef });
-    this.setState({ AllcolumnDefs: columnDef });
-    const array = [];
-    const myObject = {};
     await CreateAccountList()
       .then((res) => {
         console.log(res?.CreateAccount);
         let value = res?.CreateAccount;
-        // var myAccount =
-        value?.map((ele, i) => {
-          // debugger;
+        let Product = [
+          {
+            headerName: "Actions",
+            field: "sortorder",
+            field: "transactions",
+            width: 120,
+            cellRendererFramework: (params) => {
+              console.log(params.data);
+              return (
+                <div className="actions cursor-pointer">
+                  <Route
+                    render={({ history }) => (
+                      <Eye
+                        className="mr-50"
+                        size="25px"
+                        color="green"
+                        onClick={() =>
+                          history.push(
+                            `/app/freshlist/order/EditCompletedorders/${params.data?.order_id}`
+                          )
+                        }
+                      />
+                    )}
+                  />
+                  <Route
+                    render={({ history }) => (
+                      <Edit
+                        className="mr-50"
+                        size="25px"
+                        color="blue"
+                        onClick={() =>
+                          history.push(
+                            `/app/freshlist/order/editplaceorder/${params.data?.order_id}`
+                          )
+                        }
+                      />
+                    )}
+                  />
 
-          // console.log(ele);
-          myObject["headerName"] = `${ele?.Address}`;
-          myObject["field"] = `${ele?.B_name}`;
-        });
+                  <Route
+                    render={() => (
+                      <Trash2
+                        className="mr-50"
+                        size="25px"
+                        color="red"
+                        onClick={() => {
+                          let selectedData = this.gridApi.getSelectedRows();
+                          this.runthisfunction(params.data.id);
+                          this.gridApi.updateRowData({ remove: selectedData });
+                        }}
+                      />
+                    )}
+                  />
+                </div>
+              );
+            },
+          },
+        ];
+        for (const [key, value] of Object.entries(res?.CreateAccount[0])) {
+          Product.push({
+            headerName: key, // Use the property name as the column header
+            field: key, // Use the property name as the field name
+            // width: auto, // Set the desired width
+            filter: true,
+            sortable: true,
+          });
+        }
 
-        // console.log(myAccount);
-        // {
-        //   headerName: "Role",
-        //   field: "role",
-        //   filter: "agSetColumnFilter",
-        //   width: 120,
-        //   cellRendererFramework: (params) => {
-        //     return (
-        //       <div className="d-flex align-items-center cursor-pointer">
-        //         <div className="">
-        //           <span>params?.data?.role</span>
-        //         </div>
-        //       </div>
-        //     );
-        //   },
-        // },
+        this.setState({ columnDefs: Product });
+        this.setState({ rowData: value });
+        this.setState({ AllcolumnDefs: Product });
       })
       .catch((err) => {
         console.log(err);
       });
-    console.log(myObject);
-    const newArray = array.push(myObject);
-
-    console.log(newArray);
   }
   toggleDropdown = () => {
     // Toggle the isOpen state when the button is clicked
@@ -802,7 +523,7 @@ class ProductType extends React.Component {
                   </div>
                 </div>
               </Col>
-              <Col lg="4" md="4" sm="4" xl="4" xs="12">
+              <Col lg="6" md="6" sm="6" xl="6" xs="12">
                 <Row>
                   <Col lg="8" md="8" sm="8" xs="12">
                     <h4>Selected Columns</h4>
@@ -848,7 +569,7 @@ class ProductType extends React.Component {
                       </div>
                     </div>
                   </Col>
-                  <Col lg="2" md="2" sm="2" xs="12"></Col>
+                  <Col lg="4" md="4" sm="4" xs="12"></Col>
                 </Row>
               </Col>
             </Row>
