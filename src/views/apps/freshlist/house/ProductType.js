@@ -29,13 +29,13 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Eye, Trash2, ChevronDown, Edit, CloudLightning } from "react-feather";
+import { IoMdRemoveCircleOutline } from "react-icons/io";
 import { history } from "../../../../history";
 import "../../../../assets/scss/plugins/tables/_agGridStyleOverride.scss";
 import "../../../../assets/scss/pages/users.scss";
 import Moment from "react-moment";
 import { Route } from "react-router-dom";
-
-import { IoMdRemoveCircleOutline } from "react-icons/io";
+import xmlJs from "xml-js";
 
 import {
   FaArrowAltCircleLeft,
@@ -48,8 +48,13 @@ import "moment-timezone";
 import swal from "sweetalert";
 import {
   CreateAccountList,
+  CreateAccountView,
   DeleteAccount,
 } from "../../../../ApiEndPoint/ApiCalling";
+import {
+  BsFillArrowDownSquareFill,
+  BsFillArrowUpSquareFill,
+} from "react-icons/bs";
 // import * as XLSX from "xlsx";
 
 const SelectedCols = [];
@@ -61,12 +66,9 @@ class ProductType extends React.Component {
     // this.gridApi = null;
     this.state = {
       isOpen: false,
+      Arrindex: "",
       rowData: [],
       setMySelectedarr: [],
-      Viewpermisson: null,
-      Editpermisson: null,
-      Createpermisson: null,
-      Deletepermisson: null,
       paginationPageSize: 20,
       currenPageSize: "",
       getPageSize: "",
@@ -82,17 +84,66 @@ class ProductType extends React.Component {
     };
   }
 
-  // ...
-
   toggleModal = () => {
     this.setState((prevState) => ({
       modal: !prevState.modal,
     }));
   };
+
   async componentDidMount() {
-    await CreateAccountList()
+    CreateAccountView()
       .then((res) => {
-        let value = res?.CreateAccount;
+        var mydropdownArray = [];
+        var adddropdown = [];
+        const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
+        console.log(JSON.parse(jsonData));
+        const inputs = JSON.parse(jsonData).CreateAccount?.input?.map((ele) => {
+          return {
+            headerName: ele?.label._text,
+            field: ele?.name._text,
+            filter: true,
+            sortable: true,
+          };
+        });
+        let Radioinput =
+          JSON.parse(jsonData).CreateAccount?.Radiobutton?.input[0]?.name
+            ?._text;
+        const addRadio = [
+          {
+            headerName: Radioinput,
+            field: Radioinput,
+            filter: true,
+            sortable: true,
+          },
+        ];
+
+        let dropdown = JSON.parse(jsonData).CreateAccount?.MyDropdown?.dropdown;
+        if (dropdown.length) {
+          var mydropdownArray = dropdown?.map((ele) => {
+            return {
+              headerName: ele?.label,
+              field: ele?.name,
+              filter: true,
+              sortable: true,
+            };
+          });
+        } else {
+          var adddropdown = [
+            {
+              headerName: dropdown?.label._text,
+              field: dropdown?.name._text,
+              filter: true,
+              sortable: true,
+            },
+          ];
+        }
+
+        let myHeadings = [
+          ...inputs,
+          ...adddropdown,
+          ...addRadio,
+          ...mydropdownArray,
+        ];
         let Product = [
           {
             headerName: "Actions",
@@ -160,43 +211,27 @@ class ProductType extends React.Component {
               );
             },
           },
+          ...myHeadings,
         ];
-        for (const [key, value] of Object.entries(res?.CreateAccount[0])) {
-          if (key == "_id") {
-          } else if (key == "__v") {
-          } else {
-            Product.push({
-              headerName: key, // Use the property name as the column header
-              field: key, // Use the property name as the field name
-              // width: auto, // Set the desired width
-              filter: true,
-              sortable: true,
-            });
-          }
-        }
-
+        // console.log(Product);
         this.setState({ columnDefs: Product });
-        this.setState({ rowData: value });
         this.setState({ AllcolumnDefs: Product });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    await CreateAccountList()
+      .then((res) => {
+        let value = res?.CreateAccount;
+        this.setState({ rowData: value });
       })
       .catch((err) => {
         console.log(err);
       });
   }
   toggleDropdown = () => {
-    // Toggle the isOpen state when the button is clicked
     this.setState((prevState) => ({ isOpen: !prevState.isOpen }));
   };
-  // getUserList = async () => {
-  //   const formdata = new FormData();
-  //   formdata.append("user_id", pageparmission?.Userinfo?.id);
-  //   formdata.append("role", pageparmission?.Userinfo?.role);
-  //   await axiosConfig.post("/getuserlist", formdata).then((response) => {
-  //     console.log(response);
-  //     let rowData = response?.data?.data?.users;
-  //     this.setState({ rowData });
-  //   });
-  // };
 
   runthisfunction(id) {
     swal("Warning", "Sure You Want to Delete it", {
@@ -262,7 +297,7 @@ class ProductType extends React.Component {
     // console.log(this.state.setMySelectedarr);
   };
   exportToPDF = () => {
-    const doc = new jsPDF("landscape", "mm", "a4", false);
+    const doc = new jsPDF("landscape", "mm", "a1", false);
     const contentWidth = doc.internal.pageSize.getWidth();
     const contentHeight = doc.internal.pageSize.getHeight();
     // const tableHeight = this.gridApi.getRowHeight();
@@ -270,22 +305,27 @@ class ProductType extends React.Component {
     const tableWidth = contentWidth;
     const tableX = 10;
     const tableY = 10;
-    const data = this.gridApi.getDataAsCsv({
+    const data1 = this.gridApi.getDataAsCsv({
       processCellCallback: this.processCell,
     });
-    const dataa = this.gridApi.getDataAsExcel({
-      processCellCallback: this.processCell,
-    });
+
+    const lines = data1.split("\n");
+    const header = lines[0].split(",");
+    const data = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].split(",");
+      data.push(line);
+    }
+
     console.log(data);
-    console.log(dataa);
+    doc.text("User Account List", 10, 10);
 
-    doc.text("User Data Table", 10, 10);
+    // const columns = PdfData?.meta.fields;
 
-    // Define columns and rows for the table
-    const columns = data[0];
-    const rows = data.slice(1);
+    const columns = header;
+    const rows = data;
 
-    // Create the table
     doc.autoTable({
       head: [columns],
       body: rows,
@@ -305,6 +345,7 @@ class ProductType extends React.Component {
     doc.save("agGrid.pdf");
   };
   processCell = (params) => {
+    // console.log(params);
     // Customize cell content as needed
     return params.value;
   };
@@ -335,6 +376,28 @@ class ProductType extends React.Component {
     };
 
     this.gridApi.exportDataAsExcel(params, exportParams);
+  };
+
+  shiftElementUp = () => {
+    let currentIndex = this.state.Arrindex;
+    if (currentIndex > 0) {
+      const myArrayCopy = [...this.state.SelectedcolumnDefs];
+      const elementToMove = myArrayCopy.splice(currentIndex, 1)[0];
+      this.setState({ Arrindex: currentIndex - 1 });
+      myArrayCopy.splice(currentIndex - 1, 0, elementToMove);
+      this.setState({ SelectedcolumnDefs: myArrayCopy });
+    }
+  };
+
+  shiftElementDown = () => {
+    let currentIndex = this.state.Arrindex;
+    if (currentIndex < this.state.SelectedcolumnDefs.length - 1) {
+      const myArrayCopy = [...this.state.SelectedcolumnDefs];
+      const elementToMove = myArrayCopy.splice(currentIndex, 1)[0];
+      this.setState({ Arrindex: currentIndex + 1 });
+      myArrayCopy.splice(currentIndex + 1, 0, elementToMove);
+      this.setState({ SelectedcolumnDefs: myArrayCopy });
+    }
   };
 
   render() {
@@ -556,7 +619,7 @@ class ProductType extends React.Component {
                               className="mycustomtag mt-1"
                             >
                               <span className="mt-1">
-                                <h4
+                                <h5
                                   style={{ cursor: "pointer" }}
                                   className="allfields"
                                 >
@@ -567,7 +630,7 @@ class ProductType extends React.Component {
                                   />
 
                                   {ele?.headerName}
-                                </h4>
+                                </h5>
                               </span>
                             </div>
                           </>
@@ -614,8 +677,18 @@ class ProductType extends React.Component {
                               <>
                                 <div key={i} className="mycustomtag mt-1">
                                   <span className="mt-1">
-                                    <h4
-                                      style={{ cursor: "pointer" }}
+                                    <h5
+                                      onClick={() =>
+                                        this.setState({ Arrindex: i })
+                                      }
+                                      style={{
+                                        cursor: "pointer",
+                                        backgroundColor: `${
+                                          this.state.Arrindex === i
+                                            ? "#1877f2"
+                                            : ""
+                                        }`,
+                                      }}
                                       className="allfields"
                                     >
                                       <IoMdRemoveCircleOutline
@@ -639,7 +712,7 @@ class ProductType extends React.Component {
                                       />
 
                                       {ele?.headerName}
-                                    </h4>
+                                    </h5>
                                   </span>
                                 </div>
                               </>
@@ -648,7 +721,24 @@ class ProductType extends React.Component {
                       </div>
                     </div>
                   </Col>
-                  <Col lg="4" md="4" sm="4" xs="12"></Col>
+                  <Col lg="4" md="4" sm="4" xs="12">
+                    <div className="updownbtn justify-content-center">
+                      <div>
+                        <BsFillArrowUpSquareFill
+                          className="arrowassign mb-1"
+                          size="30px"
+                          onClick={() => this.shiftElementUp()}
+                        />
+                      </div>
+                      <div>
+                        <BsFillArrowDownSquareFill
+                          onClick={() => this.shiftElementDown()}
+                          className="arrowassign"
+                          size="30px"
+                        />
+                      </div>
+                    </div>
+                  </Col>
                 </Row>
               </Col>
             </Row>
@@ -663,7 +753,7 @@ class ProductType extends React.Component {
                       this.setState({ columnDefs: SelectedcolumnDefs });
                       // this.setState({ columnDefs: SelectedCols });
 
-                      // this.toggleModal();
+                      this.toggleModal();
                     }}
                     color="primary"
                   >
