@@ -297,7 +297,7 @@ class ProductType extends React.Component {
     // console.log(this.state.setMySelectedarr);
   };
   exportToPDF = () => {
-    const doc = new jsPDF("landscape", "mm", "a1", false);
+    const doc = new jsPDF("landscape", "mm", "a4", false);
     const contentWidth = doc.internal.pageSize.getWidth();
     const contentHeight = doc.internal.pageSize.getHeight();
     // const tableHeight = this.gridApi.getRowHeight();
