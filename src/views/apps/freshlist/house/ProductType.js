@@ -29,14 +29,13 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Eye, Trash2, ChevronDown, Edit, CloudLightning } from "react-feather";
+import { IoMdRemoveCircleOutline } from "react-icons/io";
 import { history } from "../../../../history";
 import "../../../../assets/scss/plugins/tables/_agGridStyleOverride.scss";
 import "../../../../assets/scss/pages/users.scss";
 import Moment from "react-moment";
 import { Route } from "react-router-dom";
 import xmlJs from "xml-js";
-
-import { IoMdRemoveCircleOutline } from "react-icons/io";
 
 import {
   FaArrowAltCircleLeft,
@@ -70,10 +69,6 @@ class ProductType extends React.Component {
       Arrindex: "",
       rowData: [],
       setMySelectedarr: [],
-      Viewpermisson: null,
-      Editpermisson: null,
-      Createpermisson: null,
-      Deletepermisson: null,
       paginationPageSize: 20,
       currenPageSize: "",
       getPageSize: "",
@@ -89,8 +84,6 @@ class ProductType extends React.Component {
     };
   }
 
-  // ...
-
   toggleModal = () => {
     this.setState((prevState) => ({
       modal: !prevState.modal,
@@ -100,17 +93,57 @@ class ProductType extends React.Component {
   async componentDidMount() {
     CreateAccountView()
       .then((res) => {
-        debugger;
+        var mydropdownArray = [];
+        var adddropdown = [];
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        console.log(JSON.parse(jsonData?.CreateAccount));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    await CreateAccountList()
-      .then((res) => {
-        let value = res?.CreateAccount;
-        console.log(value);
+        console.log(JSON.parse(jsonData));
+        const inputs = JSON.parse(jsonData).CreateAccount?.input?.map((ele) => {
+          return {
+            headerName: ele?.label._text,
+            field: ele?.name._text,
+            filter: true,
+            sortable: true,
+          };
+        });
+        let Radioinput =
+          JSON.parse(jsonData).CreateAccount?.Radiobutton?.input[0]?.name
+            ?._text;
+        const addRadio = [
+          {
+            headerName: Radioinput,
+            field: Radioinput,
+            filter: true,
+            sortable: true,
+          },
+        ];
+
+        let dropdown = JSON.parse(jsonData).CreateAccount?.MyDropdown?.dropdown;
+        if (dropdown.length) {
+          var mydropdownArray = dropdown?.map((ele) => {
+            return {
+              headerName: ele?.label,
+              field: ele?.name,
+              filter: true,
+              sortable: true,
+            };
+          });
+        } else {
+          var adddropdown = [
+            {
+              headerName: dropdown?.label._text,
+              field: dropdown?.name._text,
+              filter: true,
+              sortable: true,
+            },
+          ];
+        }
+
+        let myHeadings = [
+          ...inputs,
+          ...adddropdown,
+          ...addRadio,
+          ...mydropdownArray,
+        ];
         let Product = [
           {
             headerName: "Actions",
@@ -178,31 +211,25 @@ class ProductType extends React.Component {
               );
             },
           },
+          ...myHeadings,
         ];
-        for (const [key, value] of Object.entries(res?.CreateAccount[0])) {
-          if (key == "_id") {
-          } else if (key == "__v") {
-          } else {
-            Product.push({
-              headerName: key, // Use the property name as the column header
-              field: key, // Use the property name as the field name
-              // width: auto, // Set the desired width
-              filter: true,
-              sortable: true,
-            });
-          }
-        }
-
+        // console.log(Product);
         this.setState({ columnDefs: Product });
-        this.setState({ rowData: value });
         this.setState({ AllcolumnDefs: Product });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    await CreateAccountList()
+      .then((res) => {
+        let value = res?.CreateAccount;
+        this.setState({ rowData: value });
       })
       .catch((err) => {
         console.log(err);
       });
   }
   toggleDropdown = () => {
-    // Toggle the isOpen state when the button is clicked
     this.setState((prevState) => ({ isOpen: !prevState.isOpen }));
   };
 
@@ -281,79 +308,24 @@ class ProductType extends React.Component {
     const data1 = this.gridApi.getDataAsCsv({
       processCellCallback: this.processCell,
     });
-    const data = [
-      [
-        "Actions",
-        "SoldBy",
-        "SecondaryPhone",
-        "Primarymobileno",
-        "Secondarymobile",
-        "Address",
-        "ShowroomAddress",
-        "StreetAddress1",
-        "StreetAddress2",
-        "Landmark",
-        "name",
-        "UserName",
-        "email",
-        "Password",
-        "B_name",
-        "Status",
-        "Role",
-      ],
-      [
-        "",
-        "Akshay",
-        "7000420819",
-        "789654123",
-        "785412369",
-        "23 Roshan bag colony near kushwaha nagar",
-        "near sukhliye",
-        "new area mumbai",
-        "madras",
-        "sunil kirna store",
-        "suresh",
-        "arpit",
-        "arun@gmail.com",
-        "123654",
-        "sveltose company",
-        "Active",
-        "SUPERADMIN",
-      ],
-      [
-        "",
-        "Akshaykashid",
-        "74151468043",
-        "8521479631",
-        "785412369",
-        "near vijay nagar indore",
-        "near sukhliye fadslffd asddf",
-        "panwel mumbai",
-        "i am in mumbai",
-        "sunil kirna store",
-        "suresh",
-        "arpit",
-        "arun@gmail.com",
-        "123654",
-        "sveltose company",
-        "Active",
-        "ADMIN",
-      ],
-    ];
-    // const dataa = this.gridApi.getDataAsExcel({
-    //   processCellCallback: this.processCell,
-    // });
-    debugger;
+
+    const lines = data1.split("\n");
+    const header = lines[0].split(",");
+    const data = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].split(",");
+      data.push(line);
+    }
+
     console.log(data);
-    console.log(data1);
+    doc.text("User Account List", 10, 10);
 
-    doc.text("User Data Table", 10, 10);
+    // const columns = PdfData?.meta.fields;
 
-    // Define columns and rows for the table
-    const columns = data[0];
-    const rows = data.slice(1);
+    const columns = header;
+    const rows = data;
 
-    // Create the table
     doc.autoTable({
       head: [columns],
       body: rows,
@@ -647,7 +619,7 @@ class ProductType extends React.Component {
                               className="mycustomtag mt-1"
                             >
                               <span className="mt-1">
-                                <h4
+                                <h5
                                   style={{ cursor: "pointer" }}
                                   className="allfields"
                                 >
@@ -658,7 +630,7 @@ class ProductType extends React.Component {
                                   />
 
                                   {ele?.headerName}
-                                </h4>
+                                </h5>
                               </span>
                             </div>
                           </>
@@ -705,7 +677,7 @@ class ProductType extends React.Component {
                               <>
                                 <div key={i} className="mycustomtag mt-1">
                                   <span className="mt-1">
-                                    <h4
+                                    <h5
                                       onClick={() =>
                                         this.setState({ Arrindex: i })
                                       }
@@ -740,7 +712,7 @@ class ProductType extends React.Component {
                                       />
 
                                       {ele?.headerName}
-                                    </h4>
+                                    </h5>
                                   </span>
                                 </div>
                               </>
@@ -781,7 +753,7 @@ class ProductType extends React.Component {
                       this.setState({ columnDefs: SelectedcolumnDefs });
                       // this.setState({ columnDefs: SelectedCols });
 
-                      // this.toggleModal();
+                      this.toggleModal();
                     }}
                     color="primary"
                   >
