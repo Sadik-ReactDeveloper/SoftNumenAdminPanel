@@ -580,6 +580,12 @@ const UpdateExistingRole = lazy(() =>
 const CreateAccount = lazy(() =>
   import("./views/apps/freshlist/accounts/CreateAccount")
 );
+const EditAccount = lazy(() =>
+  import("./views/apps/freshlist/accounts/EditAccount")
+);
+const ViewAccount = lazy(() =>
+  import("./views/apps/freshlist/accounts/ViewAccount")
+);
 const RoleList = lazy(() => import("./views/apps/freshlist/accounts/RoleList"));
 // INhouseProduct
 const HouseProductList = lazy(() =>
@@ -1712,6 +1718,14 @@ class AppRouter extends React.Component {
           <AppRoute
             path="/app/SoftNumen/account/CreateAccount"
             component={CreateAccount}
+          />
+          <AppRoute
+            path="/app/SoftNumen/account/EditAccount/:id"
+            component={EditAccount}
+          />
+          <AppRoute
+            path="/app/SoftNumen/account/ViewAccount/:id"
+            component={ViewAccount}
           />
           <AppRoute path="/app/Trupee/account/RoleList" component={RoleList} />
           {/* inhouse Product */}
