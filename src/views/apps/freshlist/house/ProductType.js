@@ -28,6 +28,7 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 // import "ag-grid-community/styles/ag-theme-alpine.css";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import Papa from "papaparse";
 import { Eye, Trash2, ChevronDown, Edit, CloudLightning } from "react-feather";
 import { IoMdRemoveCircleOutline } from "react-icons/io";
 import { history } from "../../../../history";
@@ -52,10 +53,11 @@ import {
   DeleteAccount,
 } from "../../../../ApiEndPoint/ApiCalling";
 import {
+  BsCloudDownloadFill,
   BsFillArrowDownSquareFill,
   BsFillArrowUpSquareFill,
 } from "react-icons/bs";
-// import * as XLSX from "xlsx";
+import * as XLSX from "xlsx";
 
 const SelectedCols = [];
 
@@ -63,7 +65,7 @@ class ProductType extends React.Component {
   constructor(props) {
     super(props);
     this.gridRef = React.createRef();
-    // this.gridApi = null;
+    this.gridApi = null;
     this.state = {
       isOpen: false,
       Arrindex: "",
@@ -260,6 +262,7 @@ class ProductType extends React.Component {
 
   onGridReady = (params) => {
     this.gridApi = params.api;
+    this.gridRef.current = params.api;
     this.gridColumnApi = params.columnApi;
 
     this.setState({
@@ -296,86 +299,130 @@ class ProductType extends React.Component {
     // this.setState({ setMySelectedarr: [...SelectedCols] });
     // console.log(this.state.setMySelectedarr);
   };
-  exportToPDF = () => {
-    const doc = new jsPDF("landscape", "mm", "a4", false);
-    const contentWidth = doc.internal.pageSize.getWidth();
-    const contentHeight = doc.internal.pageSize.getHeight();
-    // const tableHeight = this.gridApi.getRowHeight();
-    // console.log(tableHeight);
-    const tableWidth = contentWidth;
-    const tableX = 10;
-    const tableY = 10;
-    const data1 = this.gridApi.getDataAsCsv({
-      processCellCallback: this.processCell,
+  parseCsv(csvData) {
+    return new Promise((resolve, reject) => {
+      Papa.parse(csvData, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (result) => {
+          debugger;
+          console.log(result);
+          if (result.data && result.data.length > 0) {
+            resolve(result.data);
+          } else {
+            reject(new Error("No data found in the CSV"));
+          }
+        },
+        error: (error) => {
+          reject(error);
+        },
+      });
     });
-
-    const lines = data1.split("\n");
-    const header = lines[0].split(",");
-    const data = [];
-
-    for (let i = 1; i < lines.length; i++) {
-      const line = lines[i].split(",");
-      data.push(line);
-    }
-
-    console.log(data);
-    doc.text("User Account List", 10, 10);
-
-    // const columns = PdfData?.meta.fields;
-
-    const columns = header;
-    const rows = data;
-
+  }
+  generatePDF(parsedData) {
+    const doc = new jsPDF("landscape", "mm", "a4", false);
+    // const headingBgColor = "yellow";
+    // doc.setFillColor(headingBgColor);
+    const tableData = parsedData.map((row) => Object.values(row));
+    doc.text("UserAccount", 10, 10);
     doc.autoTable({
-      head: [columns],
-      body: rows,
+      head: [Object.keys(parsedData[0])],
+      body: tableData,
       startY: 20,
     });
 
-    // if (tableHeight < contentHeight) {
-    //   doc.autoTable({ html: "#myAgGrid" });
-    // } else {
-    //   doc.text(
-    //     "Table too large for one page, implement pagination or adjust layout.",
-    //     20,
-    //     20
-    //   );
+    doc.save("UserList.pdf");
+  }
+
+  exportToPDF = async () => {
+    const csvData = this.gridApi.getDataAsCsv({
+      processCellCallback: this.processCell,
+    });
+    try {
+      const parsedData = await this.parseCsv(csvData);
+      this.generatePDF(parsedData);
+    } catch (error) {
+      console.error("Error parsing CSV:", error);
+    }
+    // debugger;
+    // const doc = new jsPDF("landscape", "mm", "a4", false);
+    // const contentWidth = doc.internal.pageSize.getWidth();
+    // const contentHeight = doc.internal.pageSize.getHeight();
+    // // const tableHeight = this.gridApi.getRowHeight();
+    // // console.log(tableHeight);
+    // const tableWidth = contentWidth;
+    // const tableX = 10;
+    // const tableY = 10;
+    // const data1 = this.gridApi.getDataAsCsv({
+    //   processCellCallback: this.processCell,
+    // });
+
+    // const lines = data1.split("\n");
+    // const header = lines[0].split(",");
+    // const data = [];
+
+    // for (let i = 1; i < lines.length; i++) {
+    //   const line = lines[i].split(",");
+    //   data.push(line);
     // }
 
-    doc.save("agGrid.pdf");
+    // doc.text("User_Account  ", 10, 10);
+
+    // const columns = header;
+    // const rows = data;
+
+    // doc.autoTable({
+    //   head: [columns],
+    //   body: rows,
+    //   startY: 20,
+    // });
+
+    // doc.save("userlist.pdf");
   };
   processCell = (params) => {
     // console.log(params);
     // Customize cell content as needed
     return params.value;
   };
-  // exportToPDF = () => {
-  //   // let id = document.getElementById("myAgGrid");
-  //   // const gridApi = this.gridRef.current.api;
-  //   // console.log(id);
-  //   // console.log(cid);
-  //   if (this.gridApi) {
-  //     const doc = new jsPDF("landscape", "mm", "a4", false);
-  //     doc.autoTable({ html: "#myAgGrid" });
-  //     // doc.autoTable({ html: ".ag-root-wrapper ag-layout-auto-height ag-ltr" });
 
-  //     // doc.text("Hello, Landscape PDF!", 10, 10);
-  //     doc.save("landscape-pdf.pdf");
-  //     // const doc = new jsPDF("landscape", "mm", "a4", false);
+  convertCsvToExcel(csvData) {
+    return new Promise((resolve) => {
+      Papa.parse(csvData, {
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: function (result) {
+          const worksheet = XLSX.utils.json_to_sheet(result.data);
+          const workbook = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+          const excelBuffer = XLSX.write(workbook, {
+            bookType: "xlsx",
+            type: "array",
+          });
+          const blob = new Blob([excelBuffer], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          });
+          resolve(blob);
+        },
+      });
+    });
+  }
+  downloadExcelFile(blob) {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "userlist.xlsx";
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
 
-  //     // doc.save("mypdf.pdf");
-  //   }
-  // };
-  exportToExcel = () => {
-    const params = {
-      fileName: "my-exported-data.xlsx", // Set the desired file name
-    };
-
-    const exportParams = {
-      columnWidth: 100, // Set the column width in Excel (optional)
-    };
-
-    this.gridApi.exportDataAsExcel(params, exportParams);
+  exportToExcel = async (e) => {
+    const CsvData = this.gridApi.getDataAsCsv({
+      processCellCallback: this.processCell,
+    });
+    const blob = await this.convertCsvToExcel(CsvData);
+    this.downloadExcelFile(blob);
   };
 
   shiftElementUp = () => {
@@ -424,7 +471,7 @@ class ProductType extends React.Component {
                     <FaFilter
                       style={{ cursor: "pointer" }}
                       title="filter coloumn"
-                      size="25px"
+                      size="30px"
                       onClick={(e) => {
                         e.preventDefault();
                         this.toggleModal();
@@ -435,10 +482,10 @@ class ProductType extends React.Component {
                   </span>
                   <span className="mx-1">
                     <div className="dropdown-container float-right">
-                      <FaFileDownload
+                      <BsCloudDownloadFill
                         style={{ cursor: "pointer" }}
                         title="download file"
-                        size="25px"
+                        size="30px"
                         className="dropdown-button "
                         color="blue"
                         onClick={this.toggleDropdown}
@@ -467,7 +514,8 @@ class ProductType extends React.Component {
                             CSV
                           </h5>
                           <h5
-                            onClick={() => this.gridApi.exportDataAsExcel()}
+                            // onClick={() => this.gridApi.exportDataAsExcel()}
+                            onClick={this.exportToExcel}
                             style={{ cursor: "pointer" }}
                             className=" mx-1 myactive"
                           >
@@ -536,10 +584,10 @@ class ProductType extends React.Component {
                           </DropdownMenu>
                         </UncontrolledDropdown>
                       </div>
-                      <div className="d-flex flex-wrap justify-content-between mb-1">
+                      <div className="d-flex flex-wrap justify-content-end mb-1">
                         <div className="table-input mr-1">
                           <Input
-                            placeholder="search..."
+                            placeholder="search Item here..."
                             onChange={(e) =>
                               this.updateSearchQuery(e.target.value)
                             }
@@ -547,14 +595,14 @@ class ProductType extends React.Component {
                           />
                         </div>
 
-                        <div className="export-btn">
+                        {/* <div className="export-btn">
                           <Button.Ripple
                             color="primary"
                             onClick={() => this.gridApi.exportDataAsCsv()}
                           >
                             Export as CSV
                           </Button.Ripple>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                     <ContextLayout.Consumer className="ag-theme-alpine">
@@ -569,7 +617,12 @@ class ProductType extends React.Component {
                           defaultColDef={defaultColDef}
                           columnDefs={columnDefs}
                           rowData={rowData}
-                          onGridReady={this.onGridReady}
+                          onGridReady={(params) => {
+                            this.gridApi = params.api;
+                            this.gridColumnApi = params.columnApi;
+                            this.gridRef.current = params.api;
+                          }}
+                          // onGridReady={this.onGridReady}
                           colResizeDefault={"shift"}
                           animateRows={true}
                           floatingFilter={false}
@@ -597,18 +650,12 @@ class ProductType extends React.Component {
           <ModalHeader toggle={this.toggleModal}>Change Fileds</ModalHeader>
           <ModalBody className="modalbodyhead">
             <Row>
-              <Col lg="4" md="4" sm="4" xl="4" xs="12">
+              <Col lg="4" md="4" sm="12" xl="4" xs="12">
                 <h4>Columns</h4>
                 <div className="mainshffling">
                   <div class="ex1">
                     {AllcolumnDefs &&
                       AllcolumnDefs?.map((ele, i) => {
-                        let check =
-                          SelectedcolumnDefs &&
-                          SelectedcolumnDefs?.some((item) => {
-                            item?.headerName == ele?.headerName;
-                          });
-
                         return (
                           <>
                             <div
@@ -639,7 +686,7 @@ class ProductType extends React.Component {
                   </div>
                 </div>
               </Col>
-              <Col lg="2" md="2" sm="2" xl="2" xs="12" className="colarrowbtn">
+              <Col lg="2" md="2" sm="12" xl="2" xs="12" className="colarrowbtn">
                 <div className="mainarrowbtn">
                   <div style={{ cursor: "pointer" }}>
                     <FaArrowAltCircleRight
@@ -665,9 +712,9 @@ class ProductType extends React.Component {
                   </div>
                 </div>
               </Col>
-              <Col lg="6" md="6" sm="6" xl="6" xs="12">
+              <Col lg="6" md="6" sm="12" xl="6" xs="12">
                 <Row>
-                  <Col lg="8" md="8" sm="8" xs="12">
+                  <Col lg="8" md="8" sm="12" xs="12">
                     <h4>Selected Columns</h4>
                     <div className="mainshffling">
                       <div class="ex1">
@@ -721,7 +768,7 @@ class ProductType extends React.Component {
                       </div>
                     </div>
                   </Col>
-                  <Col lg="4" md="4" sm="4" xs="12">
+                  <Col lg="4" md="4" sm="12" xs="12">
                     <div className="updownbtn justify-content-center">
                       <div>
                         <BsFillArrowUpSquareFill
@@ -748,11 +795,10 @@ class ProductType extends React.Component {
                   <Button
                     onClick={(e) => {
                       e.preventDefault();
-                      debugger;
-                      console.log(SelectedCols);
+                      // console.log(this.gridRef.current)
+                      // this.gridRef.current.setColumnDefs(SelectedcolumnDefs);
                       this.setState({ columnDefs: SelectedcolumnDefs });
                       // this.setState({ columnDefs: SelectedCols });
-
                       this.toggleModal();
                     }}
                     color="primary"

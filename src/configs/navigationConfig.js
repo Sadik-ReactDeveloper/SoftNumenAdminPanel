@@ -98,8 +98,8 @@ const navigationConfig = [
       //   navLink: "/app/freshlist/house/AddProduct",
       // },
       {
-        id: "Create Role",
-        title: "Create Role",
+        id: "Assign Role",
+        title: "Assign Role",
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
