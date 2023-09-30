@@ -290,9 +290,7 @@ export class EditProductType extends Component {
                 render={({ history }) => (
                   <Button
                     className=" btn btn-danger float-right"
-                    onClick={() =>
-                      history.push("/app/freshlist/house/userlist")
-                    }
+                    onClick={() => history.push("/app/SoftNumen/userlist")}
                   >
                     Back
                   </Button>

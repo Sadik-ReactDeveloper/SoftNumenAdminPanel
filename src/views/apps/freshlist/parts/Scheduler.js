@@ -56,7 +56,6 @@ const AddProduct = () => {
   const [S_Street, setS_Street] = useState("");
   const [B_PinCode, setB_PinCode] = useState("");
   const [S_PinCode, setS_PinCode] = useState("");
-  const [setuserList, setsetuserList] = useState(false);
   const [multiSelect, setmultiSelect] = useState([]);
   const [selectedOptions, setselectedOptions] = useState([]);
   const [password, setpassword] = useState("");
@@ -65,7 +64,6 @@ const AddProduct = () => {
   const [AssignRole, setAssignRole] = useState("");
   const [CompanyName, setCompanyName] = useState("");
   const [Companytype, setCompanytype] = useState("");
-  const [Selectuser, setSelectuser] = useState("");
   const [UserName, setUserName] = useState("");
   const [productName, setproductName] = useState([]);
   const [City, setCity] = useState("");
@@ -75,7 +73,7 @@ const AddProduct = () => {
   useEffect(() => {
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let newparmisson = pageparmission?.role?.find(
-      value => value?.pageName === "Create Account"
+      (value) => value?.pageName === "Create Account"
     );
     setViewpermisson(newparmisson?.permission.includes("View"));
     setCreatepermisson(newparmisson?.permission.includes("Create"));
@@ -88,7 +86,7 @@ const AddProduct = () => {
     formdata.append("role", pageparmission?.Userinfo?.role);
   }, []);
 
-  const submitHandler = e => {
+  const submitHandler = (e) => {
     e.preventDefault();
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let uniqueChars = [...new Set(selectItem1)];
@@ -130,7 +128,7 @@ const AddProduct = () => {
 
     axiosConfig
       .post("/createuser", formdata)
-      .then(response => {
+      .then((response) => {
         if (response.data?.success) {
           swal("Success!", "Submitted SuccessFull!", "success");
           setAssignRole("");
@@ -149,7 +147,7 @@ const AddProduct = () => {
         }
         // this.props.history.push("/app/softNumen/order/placeorder");
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -185,7 +183,7 @@ const AddProduct = () => {
       }
     }
 
-    let arr = selectedList.map(ele => ele.id);
+    let arr = selectedList.map((ele) => ele.id);
     setmultiSelect(arr);
     // console.log(multiSelect);
 
@@ -197,10 +195,10 @@ const AddProduct = () => {
       formdata.append("state_id", value);
       axiosConfig
         .post(`/getcity`, formdata)
-        .then(res => {
+        .then((res) => {
           setCityList(res?.data?.cities);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     } else {
@@ -230,7 +228,7 @@ const AddProduct = () => {
                       //   placeholder="Enter Your Name"
                       name="date"
                       value={fullname}
-                      onChange={e => setfullname(e.target.value)}
+                      onChange={(e) => setfullname(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -265,7 +263,7 @@ const AddProduct = () => {
                   <Label>Recurrence Pattern</Label>
                   <div
                     className="form-label-group mt-2"
-                    onChange={e => {
+                    onChange={(e) => {
                       setstatus(e.target.value), console.log(e.target.value);
                     }}
                   >
@@ -329,17 +327,11 @@ const AddProduct = () => {
                 </Col>
 
                 <Col lg="6" md="6">
-                  <div>
-                    <Label>If you want to Repeated Time</Label>
-                  </div>
+                  <Label className="mb-1">If you want to Repeated Time</Label>
+
                   <FormGroup className="d-flex">
-                    <div>
-                      <Input
-                        style={{ marginRight: "3px" }}
-                        type="radio"
-                        name="Pattern"
-                        value="Yearly"
-                      />
+                    <div className="mx-2">
+                      <Input type="radio" name="Pattern" value="Yearly" />
                       <span style={{ marginRight: "3px" }}>Every</span>
                     </div>
                     <div>
@@ -347,7 +339,7 @@ const AddProduct = () => {
                         className="every"
                         style={{ marginRight: "3px", width: "80px" }}
                         type="text"
-                        placeholder="Hours"
+                        placeholder="minute"
                         name="name"
                         value=""
                       />
@@ -409,14 +401,15 @@ const AddProduct = () => {
                       value="by"
                     />
                     <span style={{ marginRight: "3px" }}>End by</span>
-                    <Input
-                      //   style={{ marginRight: "3px", width: "100px" }}
-                      type="date"
-                      name="date"
-                      //   value="Yearly"
-                    />
                   </div>
+                  <Input
+                    //   style={{ marginRight: "3px", width: "100px" }}
+                    type="date"
+                    name="date"
+                    //   value="Yearly"
+                  />
                 </Col>
+
                 {/* <Col lg="6" md="6">
                   <FormGroup>
                     <Label>Password</Label>
@@ -490,37 +483,6 @@ const AddProduct = () => {
                   </FormGroup>
                 </Col> */}
               </Row>
-
-              {/* <Row className="mt-2">
-                <Col lg="6" md="6" sm="6" className="mb-2">
-                  <Label className="">
-                    <h4>Status</h4>
-                  </Label>
-                  <div
-                    className="form-label-group"
-                    onChange={e => setstatus(e.target.value)}
-                  >
-                    <input
-                      style={{ marginRight: "3px" }}
-                      type="radio"
-                      name="status"
-                      value="Active"
-                    />
-                    <span style={{ marginRight: "20px" }}>Active</span>
-
-                    <input
-                      style={{ marginRight: "3px" }}
-                      type="radio"
-                      name="status"
-                      value="Deactive"
-                    />
-                    <span style={{ marginRight: "3px" }}>Deactive</span>
-                  </div>
-                </Col>
-                
-              </Row> */}
-              {/* )} */}
-
               <Row>
                 <Button.Ripple
                   color="primary"
@@ -529,6 +491,39 @@ const AddProduct = () => {
                 >
                   Submit
                 </Button.Ripple>
+              </Row>
+            </Form>
+
+            <hr />
+
+            <Form>
+              <Row className="mt-2">
+                <Col lg="6" md="6" sm="6" className="mb-2">
+                  <Label className="">
+                    <h4>Upload Excel file</h4>
+                  </Label>
+
+                  <input
+                    multiple
+                    className="form-control"
+                    style={{ marginRight: "3px" }}
+                    type="file"
+                  />
+                </Col>
+                <Col
+                  lg="6"
+                  md="6"
+                  sm="6"
+                  className="mb-2 d-flex justify-content-center"
+                >
+                  <Button.Ripple
+                    color="primary"
+                    type="submit"
+                    className="mr-1 mt-2 mx-2"
+                  >
+                    Upload
+                  </Button.Ripple>
+                </Col>
               </Row>
             </Form>
           </CardBody>

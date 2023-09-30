@@ -1,10 +1,21 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Row, Col, Card, Button, Label, Input, Form } from "reactstrap";
+import {
+  Row,
+  Col,
+  Card,
+  Button,
+  Label,
+  Input,
+  Form,
+  InputGroup,
+} from "reactstrap";
 import { Roles } from "./AddRole";
 import axios from "axios";
 import axiosConfig from "../../../../axiosConfig";
 import swal from "sweetalert";
+import "../../../../assets/scss/pages/users.scss";
 import { BsFillArrowDownCircleFill } from "react-icons/bs";
+import { AiOutlineSearch } from "react-icons/ai";
 
 export default function AddRoleNew() {
   const [Desc, setDesc] = useState("");
@@ -12,8 +23,6 @@ export default function AddRoleNew() {
   const [Selected, setSelected] = useState([]);
   const [SelectedIndex, setIndex] = useState("");
   const [show, setShow] = useState(false);
-
-  // const navigate = useNavigate();
 
   const handleSelectPage = (value, checked, permit, title, ele) => {
     if (checked) {
@@ -67,7 +76,7 @@ export default function AddRoleNew() {
     console.log(Selected);
   }, [Selected]);
 
-  const handleSumit = e => {
+  const handleSumit = (e) => {
     e.preventDefault();
     let userdata = JSON.parse(localStorage.getItem("userData"));
 
@@ -80,7 +89,7 @@ export default function AddRoleNew() {
 
     axiosConfig
       .post(`/addroles`, formdata)
-      .then(res => {
+      .then((res) => {
         console.log(res);
         swal("Success", "Role Created");
         setSelected("");
@@ -91,7 +100,7 @@ export default function AddRoleNew() {
           checkbox.checked = false;
         }
       })
-      .catch(er => {
+      .catch((er) => {
         console.log(er);
       });
   };
@@ -103,6 +112,7 @@ export default function AddRoleNew() {
   };
   return (
     <>
+      <Row></Row>
       <Row className="">
         <Col xl={12}>
           <Card>
@@ -111,22 +121,38 @@ export default function AddRoleNew() {
               <div className="container mt-5">
                 <Row className="mb-3 container">
                   <Col>
-                    <Label>Enter Role *</Label>
-                    <Input
+                    <Label>Enter Role Name*</Label>
+                    <InputGroup className="maininput">
+                      <Input
+                        // required
+                        value={Role}
+                        onChange={(e) => setRole(e.target.value)}
+                        type="text"
+                        placeholder="Enter Role"
+                        className="form-control inputs"
+                      />
+                      <Button color="primary" className="mybtn primary">
+                        <AiOutlineSearch
+                          onClick={(e) => e.preventDefault()}
+                          fill="white"
+                        />
+                      </Button>
+                    </InputGroup>
+                    {/* <Input
                       required
                       value={Role}
-                      onChange={e => setRole(e.target.value)}
+                      onChange={(e) => setRole(e.target.value)}
                       type="text"
                       placeholder="Enter Role"
                       className="form-control"
-                    />
+                    /> */}
                   </Col>
                   <Col>
                     <Label>Enter Role Description * </Label>
                     <Input
                       required
                       value={Desc}
-                      onChange={e => setDesc(e.target.value)}
+                      onChange={(e) => setDesc(e.target.value)}
                       type="text"
                       placeholder="Enter Role Desc.."
                       // className="form-control"
@@ -166,7 +192,7 @@ export default function AddRoleNew() {
                                 className="mt-1"
                                 name="check"
                                 id={`head_${value?.title}`}
-                                onClick={e => {
+                                onClick={(e) => {
                                   handlesetparent(e.target.checked, index);
                                   handleSelectPage(
                                     e.target.value,
@@ -224,7 +250,7 @@ export default function AddRoleNew() {
                                             <input
                                               name="check"
                                               id={`item_${permit}`}
-                                              onClick={e => {
+                                              onClick={(e) => {
                                                 handleSelectPage(
                                                   e.target.value,
                                                   e.target.checked,

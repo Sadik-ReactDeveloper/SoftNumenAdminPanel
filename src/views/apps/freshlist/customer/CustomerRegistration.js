@@ -45,8 +45,8 @@ const CustomerRegistration = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  useEffect(async () => {
-    await Customer_Registration()
+  useEffect(() => {
+    Customer_Registration()
       .then((res) => {
         // console.log(res.data);
         const jsonAllData = xmlJs.xml2json(res.data, {

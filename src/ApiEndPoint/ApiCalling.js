@@ -7,6 +7,7 @@ import {
   Create_Account_save,
   Create_Account_List,
   Delete_Account_List,
+  Create_Account_Update,
 } from "./Api";
 import axiosConfig from "../axiosConfig";
 
@@ -47,6 +48,12 @@ export const DeleteAccount = async (id) => {
 export const CreateAccountList = async (data) => {
   let response = await axiosConfig
     .get(`${Create_Account_List}`, data)
+    .then((res) => res.data);
+  return response;
+};
+export const CreateAccountUpdate = async (id) => {
+  let response = await axiosConfig
+    .post(`${Create_Account_Update}` + id)
     .then((res) => res.data);
   return response;
 };
