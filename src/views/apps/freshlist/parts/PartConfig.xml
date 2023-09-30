@@ -1,6 +1,6 @@
-<CreateAccount>
-
-    <input>
+<?xml version="1.0" encoding="UTF-8"?> 
+<PartConfig>
+ <input>
 	<label>Sold BY</label>
 	<type type="text">text</type>
     <name>SoldBy</name>
@@ -145,4 +145,4 @@
 	</dropdown>
 
 </MyDropdown>
-</CreateAccount>
+</PartConfig>
