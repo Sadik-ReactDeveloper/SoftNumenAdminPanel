@@ -63,7 +63,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/Trupee/account/CreateAccount",
+        navLink: "/app/SoftNumen/account/CreateAccount",
       },
       {
         id: "Customer Registration",
@@ -79,7 +79,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaList size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/house/userlist",
+        navLink: "/app/SoftNumen/userlist",
       },
       // {
       //   id: "clientAccounts",
@@ -87,7 +87,7 @@ const navigationConfig = [
       //   type: "item",
       //   icon: <FaCircle size={15} />,
       //   permissions: ["admin", "editor"],
-      //   navLink: "/app/freshlist/house/userlist",
+      //   navLink: "/app/SoftNumen/userlist",
       // },
       // {
       //   id: "accountantaccounts",
