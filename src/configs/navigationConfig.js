@@ -368,6 +368,21 @@ const navigationConfig = [
     groupTitle: "Parts Management",
     title: "Parts",
   },
+  // {
+  //   id: "Scheduler",
+  //   title: "Scheduler Time",
+  //   type: "collapse",
+  //   icon: <FaList size={15} />,
+  // },
+
+  {
+    id: "Scheduler",
+    title: "Scheduler Time",
+    type: "item",
+    icon: <MdOutlineFolderSpecial size={15} />,
+    permissions: ["admin", "editor"],
+    navLink: "/app/SoftNumen/parts/SchedulerTime",
+  },
   {
     id: "Parts",
     title: "Parts",
@@ -380,7 +395,8 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/SoftNumen/parts/AddPart",
+        // navLink: "/app/SoftNumen/parts/AddPart",
+        navLink: "/app/SoftNumen/parts/PartList",
       },
       {
         id: "Parts Catalogue",
