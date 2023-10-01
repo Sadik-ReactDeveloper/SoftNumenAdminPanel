@@ -8,6 +8,11 @@ import {
   Input,
   Form,
   InputGroup,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Table,
 } from "reactstrap";
 import { Roles } from "./AddRole";
 import axios from "axios";
@@ -16,13 +21,20 @@ import swal from "sweetalert";
 import "../../../../assets/scss/pages/users.scss";
 import { BsFillArrowDownCircleFill } from "react-icons/bs";
 import { AiOutlineSearch } from "react-icons/ai";
+import { CreateAccountView } from "../../../../ApiEndPoint/ApiCalling";
+import xmlJs from "xml-js";
 
-export default function AddRoleNew() {
+export default function AddRoleNew(args) {
   const [Desc, setDesc] = useState("");
   const [Role, setRole] = useState("");
   const [Selected, setSelected] = useState([]);
   const [SelectedIndex, setIndex] = useState("");
   const [show, setShow] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [CreatAccountView, setCreatAccountView] = useState({});
+  const [dropdownValue, setdropdownValue] = useState({});
+
+  const toggle = () => setModal(!modal);
 
   const handleSelectPage = (value, checked, permit, title, ele) => {
     if (checked) {
@@ -73,6 +85,18 @@ export default function AddRoleNew() {
   };
   console.log(Selected);
   useEffect(() => {
+    CreateAccountView()
+      .then((res) => {
+        const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
+        console.log(JSON.parse(jsonData)?.CreateAccount?.MyDropdown?.dropdown);
+        setCreatAccountView(
+          JSON.parse(jsonData)?.CreateAccount?.MyDropdown?.dropdown
+        );
+        setdropdownValue(JSON.parse(jsonData));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     console.log(Selected);
   }, [Selected]);
 
@@ -131,7 +155,11 @@ export default function AddRoleNew() {
                         placeholder="Enter Role"
                         className="form-control inputs"
                       />
-                      <Button color="primary" className="mybtn primary">
+                      <Button
+                        onClick={toggle}
+                        color="primary"
+                        className="mybtn primary"
+                      >
                         <AiOutlineSearch
                           onClick={(e) => e.preventDefault()}
                           fill="white"
@@ -296,6 +324,59 @@ export default function AddRoleNew() {
           </Card>
         </Col>
       </Row>
+      <Modal
+        fullscreen="xl"
+        size="lg"
+        backdrop={false}
+        isOpen={modal}
+        toggle={toggle}
+        {...args}
+      >
+        <ModalHeader toggle={toggle}>Role list</ModalHeader>
+        <ModalBody>
+          <div className="modalheaderaddrol p-1">
+            <h3>Role List</h3>
+            <Table bordered borderless hover responsive size="sm" striped>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Username</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>Mark</td>
+                  <td>Otto</td>
+                  <td>@mdo</td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>Jacob</td>
+                  <td>Thornton</td>
+                  <td>@fat</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>Larry</td>
+                  <td>the Bird</td>
+                  <td>@twitter</td>
+                </tr>
+              </tbody>
+            </Table>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={toggle}>
+            Do Something
+          </Button>{" "}
+          <Button color="secondary" onClick={toggle}>
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
     </>
   );
 }

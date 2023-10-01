@@ -58,8 +58,8 @@ const navigationConfig = [
     icon: <FaUsers size={15} />,
     children: [
       {
-        id: "Create Account",
-        title: "Create Account",
+        id: "Create Customer",
+        title: "Create Customer",
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
@@ -236,8 +236,8 @@ const navigationConfig = [
     icon: <FaProductHunt size={15} />,
     children: [
       {
-        id: "Add Suppier",
-        title: "Add Suppier",
+        id: "Add Supplier",
+        title: "Add Supplier",
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
@@ -739,7 +739,7 @@ const navigationConfig = [
         navLink: "/app/softNumen/warranty/OEMWarranty",
       },
       {
-        id: "Suppier Warranty",
+        id: "Supplier Warranty",
         title: "Suppier Warranty",
         type: "item",
         icon: <FaList size={15} />,

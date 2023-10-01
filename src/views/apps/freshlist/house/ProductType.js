@@ -162,19 +162,6 @@ class ProductType extends React.Component {
             cellRendererFramework: (params) => {
               return (
                 <div className="actions cursor-pointer">
-                  {/* <CustomInput
-                    className=""
-                    type="switch"
-                    id="exampleCustomSwitch"
-                    Reactstrap
-                    Switch
-                    Colors
-                    name="customSwitch"
-                    inline
-                    onChange={(e) => {
-                      console.log(e.target.value);
-                    }}
-                  ></CustomInput> */}
                   <Route
                     render={({ history }) => (
                       <Eye
@@ -439,6 +426,21 @@ class ProductType extends React.Component {
     this.downloadExcelFile(blob);
   };
 
+  convertCSVtoExcel = () => {
+    const CsvData = this.gridApi.getDataAsCsv({
+      processCellCallback: this.processCell,
+    });
+    Papa.parse(CsvData, {
+      complete: (result) => {
+        const ws = XLSX.utils.json_to_sheet(result.data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        const excelType = "xls";
+        XLSX.writeFile(wb, `UserList.${excelType}`);
+      },
+    });
+  };
+
   shiftElementUp = () => {
     let currentIndex = this.state.Arrindex;
     if (currentIndex > 0) {
@@ -459,6 +461,40 @@ class ProductType extends React.Component {
       myArrayCopy.splice(currentIndex + 1, 0, elementToMove);
       this.setState({ SelectedcolumnDefs: myArrayCopy });
     }
+  };
+  convertCsvToXml = () => {
+    debugger;
+    const CsvData = this.gridApi.getDataAsCsv({
+      processCellCallback: this.processCell,
+    });
+    Papa.parse(CsvData, {
+      complete: (result) => {
+        const rows = result.data;
+
+        // Create XML
+        let xmlString = "<root>\n";
+
+        rows.forEach((row) => {
+          xmlString += "  <row>\n";
+          row.forEach((cell, index) => {
+            xmlString += `    <field${index + 1}>${cell}</field${index + 1}>\n`;
+          });
+          xmlString += "  </row>\n";
+        });
+
+        xmlString += "</root>";
+
+        // setXmlData(xmlString);
+        console.log(xmlString);
+
+        // Create a download link
+        const blob = new Blob([xmlString], { type: "text/xml" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "output.xml";
+        link.click();
+      },
+    });
   };
 
   render() {
@@ -558,7 +594,7 @@ class ProductType extends React.Component {
                                     style={{ cursor: "pointer" }}
                                     className=" mx-1 myactive mt-1"
                                   >
-                                    PDF
+                                    .PDF
                                   </h5>
                                   <h5
                                     onClick={() =>
@@ -567,22 +603,28 @@ class ProductType extends React.Component {
                                     style={{ cursor: "pointer" }}
                                     className=" mx-1 myactive"
                                   >
-                                    CSV
+                                    .CSV
                                   </h5>
                                   <h5
-                                    // onClick={() => this.gridApi.exportDataAsExcel()}
+                                    onClick={this.convertCSVtoExcel}
+                                    style={{ cursor: "pointer" }}
+                                    className=" mx-1 myactive"
+                                  >
+                                    .XLS
+                                  </h5>
+                                  <h5
                                     onClick={this.exportToExcel}
                                     style={{ cursor: "pointer" }}
                                     className=" mx-1 myactive"
                                   >
-                                    XLS
+                                    .XLSX
                                   </h5>
                                   <h5
-                                    onClick={() => this.exportToExcel()}
+                                    onClick={() => this.convertCsvToXml()}
                                     style={{ cursor: "pointer" }}
                                     className=" mx-1 myactive"
                                   >
-                                    XML
+                                    .XML
                                   </h5>
                                 </div>
                               )}
