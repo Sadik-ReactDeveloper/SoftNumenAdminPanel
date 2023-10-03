@@ -25,20 +25,38 @@ const CreateAccount = () => {
   const [CreatAccountView, setCreatAccountView] = useState({});
   const [formData, setFormData] = useState({});
   const [dropdownValue, setdropdownValue] = useState({});
+  const [index, setindex] = useState("");
+  const [error, setError] = useState("");
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e, type, i) => {
     const { name, value } = e.target;
+    setindex(i);
+    if (type == "number") {
+      if (/^\d{0,10}$/.test(value)) {
+        setError("");
+      } else {
+        setError(
+          "Please enter a valid number with a maximum length of 10 digits"
+        );
+      }
+    } else {
+      if (value.length <= 10) {
+        console.log(value);
+        setError("");
+      } else {
+        // setError("Input length exceeds the maximum of 10 characters");
+      }
+    }
     setFormData({
       ...formData,
       [name]: value,
     });
   };
-  // console.log(formData);
   useEffect(() => {
     CreateAccountView()
       .then((res) => {
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        // console.log(JSON.parse(jsonData));
+        console.log(JSON.parse(jsonData));
         setCreatAccountView(JSON.parse(jsonData));
         setdropdownValue(JSON.parse(jsonData));
       })
@@ -49,18 +67,21 @@ const CreateAccount = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(formData);
-    CreateAccountSave(formData)
-      .then((res) => {
-        if (res.status) {
-          setFormData({});
-          window.location.reload();
-          swal("Acccont Created Successfully");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (error) {
+      swal("Error occured while Entering Details");
+    } else {
+      CreateAccountSave(formData)
+        .then((res) => {
+          if (res.status) {
+            setFormData({});
+            window.location.reload();
+            swal("Acccont Created Successfully");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   return (
@@ -132,8 +153,23 @@ const CreateAccount = () => {
                             placeholder={ele?.placeholder?._text}
                             name={ele?.name?._text}
                             value={formData[ele?.name?._text]}
-                            onChange={handleInputChange}
+                            onChange={(e) =>
+                              handleInputChange(
+                                e,
+                                ele?.type?._attributes?.type,
+                                i
+                              )
+                            }
                           />
+                          {index === i ? (
+                            <>
+                              {error && (
+                                <span style={{ color: "red" }}>{error}</span>
+                              )}
+                            </>
+                          ) : (
+                            <></>
+                          )}
                         </FormGroup>
                       </Col>
                     );

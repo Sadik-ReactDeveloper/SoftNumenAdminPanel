@@ -500,7 +500,7 @@ const AddProduct = () => {
               <Row className="mt-2">
                 <Col lg="6" md="6" sm="6" className="mb-2">
                   <Label className="">
-                    <h4>Upload Excel file</h4>
+                    <h4>Adhoc Upload</h4>
                   </Label>
 
                   <input

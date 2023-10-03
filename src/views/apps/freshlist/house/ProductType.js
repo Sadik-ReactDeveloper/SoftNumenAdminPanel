@@ -11,15 +11,10 @@ import {
   DropdownItem,
   DropdownToggle,
   Button,
-  Form,
   ModalHeader,
   ModalBody,
-  CustomInput,
-  FormGroup,
 } from "reactstrap";
-import axiosConfig from "../../../../axiosConfig";
-
-import ReactHtmlParser from "react-html-parser";
+import ExcelReader from "../parts/ExcelReader";
 import { ContextLayout } from "../../../../utility/context/Layout";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
@@ -27,6 +22,7 @@ import EditAccount from "../../freshlist/accounts/EditAccount";
 import ViewAccount from "../../freshlist/accounts/ViewAccount";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+
 import Papa from "papaparse";
 import { Eye, Trash2, ChevronDown, Edit, CloudLightning } from "react-feather";
 import { IoMdRemoveCircleOutline } from "react-icons/io";
@@ -88,6 +84,7 @@ class ProductType extends React.Component {
       modal: !prevState.modal,
     }));
   };
+
   handleChangeEdit = (data, types) => {
     let type = types;
     if (type == "readonly") {
@@ -105,7 +102,6 @@ class ProductType extends React.Component {
         var mydropdownArray = [];
         var adddropdown = [];
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        console.log(JSON.parse(jsonData));
         const inputs = JSON.parse(jsonData).CreateAccount?.input?.map((ele) => {
           return {
             headerName: ele?.label._text,
@@ -123,6 +119,21 @@ class ProductType extends React.Component {
             field: Radioinput,
             filter: true,
             sortable: true,
+            cellRendererFramework: (params) => {
+              debugger;
+              console.log(params.data);
+              return params.data?.Status === "Active" ? (
+                <div className="badge badge-pill badge-success">
+                  {params.data.Status}
+                </div>
+              ) : params.data?.Status === "Deactive" ? (
+                <div className="badge badge-pill badge-warning">
+                  {params.data.Status}
+                </div>
+              ) : (
+                "NA"
+              );
+            },
           },
         ];
 
@@ -153,6 +164,7 @@ class ProductType extends React.Component {
           ...addRadio,
           ...mydropdownArray,
         ];
+        console.log(myHeadings);
         let Product = [
           {
             headerName: "Actions",
@@ -170,15 +182,7 @@ class ProductType extends React.Component {
                         color="green"
                         onClick={() => {
                           this.handleChangeEdit(params.data, "readonly");
-                          // history.push(
-                          //   `/app/SoftNumen/account/EditAccount/${params.data?._id}`
-                          // );
                         }}
-                        // onClick={() =>
-                        //   history.push(
-                        //     `/app/SoftNumen/account/ViewAccount/${params.data?._id}`
-                        //   )
-                        // }
                       />
                     )}
                   />
@@ -190,9 +194,6 @@ class ProductType extends React.Component {
                         color="blue"
                         onClick={() => {
                           this.handleChangeEdit(params.data, "Editable");
-                          // history.push(
-                          //   `/app/SoftNumen/account/EditAccount/${params.data?._id}`
-                          // );
                         }}
                       />
                     )}
@@ -205,7 +206,7 @@ class ProductType extends React.Component {
                         size="25px"
                         color="red"
                         onClick={() => {
-                          this.runthisfunction(params.data._id);
+                          this.runthisfunction(params?.data?._id);
                         }}
                       />
                     )}
@@ -216,12 +217,12 @@ class ProductType extends React.Component {
           },
           ...myHeadings,
         ];
-        // console.log(Product);
         this.setState({ columnDefs: Product });
         this.setState({ AllcolumnDefs: Product });
       })
       .catch((err) => {
         console.log(err);
+        swal("Error", "something went wrong try again");
       });
     CreateAccountList()
       .then((res) => {
@@ -245,12 +246,10 @@ class ProductType extends React.Component {
     }).then((value) => {
       switch (value) {
         case "delete":
-          console.log(id);
           DeleteAccount(id)
             .then((res) => {
               let selectedData = this.gridApi.getSelectedRows();
               this.gridApi.updateRowData({ remove: selectedData });
-              console.log(res);
             })
             .catch((err) => {
               console.log(err);
@@ -306,8 +305,6 @@ class ProductType extends React.Component {
         header: true,
         skipEmptyLines: true,
         complete: (result) => {
-          debugger;
-          console.log(result);
           if (result.data && result.data.length > 0) {
             resolve(result.data);
           } else {
@@ -485,7 +482,6 @@ class ProductType extends React.Component {
         xmlString += "</root>";
 
         // setXmlData(xmlString);
-        console.log(xmlString);
 
         // Create a download link
         const blob = new Blob([xmlString], { type: "text/xml" });
@@ -495,6 +491,11 @@ class ProductType extends React.Component {
         link.click();
       },
     });
+  };
+  handleChangeView = (e) => {
+    e.preventDefault();
+    this.setState({ columnDefs: this.state.SelectedcolumnDefs });
+    this.toggleModal();
   };
 
   render() {
@@ -508,6 +509,7 @@ class ProductType extends React.Component {
     } = this.state;
     return (
       <>
+        <ExcelReader />
         <Row className="app-user-list">
           {this.state.EditOneUserView && this.state.EditOneUserView ? (
             <Row className="card">
@@ -898,14 +900,7 @@ class ProductType extends React.Component {
               <Col>
                 <div className="d-flex justify-content-center">
                   <Button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      // console.log(this.gridRef.current)
-                      // this.gridRef.current.setColumnDefs(SelectedcolumnDefs);
-                      this.setState({ columnDefs: SelectedcolumnDefs });
-                      // this.setState({ columnDefs: SelectedCols });
-                      this.toggleModal();
-                    }}
+                    onClick={(e) => this.handleChangeView(e)}
                     color="primary"
                   >
                     Submit
