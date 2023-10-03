@@ -102,6 +102,32 @@ class ProductType extends React.Component {
         var mydropdownArray = [];
         var adddropdown = [];
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
+        console.log(JSON.parse(jsonData));
+        const checkboxinput = JSON.parse(
+          jsonData
+        ).CreateAccount?.CheckBox?.input?.map((ele) => {
+          return {
+            headerName: ele?.label?._text,
+            field: ele?.name?._text,
+            filter: true,
+            sortable: true,
+            cellRendererFramework: (params) => {
+              console.log(params.data);
+              debugger;
+              return params.data?.Status === "Active" ? (
+                <div className="badge badge-pill badge-success">
+                  {params.data.Status}
+                </div>
+              ) : params.data?.Status === "Deactive" ? (
+                <div className="badge badge-pill badge-warning">
+                  {params.data.Status}
+                </div>
+              ) : (
+                "NA"
+              );
+            },
+          };
+        });
         const inputs = JSON.parse(jsonData).CreateAccount?.input?.map((ele) => {
           return {
             headerName: ele?.label._text,
@@ -120,8 +146,8 @@ class ProductType extends React.Component {
             filter: true,
             sortable: true,
             cellRendererFramework: (params) => {
-              debugger;
-              console.log(params.data);
+              // debugger;
+              // console.log(params.data);
               return params.data?.Status === "Active" ? (
                 <div className="badge badge-pill badge-success">
                   {params.data.Status}
@@ -159,12 +185,13 @@ class ProductType extends React.Component {
         }
 
         let myHeadings = [
+          ...checkboxinput,
           ...inputs,
           ...adddropdown,
           ...addRadio,
           ...mydropdownArray,
         ];
-        console.log(myHeadings);
+        // console.log(myHeadings);
         let Product = [
           {
             headerName: "Actions",
@@ -509,7 +536,7 @@ class ProductType extends React.Component {
     } = this.state;
     return (
       <>
-        <ExcelReader />
+        {/* <ExcelReader /> */}
         <Row className="app-user-list">
           {this.state.EditOneUserView && this.state.EditOneUserView ? (
             <Row className="card">

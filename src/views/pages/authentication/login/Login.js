@@ -25,7 +25,7 @@ import LoginFirebase from "./LoginFirebase";
 import LoginJWT from "./LoginJWT";
 import { connect } from "react-redux";
 // import UserContext from "../../../../context/Context";
-
+import OtpInput from "react-otp-input";
 import swal from "sweetalert";
 import axiosConfig from "../../../../axiosConfig";
 
@@ -36,71 +36,77 @@ class Login extends React.Component {
     super(props);
     this.state = {
       email: "",
+      Otp: "",
+      OtpScreen: false,
       password: "",
       resetpassword: false,
     };
   }
-  handlechange = e => {
+  handlechange = (e) => {
     e.preventDefault();
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  loginHandler = e => {
+  loginHandler = (e) => {
+    this.setState({ OtpScreen: true });
     e.preventDefault();
-    const fromdata = new FormData();
-    fromdata.append("username", this.state.email);
-    fromdata.append("password", this.state.password);
-    axiosConfig
-      .post("/usersign", fromdata)
-      .then(response => {
-        let msg = response.data?.success;
-        if (msg) {
-          localStorage.setItem("userData", JSON.stringify(response.data?.data));
-          setTimeout(() => {
-            this.props.history.push("/dashboard");
-          }, 2000);
-          swal(
-            "Sucessfully login",
-            "You are LoggedIn!",
-            "Success",
+    // const fromdata = new FormData();
+    // fromdata.append("username", this.state.email);
+    // fromdata.append("password", this.state.password);
+    // axiosConfig
+    //   .post("/usersign", fromdata)
+    //   .then((response) => {
+    //     let msg = response.data?.success;
+    //     if (msg) {
+    //       localStorage.setItem("userData", JSON.stringify(response.data?.data));
+    //       setTimeout(() => {
+    //         this.props.history.push("/dashboard");
+    //       }, 2000);
+    //       swal(
+    //         "Sucessfully login",
+    //         "You are LoggedIn!",
+    //         "Success",
 
-            {
-              buttons: {
-                ok: { text: "Ok", value: "ok" },
-              },
-            }
-          ).then(value => {
-            switch (value) {
-              case "ok":
-                break;
-              default:
-            }
-          });
-        }
-      })
-      .catch(error => {
-        let msg = error.response?.data.success;
-        if (!msg) {
-          swal("Error", "Invalid Username or Password");
-        }
-      });
+    //         {
+    //           buttons: {
+    //             ok: { text: "Ok", value: "ok" },
+    //           },
+    //         }
+    //       ).then((value) => {
+    //         switch (value) {
+    //           case "ok":
+    //             break;
+    //           default:
+    //         }
+    //       });
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     let msg = error.response?.data.success;
+    //     if (!msg) {
+    //       swal("Error", "Invalid Username or Password");
+    //     }
+    //   });
   };
-  changepassword = e => {
+  changepassword = (e) => {
     e.preventDefault();
-    debugger;
     let formdata = new FormData();
     formdata.append("email", this.state.email);
     formdata.append("base_url", "this.state.password");
     axiosConfig
       .post("/forgetPasswordEmailVerify", formdata)
-      .then(res => {
+      .then((res) => {
         console.log(res);
         this.setState({ resetpassword: false });
         swal("Email has been sent to Your Mail id", "Please Check and verify");
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
+  };
+  handleChangeOTP = (otp) => {
+    console.log(otp);
+    this.setState({ Otp: otp });
   };
 
   render() {
@@ -160,78 +166,141 @@ class Login extends React.Component {
                       </>
                     ) : (
                       <>
-                        <CardHeader className="pb-1">
-                          <CardTitle>
-                            <h4 className="mb-0">
-                              <strong>Login</strong>
-                            </h4>
-                          </CardTitle>
-                        </CardHeader>
-                        <p className="px-2 auth-title mb-2">
-                          Welcome back, Please login to your account.
-                        </p>
-                        <Form onSubmit={this.loginHandler}>
-                          <Label>UserName</Label>
-                          <FormGroup className="form-label-group position-relative has-icon-left">
-                            <InputGroup>
-                              <InputGroupAddon addonType="prepend">
-                                @
-                              </InputGroupAddon>
-                              <Input
-                                type="text"
-                                name="email"
-                                placeholder="User Name"
-                                value={this.state.email}
-                                onChange={this.handlechange}
-                                // required
-                              />
-                            </InputGroup>
-                          </FormGroup>
+                        <>
+                          {this.state.OtpScreen && this.state.OtpScreen ? (
+                            <>
+                              <CardHeader className="pb-1">
+                                <CardTitle>
+                                  <h4 className="mb-0">
+                                    <strong>Login</strong>
+                                  </h4>
+                                </CardTitle>
+                              </CardHeader>
+                              <p className="px-2 auth-title mb-2">
+                                Welcome , Enter Email OTP to Login your Account.
+                              </p>
+                              <Form onSubmit={this.loginHandler}>
+                                <FormGroup className="otpscreeen d-flex justify-content-center">
+                                  <OtpInput
+                                    containerStyle="true inputdata"
+                                    inputStyle="true inputdataone"
+                                    className="otpinputtype mb-2"
+                                    value={this.state.Otp}
+                                    name="emailotp"
+                                    onChange={this.handleChangeOTP}
+                                    numInputs={6}
+                                    renderSeparator={<span>-</span>}
+                                    renderInput={(props) => (
+                                      <input className="inputs" {...props} />
+                                    )}
+                                  />
+                                </FormGroup>
 
-                          <Label>Password</Label>
-                          <FormGroup className="form-label-group position-relative has-icon-left">
-                            <InputGroup>
-                              <InputGroupAddon addonType="prepend">
-                                @
-                              </InputGroupAddon>
-                              <Input
-                                type="password"
-                                name="password"
-                                placeholder="Password"
-                                value={this.state.password}
-                                onChange={this.handlechange}
-                                // required
-                              />
-                            </InputGroup>
-                          </FormGroup>
+                                <div className="d-flex justify-content-between">
+                                  <Button.Ripple
+                                    color="primary"
+                                    outline
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      this.setState({ resetpassword: true });
+                                    }}
+                                    // onClick={() => {
+                                    //   history.push("/pages/reset-password");
+                                    // }}
+                                  >
+                                    Forget Password
+                                  </Button.Ripple>
+                                  <Button.Ripple color="primary" type="submit">
+                                    Login
+                                  </Button.Ripple>
+                                  <TabContent activeTab={this.state.activeTab}>
+                                    <TabPane tabId="1">
+                                      <LoginJWT />
+                                    </TabPane>
+                                    <TabPane tabId="2">
+                                      <LoginFirebase />
+                                    </TabPane>
+                                  </TabContent>
+                                </div>
+                              </Form>
+                            </>
+                          ) : (
+                            <>
+                              <CardHeader className="pb-1">
+                                <CardTitle>
+                                  <h4 className="mb-0">
+                                    <strong>Login</strong>
+                                  </h4>
+                                </CardTitle>
+                              </CardHeader>
+                              <p className="px-2 auth-title mb-2">
+                                Welcome back, Please login to your account.
+                              </p>
+                              <Form onSubmit={this.loginHandler}>
+                                {/* <Label>UserName</Label> */}
+                                <FormGroup className="form-label-group position-relative has-icon-left">
+                                  <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                      Email
+                                    </InputGroupAddon>
+                                    <Input
+                                      type="text"
+                                      name="email"
+                                      placeholder="User Name"
+                                      value={this.state.email}
+                                      onChange={this.handlechange}
+                                      // required
+                                    />
+                                  </InputGroup>
+                                </FormGroup>
 
-                          <div className="d-flex justify-content-between">
-                            <Button.Ripple
-                              color="primary"
-                              outline
-                              onClick={e => {
-                                e.preventDefault();
-                                this.setState({ resetpassword: true });
-                              }}
-                              // onClick={() => {
-                              //   history.push("/pages/reset-password");
-                              // }}
-                            >
-                              Forget Password
-                            </Button.Ripple>
-                            <Button.Ripple color="primary" type="submit">
-                              Login
-                            </Button.Ripple>
-                            <TabContent activeTab={this.state.activeTab}>
-                              <TabPane tabId="1">
-                                <LoginJWT />
-                              </TabPane>
-                              <TabPane tabId="2">
-                                <LoginFirebase />
-                              </TabPane>
-                            </TabContent>
-                          </div>
-                        </Form>
+                                {/* <Label>Password</Label> */}
+                                <FormGroup className="form-label-group position-relative has-icon-left">
+                                  <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                      Password
+                                    </InputGroupAddon>
+                                    <Input
+                                      type="password"
+                                      name="password"
+                                      placeholder="Password"
+                                      value={this.state.password}
+                                      onChange={this.handlechange}
+                                      // required
+                                    />
+                                  </InputGroup>
+                                </FormGroup>
+
+                                <div className="d-flex justify-content-between">
+                                  <Button.Ripple
+                                    color="primary"
+                                    outline
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      this.setState({ resetpassword: true });
+                                    }}
+                                    // onClick={() => {
+                                    //   history.push("/pages/reset-password");
+                                    // }}
+                                  >
+                                    Forget Password
+                                  </Button.Ripple>
+                                  <Button.Ripple color="primary" type="submit">
+                                    Login
+                                  </Button.Ripple>
+                                  <TabContent activeTab={this.state.activeTab}>
+                                    <TabPane tabId="1">
+                                      <LoginJWT />
+                                    </TabPane>
+                                    <TabPane tabId="2">
+                                      <LoginFirebase />
+                                    </TabPane>
+                                  </TabContent>
+                                </div>
+                              </Form>
+                            </>
+                          )}
+                        </>
                       </>
                     )}
                   </Card>
@@ -244,7 +313,7 @@ class Login extends React.Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     values: state.auth.login,
   };

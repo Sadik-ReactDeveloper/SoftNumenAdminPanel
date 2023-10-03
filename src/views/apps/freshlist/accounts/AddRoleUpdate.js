@@ -86,7 +86,7 @@ export default function AddRoleNew(args) {
   };
   // console.log(Selected);
   useEffect(() => {
-    // console.log(Selected);
+    console.log(Selected);
   }, [Selected]);
 
   const handleSumit = (e) => {
@@ -160,7 +160,7 @@ export default function AddRoleNew(args) {
                         value={Role}
                         onChange={(e) => setRole(e.target.value)}
                         type="text"
-                        placeholder="choose Role"
+                        placeholder="Choose Role"
                         className="form-control inputs"
                       />
                       <Button

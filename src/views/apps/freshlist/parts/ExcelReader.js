@@ -6,7 +6,6 @@ function ExcelReader() {
     const file = event.target.files[0];
     console.log(file);
     if (file) {
-      debugger;
       const reader = new FileReader();
 
       reader.onload = (e) => {
