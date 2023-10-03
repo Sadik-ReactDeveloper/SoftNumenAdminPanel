@@ -11,15 +11,10 @@ import {
   DropdownItem,
   DropdownToggle,
   Button,
-  Form,
   ModalHeader,
   ModalBody,
-  CustomInput,
-  FormGroup,
 } from "reactstrap";
-import axiosConfig from "../../../../axiosConfig";
-
-import ReactHtmlParser from "react-html-parser";
+import ExcelReader from "../parts/ExcelReader";
 import { ContextLayout } from "../../../../utility/context/Layout";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
@@ -27,6 +22,7 @@ import EditAccount from "../../freshlist/accounts/EditAccount";
 import ViewAccount from "../../freshlist/accounts/ViewAccount";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+
 import Papa from "papaparse";
 import { Eye, Trash2, ChevronDown, Edit, CloudLightning } from "react-feather";
 import { IoMdRemoveCircleOutline } from "react-icons/io";
@@ -88,6 +84,7 @@ class ProductType extends React.Component {
       modal: !prevState.modal,
     }));
   };
+
   handleChangeEdit = (data, types) => {
     let type = types;
     if (type == "readonly") {
@@ -106,6 +103,31 @@ class ProductType extends React.Component {
         var adddropdown = [];
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
         console.log(JSON.parse(jsonData));
+        const checkboxinput = JSON.parse(
+          jsonData
+        ).CreateAccount?.CheckBox?.input?.map((ele) => {
+          return {
+            headerName: ele?.label?._text,
+            field: ele?.name?._text,
+            filter: true,
+            sortable: true,
+            cellRendererFramework: (params) => {
+              console.log(params.data);
+              debugger;
+              return params.data?.Status === "Active" ? (
+                <div className="badge badge-pill badge-success">
+                  {params.data.Status}
+                </div>
+              ) : params.data?.Status === "Deactive" ? (
+                <div className="badge badge-pill badge-warning">
+                  {params.data.Status}
+                </div>
+              ) : (
+                "NA"
+              );
+            },
+          };
+        });
         const inputs = JSON.parse(jsonData).CreateAccount?.input?.map((ele) => {
           return {
             headerName: ele?.label._text,
@@ -123,6 +145,21 @@ class ProductType extends React.Component {
             field: Radioinput,
             filter: true,
             sortable: true,
+            cellRendererFramework: (params) => {
+              // debugger;
+              // console.log(params.data);
+              return params.data?.Status === "Active" ? (
+                <div className="badge badge-pill badge-success">
+                  {params.data.Status}
+                </div>
+              ) : params.data?.Status === "Deactive" ? (
+                <div className="badge badge-pill badge-warning">
+                  {params.data.Status}
+                </div>
+              ) : (
+                "NA"
+              );
+            },
           },
         ];
 
@@ -148,11 +185,13 @@ class ProductType extends React.Component {
         }
 
         let myHeadings = [
+          ...checkboxinput,
           ...inputs,
           ...adddropdown,
           ...addRadio,
           ...mydropdownArray,
         ];
+        // console.log(myHeadings);
         let Product = [
           {
             headerName: "Actions",
@@ -162,19 +201,6 @@ class ProductType extends React.Component {
             cellRendererFramework: (params) => {
               return (
                 <div className="actions cursor-pointer">
-                  {/* <CustomInput
-                    className=""
-                    type="switch"
-                    id="exampleCustomSwitch"
-                    Reactstrap
-                    Switch
-                    Colors
-                    name="customSwitch"
-                    inline
-                    onChange={(e) => {
-                      console.log(e.target.value);
-                    }}
-                  ></CustomInput> */}
                   <Route
                     render={({ history }) => (
                       <Eye
@@ -183,15 +209,7 @@ class ProductType extends React.Component {
                         color="green"
                         onClick={() => {
                           this.handleChangeEdit(params.data, "readonly");
-                          // history.push(
-                          //   `/app/SoftNumen/account/EditAccount/${params.data?._id}`
-                          // );
                         }}
-                        // onClick={() =>
-                        //   history.push(
-                        //     `/app/SoftNumen/account/ViewAccount/${params.data?._id}`
-                        //   )
-                        // }
                       />
                     )}
                   />
@@ -203,9 +221,6 @@ class ProductType extends React.Component {
                         color="blue"
                         onClick={() => {
                           this.handleChangeEdit(params.data, "Editable");
-                          // history.push(
-                          //   `/app/SoftNumen/account/EditAccount/${params.data?._id}`
-                          // );
                         }}
                       />
                     )}
@@ -218,7 +233,7 @@ class ProductType extends React.Component {
                         size="25px"
                         color="red"
                         onClick={() => {
-                          this.runthisfunction(params.data._id);
+                          this.runthisfunction(params?.data?._id);
                         }}
                       />
                     )}
@@ -229,12 +244,12 @@ class ProductType extends React.Component {
           },
           ...myHeadings,
         ];
-        // console.log(Product);
         this.setState({ columnDefs: Product });
         this.setState({ AllcolumnDefs: Product });
       })
       .catch((err) => {
         console.log(err);
+        swal("Error", "something went wrong try again");
       });
     CreateAccountList()
       .then((res) => {
@@ -258,12 +273,10 @@ class ProductType extends React.Component {
     }).then((value) => {
       switch (value) {
         case "delete":
-          console.log(id);
           DeleteAccount(id)
             .then((res) => {
               let selectedData = this.gridApi.getSelectedRows();
               this.gridApi.updateRowData({ remove: selectedData });
-              console.log(res);
             })
             .catch((err) => {
               console.log(err);
@@ -319,8 +332,6 @@ class ProductType extends React.Component {
         header: true,
         skipEmptyLines: true,
         complete: (result) => {
-          debugger;
-          console.log(result);
           if (result.data && result.data.length > 0) {
             resolve(result.data);
           } else {
@@ -439,6 +450,21 @@ class ProductType extends React.Component {
     this.downloadExcelFile(blob);
   };
 
+  convertCSVtoExcel = () => {
+    const CsvData = this.gridApi.getDataAsCsv({
+      processCellCallback: this.processCell,
+    });
+    Papa.parse(CsvData, {
+      complete: (result) => {
+        const ws = XLSX.utils.json_to_sheet(result.data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        const excelType = "xls";
+        XLSX.writeFile(wb, `UserList.${excelType}`);
+      },
+    });
+  };
+
   shiftElementUp = () => {
     let currentIndex = this.state.Arrindex;
     if (currentIndex > 0) {
@@ -460,6 +486,44 @@ class ProductType extends React.Component {
       this.setState({ SelectedcolumnDefs: myArrayCopy });
     }
   };
+  convertCsvToXml = () => {
+    debugger;
+    const CsvData = this.gridApi.getDataAsCsv({
+      processCellCallback: this.processCell,
+    });
+    Papa.parse(CsvData, {
+      complete: (result) => {
+        const rows = result.data;
+
+        // Create XML
+        let xmlString = "<root>\n";
+
+        rows.forEach((row) => {
+          xmlString += "  <row>\n";
+          row.forEach((cell, index) => {
+            xmlString += `    <field${index + 1}>${cell}</field${index + 1}>\n`;
+          });
+          xmlString += "  </row>\n";
+        });
+
+        xmlString += "</root>";
+
+        // setXmlData(xmlString);
+
+        // Create a download link
+        const blob = new Blob([xmlString], { type: "text/xml" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "output.xml";
+        link.click();
+      },
+    });
+  };
+  handleChangeView = (e) => {
+    e.preventDefault();
+    this.setState({ columnDefs: this.state.SelectedcolumnDefs });
+    this.toggleModal();
+  };
 
   render() {
     const {
@@ -472,6 +536,7 @@ class ProductType extends React.Component {
     } = this.state;
     return (
       <>
+        {/* <ExcelReader /> */}
         <Row className="app-user-list">
           {this.state.EditOneUserView && this.state.EditOneUserView ? (
             <Row className="card">
@@ -558,7 +623,7 @@ class ProductType extends React.Component {
                                     style={{ cursor: "pointer" }}
                                     className=" mx-1 myactive mt-1"
                                   >
-                                    PDF
+                                    .PDF
                                   </h5>
                                   <h5
                                     onClick={() =>
@@ -567,22 +632,28 @@ class ProductType extends React.Component {
                                     style={{ cursor: "pointer" }}
                                     className=" mx-1 myactive"
                                   >
-                                    CSV
+                                    .CSV
                                   </h5>
                                   <h5
-                                    // onClick={() => this.gridApi.exportDataAsExcel()}
+                                    onClick={this.convertCSVtoExcel}
+                                    style={{ cursor: "pointer" }}
+                                    className=" mx-1 myactive"
+                                  >
+                                    .XLS
+                                  </h5>
+                                  <h5
                                     onClick={this.exportToExcel}
                                     style={{ cursor: "pointer" }}
                                     className=" mx-1 myactive"
                                   >
-                                    XLS
+                                    .XLSX
                                   </h5>
                                   <h5
-                                    onClick={() => this.exportToExcel()}
+                                    onClick={() => this.convertCsvToXml()}
                                     style={{ cursor: "pointer" }}
                                     className=" mx-1 myactive"
                                   >
-                                    XML
+                                    .XML
                                   </h5>
                                 </div>
                               )}
@@ -856,14 +927,7 @@ class ProductType extends React.Component {
               <Col>
                 <div className="d-flex justify-content-center">
                   <Button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      // console.log(this.gridRef.current)
-                      // this.gridRef.current.setColumnDefs(SelectedcolumnDefs);
-                      this.setState({ columnDefs: SelectedcolumnDefs });
-                      // this.setState({ columnDefs: SelectedCols });
-                      this.toggleModal();
-                    }}
+                    onClick={(e) => this.handleChangeView(e)}
                     color="primary"
                   >
                     Submit

@@ -8,6 +8,11 @@ import {
   Input,
   Form,
   InputGroup,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Table,
 } from "reactstrap";
 import { Roles } from "./AddRole";
 import axios from "axios";
@@ -16,13 +21,21 @@ import swal from "sweetalert";
 import "../../../../assets/scss/pages/users.scss";
 import { BsFillArrowDownCircleFill } from "react-icons/bs";
 import { AiOutlineSearch } from "react-icons/ai";
+import { CreateAccountView } from "../../../../ApiEndPoint/ApiCalling";
+import xmlJs from "xml-js";
+import { CloudLightning } from "react-feather";
 
-export default function AddRoleNew() {
+export default function AddRoleNew(args) {
   const [Desc, setDesc] = useState("");
   const [Role, setRole] = useState("");
   const [Selected, setSelected] = useState([]);
   const [SelectedIndex, setIndex] = useState("");
   const [show, setShow] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [CreatAccountView, setCreatAccountView] = useState({});
+  const [dropdownValue, setdropdownValue] = useState({});
+
+  const toggle = () => setModal(!modal);
 
   const handleSelectPage = (value, checked, permit, title, ele) => {
     if (checked) {
@@ -71,7 +84,7 @@ export default function AddRoleNew() {
       });
     }
   };
-  console.log(Selected);
+  // console.log(Selected);
   useEffect(() => {
     console.log(Selected);
   }, [Selected]);
@@ -104,15 +117,33 @@ export default function AddRoleNew() {
         console.log(er);
       });
   };
+  const handleopentoggle = () => {
+    CreateAccountView()
+      .then((res) => {
+        const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
+        // console.log(JSON.parse(jsonData)?.CreateAccount?.MyDropdown?.dropdown);
+        setCreatAccountView(
+          JSON.parse(jsonData)?.CreateAccount?.MyDropdown?.dropdown
+        );
+        setdropdownValue(JSON.parse(jsonData));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    toggle();
+  };
   const handlesetparent = (value, index) => {
     // console.log(value);
     // console.log(index);
     setShow(value);
     setIndex(index);
   };
+  const HandleSelectRole = (val) => {
+    setRole(val?._attributes?.value);
+    toggle();
+  };
   return (
     <>
-      <Row></Row>
       <Row className="">
         <Col xl={12}>
           <Card>
@@ -125,13 +156,19 @@ export default function AddRoleNew() {
                     <InputGroup className="maininput">
                       <Input
                         // required
+                        disabled
                         value={Role}
                         onChange={(e) => setRole(e.target.value)}
                         type="text"
-                        placeholder="Enter Role"
+                        placeholder="Choose Role"
                         className="form-control inputs"
                       />
-                      <Button color="primary" className="mybtn primary">
+                      <Button
+                        onClick={handleopentoggle}
+                        // onClick={toggle}
+                        color="primary"
+                        className="mybtn primary"
+                      >
                         <AiOutlineSearch
                           onClick={(e) => e.preventDefault()}
                           fill="white"
@@ -296,6 +333,52 @@ export default function AddRoleNew() {
           </Card>
         </Col>
       </Row>
+      <Modal
+        fullscreen="xl"
+        size="lg"
+        backdrop={false}
+        isOpen={modal}
+        toggle={toggle}
+        {...args}
+      >
+        <ModalHeader toggle={toggle}>Role List</ModalHeader>
+        <ModalBody>
+          <div className="modalheaderaddrol p-1">
+            <h3>Role List</h3>
+            <Table bordered borderless hover responsive size="sm" striped>
+              <thead>
+                <tr>
+                  <th>S.No.</th>
+                  <th>Role Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {CreatAccountView &&
+                  CreatAccountView?.option?.map((ele, i) => {
+                    return (
+                      <tr
+                        onClick={(e) => HandleSelectRole(ele)}
+                        style={{ cursor: "pointer" }}
+                        key={i}
+                      >
+                        <th scope="row">{i + 1}</th>
+                        <td>{ele?._text}</td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </Table>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={toggle}>
+            Do Something
+          </Button>{" "}
+          <Button color="secondary" onClick={toggle}>
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
     </>
   );
 }
