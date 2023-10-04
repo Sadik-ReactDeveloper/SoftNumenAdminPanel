@@ -96,8 +96,8 @@ class ProductType extends React.Component {
     }
   };
 
-  componentDidMount() {
-    CreateAccountView()
+  async componentDidMount() {
+    await CreateAccountView()
       .then((res) => {
         var mydropdownArray = [];
         var adddropdown = [];
@@ -251,7 +251,7 @@ class ProductType extends React.Component {
         console.log(err);
         swal("Error", "something went wrong try again");
       });
-    CreateAccountList()
+    await CreateAccountList()
       .then((res) => {
         let value = res?.CreateAccount;
         this.setState({ rowData: value });
@@ -613,7 +613,6 @@ class ProductType extends React.Component {
                                 <div
                                   style={{
                                     position: "absolute",
-                                    // backgroundColor: "grey",
                                     zIndex: "1",
                                   }}
                                   className="dropdown-content dropdownmy"
@@ -721,15 +720,6 @@ class ProductType extends React.Component {
                                     value={this.state.value}
                                   />
                                 </div>
-
-                                {/* <div className="export-btn">
-                          <Button.Ripple
-                            color="primary"
-                            onClick={() => this.gridApi.exportDataAsCsv()}
-                          >
-                            Export as CSV
-                          </Button.Ripple>
-                        </div> */}
                               </div>
                             </div>
                             <ContextLayout.Consumer className="ag-theme-alpine">
