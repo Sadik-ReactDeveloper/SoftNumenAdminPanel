@@ -1,24 +1,29 @@
 // import React, { Component, useDebugValue } from "react";
 import React, { useEffect, useState } from "react";
-
+import { AiOutlineSearch } from "react-icons/ai";
 import {
   Card,
   CardBody,
   Col,
-  Form,
   Row,
-  Input,
-  Label,
-  Button,
   FormGroup,
   CustomInput,
+  Button,
+  Label,
+  Input,
+  Form,
+  InputGroup,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Table,
 } from "reactstrap";
-import { history } from "../../../../history";
 
+import { history } from "../../../../history";
 import axiosConfig from "../../../../axiosConfig";
 import Multiselect from "multiselect-react-dropdown";
 import Select from "react-select";
-
 import swal from "sweetalert";
 import "../../../../../src/layouts/assets/scss/pages/users.scss";
 import { Route } from "react-router-dom";
@@ -30,6 +35,23 @@ const selectstate2 = [];
 const AllunSelectedCity = [];
 const Selectedarray = [];
 
+const importData = [
+  "Product Registration",
+  "SpareParts",
+  "Orders",
+  "PartsCatalogue",
+  "Scrutiny / Inspections",
+  "Invoices / Billing",
+  "Support",
+  "Servicing",
+  "Warehouse",
+  "Distributors",
+  "Dealers",
+  "Suppliers",
+  "Service Centers",
+  "Customer Data",
+  "Campaigns",
+];
 const AddProduct = () => {
   // const [Address, setAddress] = useState("");
   const [Viewpermisson, setViewpermisson] = useState(null);
@@ -65,15 +87,20 @@ const AddProduct = () => {
   const [CompanyName, setCompanyName] = useState("");
   const [Companytype, setCompanytype] = useState("");
   const [UserName, setUserName] = useState("");
-  const [productName, setproductName] = useState([]);
+  const [productName, setproductName] = useState("");
+  const [modal, setModal] = useState(false);
   const [City, setCity] = useState("");
+  const toggle = () => setModal(!modal);
+  const [Role, setRole] = useState("");
+  const [allPart, setAllPart] = useState([]);
   const [formValues, setFormValues] = useState([
     { partname: "", partseriel: "", quantity: "" },
   ]);
   useEffect(() => {
+    setAllPart(importData);
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let newparmisson = pageparmission?.role?.find(
-      (value) => value?.pageName === "Create Account"
+      value => value?.pageName === "Create Account"
     );
     setViewpermisson(newparmisson?.permission.includes("View"));
     setCreatepermisson(newparmisson?.permission.includes("Create"));
@@ -86,7 +113,23 @@ const AddProduct = () => {
     formdata.append("role", pageparmission?.Userinfo?.role);
   }, []);
 
-  const submitHandler = (e) => {
+  const handleopentoggle = () => {
+    // setAllPart(importData);
+    // CreateAccountView()
+    //   .then(res => {
+    //     const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
+    //     setCreatAccountView(
+    //       JSON.parse(jsonData)?.CreateAccount?.MyDropdown?.dropdown
+    //     );
+    //     setdropdownValue(JSON.parse(jsonData));
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   });
+    toggle();
+  };
+
+  const submitHandler = e => {
     e.preventDefault();
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let uniqueChars = [...new Set(selectItem1)];
@@ -128,7 +171,7 @@ const AddProduct = () => {
 
     axiosConfig
       .post("/createuser", formdata)
-      .then((response) => {
+      .then(response => {
         if (response.data?.success) {
           swal("Success!", "Submitted SuccessFull!", "success");
           setAssignRole("");
@@ -147,9 +190,14 @@ const AddProduct = () => {
         }
         // this.props.history.push("/app/softNumen/order/placeorder");
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
+  };
+
+  const HandleSelectRole = val => {
+    setRole(val);
+    toggle();
   };
   const handleMatchaddress = (e, value) => {
     setcheckbox(value);
@@ -183,7 +231,7 @@ const AddProduct = () => {
       }
     }
 
-    let arr = selectedList.map((ele) => ele.id);
+    let arr = selectedList.map(ele => ele.id);
     setmultiSelect(arr);
     // console.log(multiSelect);
 
@@ -195,10 +243,10 @@ const AddProduct = () => {
       formdata.append("state_id", value);
       axiosConfig
         .post(`/getcity`, formdata)
-        .then((res) => {
+        .then(res => {
           setCityList(res?.data?.cities);
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
     } else {
@@ -228,7 +276,7 @@ const AddProduct = () => {
                       //   placeholder="Enter Your Name"
                       name="date"
                       value={fullname}
-                      onChange={(e) => setfullname(e.target.value)}
+                      onChange={e => setfullname(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -246,24 +294,12 @@ const AddProduct = () => {
                     />
                   </FormGroup>
                 </Col>
-                {/* <Col lg="6" md="6">
-                  <FormGroup>
-                    <Input
-                      required
-                      type="radio"
-                      //   placeholder="Enter Your Name"
-                      name="Pattern"
-                      //   value={UserName}
-                      //   onChange={e => setUserName(e.target.value)}
-                    />
-                  </FormGroup>
-                </Col> */}
 
                 <Col lg="6" md="6" sm="6" className="mb-2">
                   <Label>Recurrence Pattern</Label>
                   <div
                     className="form-label-group mt-2"
-                    onChange={(e) => {
+                    onChange={e => {
                       setstatus(e.target.value), console.log(e.target.value);
                     }}
                   >
@@ -409,79 +445,6 @@ const AddProduct = () => {
                     //   value="Yearly"
                   />
                 </Col>
-
-                {/* <Col lg="6" md="6">
-                  <FormGroup>
-                    <Label>Password</Label>
-                    <Input
-                      required
-                      type="password"
-                      placeholder="Enter password"
-                      name="password"
-                      value={password}
-                      onChange={e => setpassword(e.target.value)}
-                    />
-                  </FormGroup>
-                </Col>
-                <Col lg="6" md="6">
-                  <FormGroup>
-                    <Label>Company Name</Label>
-                    <Input
-                      required
-                      type="text"
-                      placeholder="Enter CompanyName"
-                      name="CompanyName"
-                      value={CompanyName}
-                      onChange={e => setCompanyName(e.target.value)}
-                    />
-                  </FormGroup>
-                </Col>
-                <Col lg="6" md="6">
-                  <FormGroup>
-                    <Label>Phone Number </Label>
-                    <Input
-                      required
-                      type="number"
-                      onKeyDown={e =>
-                        ["e", "E", "+", "-"].includes(e.key) &&
-                        e.preventDefault()
-                      }
-                      min={0}
-                      maxLength={12}
-                      size={10}
-                      placeholder="0123456789"
-                      name="Phone_no"
-                      value={Phone_no}
-                      onChange={e => setPhone_no(e.target.value)}
-                    />
-                  </FormGroup>
-                </Col> */}
-                {/* <Col lg="6" md="6">
-                  <FormGroup>
-                    <Label>Company Type</Label>
-                    <Input
-                      required
-                      type="text"
-                      placeholder="Enter Companytype"
-                      name="Companytype"
-                      value={Companytype}
-                      onChange={e => setCompanytype(e.target.value)}
-                    />
-                  </FormGroup>
-                </Col> */}
-                {/* <Col lg="6" md="6">
-                  <FormGroup>
-                    <Label>GSTIN</Label>
-                    <Input
-                      required
-                      type="text"
-                      placeholder="Enter GSTIN No."
-                      name="GSTIN"
-                      value={GSTIN}
-                      onChange={e => setGSTIN(e.target.value)}
-                    />
-                  </FormGroup>
-                </Col> */}
               </Row>
               <Row>
                 <Button.Ripple
@@ -498,6 +461,29 @@ const AddProduct = () => {
 
             <Form>
               <Row className="mt-2">
+                <Col>
+                  <Label>Import Type</Label>
+                  <InputGroup className="maininput">
+                    <Input
+                      disabled
+                      value={Role}
+                      onChange={e => setRole(e.target.value)}
+                      type="text"
+                      placeholder="Import Search"
+                      className="form-control inputs"
+                    />
+                    <Button
+                      onClick={handleopentoggle}
+                      color="primary"
+                      className="mybtn primary"
+                    >
+                      <AiOutlineSearch
+                        onClick={e => e.preventDefault()}
+                        fill="white"
+                      />
+                    </Button>
+                  </InputGroup>
+                </Col>
                 <Col lg="6" md="6" sm="6" className="mb-2">
                   <Label className="">
                     <h4>Adhoc Upload</h4>
@@ -528,6 +514,42 @@ const AddProduct = () => {
             </Form>
           </CardBody>
         </Card>
+        <Modal
+          fullscreen="xl"
+          size="lg"
+          backdrop={false}
+          isOpen={modal}
+          toggle={toggle}
+          // {...args}
+        >
+          <ModalHeader toggle={toggle}>Import Type List</ModalHeader>
+          <ModalBody>
+            <div className="modalheaderaddrol p-1">
+              <h3>Import Type</h3>
+              <ol>
+                {allPart.map((ele, i) => {
+                  return (
+                    <li
+                      key={i}
+                      onClick={e => HandleSelectRole(ele)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {ele}
+                    </li>
+                  );
+                })}
+              </ol>
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={toggle}>
+              Done
+            </Button>
+            <Button color="secondary" onClick={toggle}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </Modal>
       </div>
     </div>
   );
