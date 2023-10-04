@@ -84,31 +84,31 @@ const CreateAccount = () => {
   }, [formData]);
   useEffect(() => {
     CreateAccountView()
-      .then((res) => {
+      .then(res => {
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
         console.log(JSON.parse(jsonData));
         setCreatAccountView(JSON.parse(jsonData));
         setdropdownValue(JSON.parse(jsonData));
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }, []);
 
-  const submitHandler = (e) => {
+  const submitHandler = e => {
     e.preventDefault();
     if (error) {
       swal("Error occured while Entering Details");
     } else {
       CreateAccountSave(formData)
-        .then((res) => {
+        .then(res => {
           if (res.status) {
             setFormData({});
             window.location.reload();
             swal("Acccont Created Successfully");
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
     }
@@ -173,7 +173,7 @@ const CreateAccount = () => {
                           <Label>{ele?.label?._text}</Label>
                           <Input
                             required
-                            onKeyDown={(e) => {
+                            onKeyDown={e => {
                               if (ele?.type?._attributes?.type == "number") {
                                 ["e", "E", "+", "-"].includes(e.key) &&
                                   e.preventDefault();
@@ -183,7 +183,7 @@ const CreateAccount = () => {
                             placeholder={ele?.placeholder?._text}
                             name={ele?.name?._text}
                             value={formData[ele?.name?._text]}
-                            onChange={(e) =>
+                            onChange={e =>
                               handleInputChange(
                                 e,
                                 ele?.type?._attributes?.type,
@@ -217,9 +217,7 @@ const CreateAccount = () => {
                                 style={{ marginRight: "3px" }}
                                 type={ele?.type?._attributes?.type}
                                 name={ele?.name?._text}
-                                onChange={(e) =>
-                                  handleInputChange(e, "checkbox")
-                                }
+                                onChange={e => handleInputChange(e, "checkbox")}
                               />{" "}
                               <span
                                 className="mt-1 mx-1"

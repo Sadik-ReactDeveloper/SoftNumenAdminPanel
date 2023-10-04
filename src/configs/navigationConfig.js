@@ -135,6 +135,14 @@ const navigationConfig = [
       //   navLink: "/app/SoftNumen/house/ProductRegistration",
       // },
       {
+        id: "Scheduler",
+        title: "Import",
+        type: "item",
+        icon: <MdOutlineFolderSpecial size={15} />,
+        permissions: ["admin", "editor"],
+        navLink: "/app/SoftNumen/parts/SchedulerTime",
+      },
+      {
         id: "Spare Part",
         title: "Spare Part",
         type: "item",
@@ -375,14 +383,6 @@ const navigationConfig = [
   //   icon: <FaList size={15} />,
   // },
 
-  {
-    id: "Scheduler",
-    title: "Scheduler Time",
-    type: "item",
-    icon: <MdOutlineFolderSpecial size={15} />,
-    permissions: ["admin", "editor"],
-    navLink: "/app/SoftNumen/parts/SchedulerTime",
-  },
   {
     id: "Parts",
     title: "Parts",
@@ -754,6 +754,7 @@ const navigationConfig = [
     groupTitle: "Stock Management",
     title: "Stock Management",
   },
+
   {
     id: "Stock Management",
     title: "Stock Management",
