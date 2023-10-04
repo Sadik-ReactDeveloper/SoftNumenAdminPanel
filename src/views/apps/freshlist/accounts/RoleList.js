@@ -15,7 +15,7 @@ import {
   Button,
 } from "reactstrap";
 import UserContext from "../../../../context/Context";
-
+import xmlJs from "xml-js";
 import axiosConfig from "../../../../axiosConfig";
 import { ContextLayout } from "../../../../utility/context/Layout";
 import { AgGridReact } from "ag-grid-react";
@@ -27,6 +27,7 @@ import "../../../../assets/scss/pages/users.scss";
 import swal from "sweetalert";
 import { Route } from "react-router-dom";
 import { BsEye, BsTrash } from "react-icons/bs";
+import { CreateAccountView } from "../../../../ApiEndPoint/ApiCalling";
 
 class RoleList extends React.Component {
   static contextType = UserContext;
@@ -46,86 +47,244 @@ class RoleList extends React.Component {
       resizable: true,
       suppressMenu: true,
     },
-    columnDefs: [
-      {
-        headerName: "S.No",
-        valueGetter: "node.rowIndex + 1",
-        field: "node.rowIndex + 1",
-        width: 150,
-        filter: true,
-      },
-      {
-        headerName: "Role Name",
-        field: "Name",
-        filter: true,
-        resizable: true,
-        width: 160,
-        cellRendererFramework: (params) => {
-          return (
-            <div className="d-flex align-items-center cursor-pointer">
-              <div className="">
-                <span>{params?.data}</span>
-              </div>
-            </div>
-          );
-        },
-      },
+    columnDefs: [],
+    // columnDefs: [
+    //   {
+    //     headerName: "S.No",
+    //     valueGetter: "node.rowIndex + 1",
+    //     field: "node.rowIndex + 1",
+    //     width: 150,
+    //     filter: true,
+    //   },
+    //   {
+    //     headerName: "Role Name",
+    //     field: "Name",
+    //     filter: true,
+    //     resizable: true,
+    //     width: 160,
+    //     cellRendererFramework: (params) => {
+    //       return (
+    //         <div className="d-flex align-items-center cursor-pointer">
+    //           <div className="">
+    //             <span>{params?.data}</span>
+    //           </div>
+    //         </div>
+    //       );
+    //     },
+    //   },
 
-      {
-        headerName: "Actions",
-        field: "sortorder",
-        field: "transactions",
-        width: 160,
-        cellRendererFramework: (params) => {
-          return (
-            <div className="actions cursor-pointer">
-              {/* {this.state.Viewpermisson && (
-                <BsEye
-                  className="mr-50"
-                  size="25px"
-                  color="green"
-                  onClick={() =>
-                    history.push(
-                      `/app/freshlist/account/updateexistingrole/${params.data.id}`
-                    )
-                  }
-                />
-              )} */}
+    //   {
+    //     headerName: "Actions",
+    //     field: "sortorder",
+    //     field: "transactions",
+    //     width: 160,
+    //     cellRendererFramework: (params) => {
+    //       return (
+    //         <div className="actions cursor-pointer">
+    //           {/* {this.state.Viewpermisson && (
+    //             <BsEye
+    //               className="mr-50"
+    //               size="25px"
+    //               color="green"
+    //               onClick={() =>
+    //                 history.push(
+    //                   `/app/freshlist/account/updateexistingrole/${params.data.id}`
+    //                 )
+    //               }
+    //             />
+    //           )} */}
 
-              {this.state.Editpermisson && (
-                <Route
-                  render={({ history }) => (
-                    <Edit
-                      className="mr-50"
-                      size="25px"
-                      color="blue"
-                      onClick={() =>
-                        history.push({
-                          pathname: `/app/freshlist/account/editRole/${params?.data}`,
-                          data: params,
-                        })
-                      }
-                    />
-                  )}
-                />
-              )}
-              {/* {this.state.Deletepermisson && (
-                <BsTrash
-                  className="mr-50"
-                  size="25px"
-                  color="red"
-                  onClick={() => {
-                    this.runthisfunction(params.data.id);
-                  }}
-                />
-              )} */}
-            </div>
-          );
-        },
-      },
-    ],
+    //           {this.state.Editpermisson && (
+    //             <Route
+    //               render={({ history }) => (
+    //                 <Edit
+    //                   className="mr-50"
+    //                   size="25px"
+    //                   color="blue"
+    //                   onClick={() =>
+    //                     history.push({
+    //                       pathname: `/app/freshlist/account/editRole/${params?.data}`,
+    //                       data: params,
+    //                     })
+    //                   }
+    //                 />
+    //               )}
+    //             />
+    //           )}
+    //           {/* {this.state.Deletepermisson && (
+    //             <BsTrash
+    //               className="mr-50"
+    //               size="25px"
+    //               color="red"
+    //               onClick={() => {
+    //                 this.runthisfunction(params.data.id);
+    //               }}
+    //             />
+    //           )} */}
+    //         </div>
+    //       );
+    //     },
+    //   },
+    // ],
   };
   async componentDidMount() {
+    CreateAccountView()
+      .then((res) => {
+        var mydropdownArray = [];
+        var adddropdown = [];
+        const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
+        console.log(JSON.parse(jsonData));
+        // const checkboxinput = JSON.parse(
+        //   jsonData
+        // ).CreateAccount?.CheckBox?.input?.map((ele) => {
+        //   return {
+        //     headerName: ele?.label?._text,
+        //     field: ele?.name?._text,
+        //     filter: true,
+        //     sortable: true,
+        //     cellRendererFramework: (params) => {
+        //       console.log(params.data);
+        //       debugger;
+        //       return params.data?.Status === "Active" ? (
+        //         <div className="badge badge-pill badge-success">
+        //           {params.data.Status}
+        //         </div>
+        //       ) : params.data?.Status === "Deactive" ? (
+        //         <div className="badge badge-pill badge-warning">
+        //           {params.data.Status}
+        //         </div>
+        //       ) : (
+        //         "NA"
+        //       );
+        //     },
+        //   };
+        // });
+        // const inputs = JSON.parse(jsonData).CreateAccount?.input?.map((ele) => {
+        //   return {
+        //     headerName: ele?.label._text,
+        //     field: ele?.name._text,
+        //     filter: true,
+        //     sortable: true,
+        //   };
+        // });
+        // let Radioinput =
+        //   JSON.parse(jsonData).CreateAccount?.Radiobutton?.input[0]?.name
+        //     ?._text;
+        // const addRadio = [
+        //   {
+        //     headerName: Radioinput,
+        //     field: Radioinput,
+        //     filter: true,
+        //     sortable: true,
+        //     cellRendererFramework: (params) => {
+        //       // debugger;
+        //       // console.log(params.data);
+        //       return params.data?.Status === "Active" ? (
+        //         <div className="badge badge-pill badge-success">
+        //           {params.data.Status}
+        //         </div>
+        //       ) : params.data?.Status === "Deactive" ? (
+        //         <div className="badge badge-pill badge-warning">
+        //           {params.data.Status}
+        //         </div>
+        //       ) : (
+        //         "NA"
+        //       );
+        //     },
+        //   },
+        // ];
+
+        let dropdown = JSON.parse(jsonData).CreateAccount?.MyDropdown?.dropdown;
+        if (dropdown.length) {
+          var mydropdownArray = dropdown?.map((ele) => {
+            return {
+              headerName: ele?.label,
+              field: ele?.name,
+              filter: true,
+              sortable: true,
+            };
+          });
+        } else {
+          var adddropdown = [
+            {
+              headerName: dropdown?.label._text,
+              field: dropdown?.name._text,
+              filter: true,
+              sortable: true,
+            },
+          ];
+        }
+
+        let myHeadings = [
+          // ...checkboxinput,
+          // ...inputs,
+          ...adddropdown,
+          // ...addRadio,
+          ...mydropdownArray,
+        ];
+        console.log(myHeadings);
+        let Product = [
+          {
+            headerName: "Actions",
+            field: "sortorder",
+            field: "transactions",
+            width: 190,
+            cellRendererFramework: (params) => {
+              return (
+                <div className="actions cursor-pointer">
+                  <Route
+                    render={({ history }) => (
+                      <Eye
+                        className="mr-50"
+                        size="25px"
+                        color="green"
+                        // onClick={() => {
+                        //   this.handleChangeEdit(params.data, "readonly");
+                        // }}
+                      />
+                    )}
+                  />
+                  <Route
+                    render={({ history }) => (
+                      <Edit
+                        className="mr-50"
+                        size="25px"
+                        color="blue"
+                        // onClick={() => {
+                        //   this.handleChangeEdit(params.data, "Editable");
+                        // }}
+                      />
+                    )}
+                  />
+
+                  <Route
+                    render={() => (
+                      <Trash2
+                        className="mr-50"
+                        size="25px"
+                        color="red"
+                        // onClick={() => {
+                        //   this.runthisfunction(params?.data?._id);
+                        // }}
+                      />
+                    )}
+                  />
+                </div>
+              );
+            },
+          },
+          ...myHeadings,
+        ];
+        console.log(dropdown?.option);
+        this.setState({ columnDefs: Product });
+        this.setState({ rowData: dropdown?.option });
+
+        // this.setState({ AllcolumnDefs: Product });
+      })
+      .catch((err) => {
+        console.log(err);
+        swal("Error", "something went wrong try again");
+      });
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
 
     let newparmisson = pageparmission?.role?.find(

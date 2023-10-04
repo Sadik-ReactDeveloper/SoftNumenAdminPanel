@@ -25,12 +25,12 @@ import { IntlContext } from "../../../utility/context/Internationalization";
 import { Route } from "react-router-dom";
 import ToggleMode from "./ToggleMode";
 
-const handleNavigation = e => {
+const handleNavigation = (e) => {
   e.preventDefault();
   history.push("/#/pages/profile/userProfile");
 };
 
-const UserDropdown = props => {
+const UserDropdown = (props) => {
   // const { logout, isAuthenticated } = useAuth0()
   return (
     <DropdownMenu right>
@@ -71,7 +71,7 @@ const UserDropdown = props => {
         render={({ history }) => (
           <DropdownItem
             tag="a"
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault();
               history.push("/pages/profile/userProfile");
             }}
@@ -86,7 +86,7 @@ const UserDropdown = props => {
           <DropdownItem
             tag="a"
             href="#"
-            onClick={e => {
+            onClick={(e) => {
               // e.preventDefault();
               const data = new FormData();
               // debugger;
@@ -95,12 +95,12 @@ const UserDropdown = props => {
               data.append("role", pageparmission?.Userinfo?.role);
               axiosConfig
                 .post("/apiLogout", data)
-                .then(resp => {
+                .then((resp) => {
                   console.log(resp);
                   localStorage.clear();
                   history.push("/#/pages/login");
                 })
-                .catch(err => {
+                .catch((err) => {
                   console.log(err);
                   // swal("Somethig Went Wrong");
                 });
@@ -212,10 +212,10 @@ class NavbarUser extends React.PureComponent {
   //   })
   // }
 
-  removeItem = id => {
+  removeItem = (id) => {
     let cart = this.state.shoppingCart;
 
-    let updatedCart = cart.filter(i => i.id !== id);
+    let updatedCart = cart.filter((i) => i.id !== id);
 
     this.setState({
       shoppingCart: updatedCart,
@@ -229,7 +229,7 @@ class NavbarUser extends React.PureComponent {
     // console.log(pageparmission?.Userinfo.full_name);
     //  console.log('console.log(this.state.userData) ',this.state.userData.image)
     const { userData } = this.state;
-    const renderCartItems = this.state.shoppingCart.map(item => {
+    const renderCartItems = this.state.shoppingCart.map((item) => {
       return (
         <div className="cart-item" key={item.id}>
           <Media
@@ -260,7 +260,7 @@ class NavbarUser extends React.PureComponent {
                 <Icon.X
                   className="danger"
                   size={15}
-                  onClick={e => {
+                  onClick={(e) => {
                     e.stopPropagation();
                     this.removeItem(item.id);
                   }}
@@ -275,7 +275,7 @@ class NavbarUser extends React.PureComponent {
     return (
       <ul className="nav navbar-nav navbar-nav-user float-right">
         <IntlContext.Consumer>
-          {context => {
+          {(context) => {
             let langArr = {
               // "en" : "English",
               // "de" : "German",
@@ -317,13 +317,13 @@ class NavbarUser extends React.PureComponent {
           tag="li"
           className="dropdown-notification nav-item"
         >
-          {/* <DropdownToggle tag="a" className="nav-link nav-link-label">
+          <DropdownToggle tag="a" className="nav-link nav-link-label">
             <Icon.Bell size={21} />
             <Badge pill color="primary" className="badge-up">
               {" "}
               5{" "}
             </Badge>
-          </DropdownToggle> */}
+          </DropdownToggle>
           <DropdownMenu tag="ul" right className="dropdown-menu-media">
             <li className="dropdown-menu-header">
               <div className="dropdown-header mt-0">

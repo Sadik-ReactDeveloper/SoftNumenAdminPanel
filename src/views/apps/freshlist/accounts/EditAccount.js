@@ -39,6 +39,10 @@ const CreateAccount = ({ EditOneData }) => {
   };
   // console.log(formData);
   useEffect(() => {
+    console.log(formData);
+  }, [formData]);
+
+  useEffect(() => {
     console.log(EditOneData);
     setFormData(EditOneData);
     // CreateAccountUpdate(Params.id)
@@ -62,13 +66,13 @@ const CreateAccount = ({ EditOneData }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(formData);
-    CreateAccountSave(formData)
+    console.log(formData, EditOneData?._id);
+    CreateAccountUpdate(EditOneData?._id, formData)
       .then((res) => {
         if (res.status) {
           setFormData({});
-          window.location.reload();
-          swal("Acccont Created Successfully");
+          // window.location.reload();
+          swal("Acccont Updated Successfully");
         }
       })
       .catch((err) => {
@@ -177,7 +181,10 @@ const CreateAccount = ({ EditOneData }) => {
                                 }`}
                                 onChange={handleInputChange}
                               />{" "}
-                              <span style={{ marginRight: "20px" }}>
+                              <span
+                                className="mt-2"
+                                style={{ marginLeft: "20px" }}
+                              >
                                 {ele?.label?._text}
                               </span>
                             </FormGroup>
