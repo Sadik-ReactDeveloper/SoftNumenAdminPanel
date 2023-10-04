@@ -13,10 +13,8 @@ import "../../../assets/scss/pages/users-profile.scss";
 import CheckBoxesVuexy from "../../../components/@vuexy/checkbox/CheckboxesVuexy";
 import { Check } from "react-feather";
 import Breadcrumbs from "../../../components/@vuexy/breadCrumbs/BreadCrumb";
-// import axios from "axios";
 import swal from "sweetalert";
 import axiosConfig from "../../../axiosConfig";
-// import { Route } from "react-router-dom";
 
 class UserProfile extends React.Component {
   constructor(props) {
@@ -35,7 +33,7 @@ class UserProfile extends React.Component {
   }
 
   //Image Submit Handler
-  onChangeHandler = (event) => {
+  onChangeHandler = event => {
     this.setState({ selectedFile: event.target.files[0] });
     this.setState({ selectedName: event.target.files[0].name });
     console.log(event.target.files[0]);
@@ -73,11 +71,11 @@ class UserProfile extends React.Component {
     //   });
   }
 
-  changeHandler = (e) => {
+  changeHandler = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  submitHandler = (e) => {
+  submitHandler = e => {
     e.preventDefault();
     console.log(this.state.data);
     const data = new FormData();
@@ -100,13 +98,13 @@ class UserProfile extends React.Component {
     //  let { id } = this.props.match.params;
     axiosConfig
       .post(`/admin/adminprofile/63875207a1d65ee4d84b3ab2`, data, {})
-      .then((response) => {
+      .then(response => {
         console.log(response.data.message);
         swal("Success!", "Submitted SuccessFull!", "success");
         window.location.reload("/#/pages/profile");
       })
 
-      .catch((error) => {
+      .catch(error => {
         swal("Error!", "You clicked the button!", "error");
         console.log(error.response);
       });
