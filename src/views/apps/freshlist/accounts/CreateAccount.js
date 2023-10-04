@@ -13,6 +13,11 @@ import {
   CustomInput,
 } from "reactstrap";
 import { history } from "../../../../history";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import { Country, State, City } from "country-state-city";
+import Select from "react-select";
+
 import swal from "sweetalert";
 import "../../../../../src/layouts/assets/scss/pages/users.scss";
 
@@ -32,6 +37,10 @@ const CreateAccount = () => {
   const [dropdownValue, setdropdownValue] = useState({});
   const [index, setindex] = useState("");
   const [error, setError] = useState("");
+  const [permissions, setpermissions] = useState({});
+  // const [selectedCountry, setSelectedCountry] = useState(null);
+  // const [selectedState, setSelectedState] = useState(null);
+  // const [selectedCity, setSelectedCity] = useState(null);
 
   const handleInputChange = (e, type, i) => {
     const { name, value, checked } = e.target;
@@ -84,31 +93,45 @@ const CreateAccount = () => {
   }, [formData]);
   useEffect(() => {
     CreateAccountView()
-      .then(res => {
+      .then((res) => {
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        console.log(JSON.parse(jsonData));
+        console.log(
+          JSON.parse(jsonData)?.CreateAccount?.input[14].permissions?.role
+        );
+        let origionalpermission =
+          JSON.parse(jsonData)?.CreateAccount?.input[14].permissions?.role;
+        const rolePermissions = origionalpermission?.find(
+          (role) => role._attributes?.name === "SUPERADMIN"
+        );
+        console.log(rolePermissions);
+        setpermissions(rolePermissions);
+        console.log(permissions);
+        console.log(rolePermissions?.canCreateUser._text.includes("true"));
+        console.log(rolePermissions?.canEditProfile._text.includes("true"));
+        // console.log(rolePermissions?.canCreateUser._text.includes("true"));
+
         setCreatAccountView(JSON.parse(jsonData));
         setdropdownValue(JSON.parse(jsonData));
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }, []);
 
-  const submitHandler = e => {
+  const submitHandler = (e) => {
     e.preventDefault();
     if (error) {
       swal("Error occured while Entering Details");
     } else {
       CreateAccountSave(formData)
-        .then(res => {
+        .then((res) => {
           if (res.status) {
             setFormData({});
             window.location.reload();
             swal("Acccont Created Successfully");
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     }
@@ -167,42 +190,195 @@ const CreateAccount = () => {
 
                 {CreatAccountView &&
                   CreatAccountView?.CreateAccount?.input?.map((ele, i) => {
-                    return (
-                      <Col key={i} lg="6" md="6" sm="12">
-                        <FormGroup>
-                          <Label>{ele?.label?._text}</Label>
-                          <Input
-                            required
-                            onKeyDown={e => {
-                              if (ele?.type?._attributes?.type == "number") {
-                                ["e", "E", "+", "-"].includes(e.key) &&
-                                  e.preventDefault();
-                              }
-                            }}
-                            type={ele?.type?._attributes?.type}
-                            placeholder={ele?.placeholder?._text}
-                            name={ele?.name?._text}
-                            value={formData[ele?.name?._text]}
-                            onChange={e =>
-                              handleInputChange(
-                                e,
-                                ele?.type?._attributes?.type,
-                                i
-                              )
-                            }
-                          />
-                          {index === i ? (
-                            <>
-                              {error && (
-                                <span style={{ color: "red" }}>{error}</span>
+                    if (!!ele?.phoneinput) {
+                      return (
+                        <Col key={i} lg="6" md="6" sm="12">
+                          <FormGroup>
+                            <Label>{ele?.label?._text}</Label>
+                            <PhoneInput
+                              inputClass="myphoneinput"
+                              country={"us"}
+                              onKeyDown={(e) => {
+                                if (ele?.type?._attributes?.type == "number") {
+                                  ["e", "E", "+", "-"].includes(e.key) &&
+                                    e.preventDefault();
+                                }
+                              }}
+                              countryCodeEditable={false}
+                              name={ele?.name?._text}
+                              value={formData[ele?.name?._text]}
+                              onChange={(phone) => {
+                                setFormData({
+                                  ...formData,
+                                  [ele?.name?._text]: phone,
+                                });
+                              }}
+                              // onChange={handleInputChange}
+                            />
+                            {index === i ? (
+                              <>
+                                {error && (
+                                  <span style={{ color: "red" }}>{error}</span>
+                                )}
+                              </>
+                            ) : (
+                              <></>
+                            )}
+                          </FormGroup>
+                        </Col>
+                      );
+                    } else if (!!ele?.library) {
+                      if (ele?.label._text?.includes("ountry")) {
+                        return (
+                          <Col key={i} lg="6" md="6" sm="12">
+                            <FormGroup>
+                              <Label>{ele?.label?._text}</Label>
+                              <Select
+                                inputClass="countryclass"
+                                className="countryclassnw"
+                                options={Country.getAllCountries()}
+                                getOptionLabel={(options) => {
+                                  return options["name"];
+                                }}
+                                getOptionValue={(options) => {
+                                  return options["name"];
+                                }}
+                                value={formData.country}
+                                onChange={(country) => {
+                                  setFormData({
+                                    ...formData,
+                                    ["country"]: country,
+                                  });
+                                }}
+                              />
+                              {index === i ? (
+                                <>
+                                  {error && (
+                                    <span style={{ color: "red" }}>
+                                      {error}
+                                    </span>
+                                  )}
+                                </>
+                              ) : (
+                                <></>
                               )}
-                            </>
-                          ) : (
-                            <></>
-                          )}
-                        </FormGroup>
-                      </Col>
-                    );
+                            </FormGroup>
+                          </Col>
+                        );
+                      } else if (ele?.label._text?.includes("tate")) {
+                        return (
+                          <Col key={i} lg="6" md="6" sm="12">
+                            <FormGroup>
+                              <Label>{ele?.label?._text}</Label>
+                              <Select
+                                options={State?.getStatesOfCountry(
+                                  formData?.country?.isoCode
+                                )}
+                                getOptionLabel={(options) => {
+                                  return options["name"];
+                                }}
+                                getOptionValue={(options) => {
+                                  return options["name"];
+                                }}
+                                value={formData.State}
+                                onChange={(State) => {
+                                  setFormData({
+                                    ...formData,
+                                    ["State"]: State,
+                                  });
+                                }}
+                              />
+                              {index === i ? (
+                                <>
+                                  {error && (
+                                    <span style={{ color: "red" }}>
+                                      {error}
+                                    </span>
+                                  )}
+                                </>
+                              ) : (
+                                <></>
+                              )}
+                            </FormGroup>
+                          </Col>
+                        );
+                      } else if (ele?.label._text?.includes("ity")) {
+                        return (
+                          <Col key={i} lg="6" md="6" sm="12">
+                            <FormGroup>
+                              <Label>{ele?.label?._text}</Label>
+                              <Select
+                                options={City?.getCitiesOfState(
+                                  formData?.State?.countryCode,
+                                  formData?.State?.isoCode
+                                )}
+                                getOptionLabel={(options) => {
+                                  return options["name"];
+                                }}
+                                getOptionValue={(options) => {
+                                  return options["name"];
+                                }}
+                                value={formData.City}
+                                onChange={(City) => {
+                                  setFormData({
+                                    ...formData,
+                                    ["City"]: City,
+                                  });
+                                }}
+                              />
+                              {index === i ? (
+                                <>
+                                  {error && (
+                                    <span style={{ color: "red" }}>
+                                      {error}
+                                    </span>
+                                  )}
+                                </>
+                              ) : (
+                                <></>
+                              )}
+                            </FormGroup>
+                          </Col>
+                        );
+                      }
+                    } else {
+                      return (
+                        <Col key={i} lg="6" md="6" sm="12">
+                          <FormGroup>
+                            <Label>{ele?.label?._text}</Label>
+                            <Input
+                              required
+                              onKeyDown={(e) => {
+                                if (ele?.type?._attributes?.type == "number") {
+                                  ["e", "E", "+", "-"].includes(e.key) &&
+                                    e.preventDefault();
+                                }
+                              }}
+                              type={ele?.type?._attributes?.type}
+                              placeholder={ele?.placeholder?._text}
+                              name={ele?.name?._text}
+                              value={formData[ele?.name?._text]}
+                              onChange={(e) =>
+                                handleInputChange(
+                                  e,
+                                  ele?.type?._attributes?.type,
+                                  i
+                                )
+                              }
+                            />
+                            {index === i ? (
+                              <>
+                                {error && (
+                                  <span style={{ color: "red" }}>{error}</span>
+                                )}
+                              </>
+                            ) : (
+                              <></>
+                            )}
+                          </FormGroup>
+                        </Col>
+                      );
+                    }
                   })}
                 {/* <Row>
                   <Col> */}
@@ -217,7 +393,9 @@ const CreateAccount = () => {
                                 style={{ marginRight: "3px" }}
                                 type={ele?.type?._attributes?.type}
                                 name={ele?.name?._text}
-                                onChange={e => handleInputChange(e, "checkbox")}
+                                onChange={(e) =>
+                                  handleInputChange(e, "checkbox")
+                                }
                               />{" "}
                               <span
                                 className="mt-1 mx-1"
