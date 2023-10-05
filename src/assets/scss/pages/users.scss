@@ -161,6 +161,35 @@ select.custom-select:hover {
   box-shadow: 4px 3px 3px #84CDBB;
 }
 
-tr.tabletr:hover {
+.tabletr:hover {
   background-color: #84cdba !important;
 }
+.shedulemodalbody {
+  background-color: #055761;
+}
+.tableRowStyle {
+  color: white !important;
+}
+.tableRowStyles {
+  color: white !important;
+}
+.tableRowStyles:hover {
+  color: rgb(241, 229, 229) !important;
+  background-color: #055761 !important;
+}
+
+// sadik css below
+// h3.table-item {
+//   color: #fff;
+// }
+
+// .table-body.modal-body {
+//   background-color: #055761;
+// }
+// .table-item {
+//   color: #fff;
+// }
+
+// tr.tableRowStyle {
+//   color: #fff;
+// }
