@@ -32,18 +32,13 @@
 	<input>
 		<label>Secondary mobile No.</label>
 		 <role name="SUPERADMIN">
-    <canEditProfile>true</canEditProfile>
-    <canCreateUser>true</canCreateUser>
+    <permissions>View,Edit</permissions>
    </role>
    <role name="ADMIN">
-    <canEditProfile>true</canEditProfile>
-    <canCreateUser>true</canCreateUser>
-    <canEditRoles>true</canEditRoles>
+    <permissions>View</permissions>
    </role>
    <role name="WARRANTY APPROVER">
-    <canEditProfile>true</canEditProfile>
-    <canCreateUser>true</canCreateUser>
-    <canEditRoles>true</canEditRoles>
+   <permissions>View,Edit</permissions>
    </role>
 		<type type="number">text</type>
 		<name>Secondarymobile</name>
@@ -81,20 +76,15 @@
 	</input>
 
 	<input>
-		<label>ShowRoom Address/office Address</label>
-		 <role name="SUPERADMIN">
-    <canEditProfile>true</canEditProfile>
-    <canCreateUser>true</canCreateUser>
+	<label>ShowRoom Address/office Address</label>
+	<role name="SUPERADMIN">
+  	<permissions>View</permissions>
    </role>
    <role name="ADMIN">
-    <canEditProfile>true</canEditProfile>
-    <canCreateUser>true</canCreateUser>
-    <canEditRoles>true</canEditRoles>
+    <permissions>Edit</permissions>
    </role>
    <role name="WARRANTY APPROVER">
-    <canEditProfile>true</canEditProfile>
-    <canCreateUser>true</canCreateUser>
-    <canEditRoles>true</canEditRoles>
+	<permissions>View</permissions>
    </role>
 		<type type="textarea">text</type>
 		<name>ShowroomAddress</name>
@@ -102,19 +92,14 @@
 	</input>
 
 	<input>
-	 <role name="SUPERADMIN">
-    <canEditProfile>true</canEditProfile>
-    <canCreateUser>true</canCreateUser>
-   </role>
-   <role name="ADMIN">
-    <canEditProfile>true</canEditProfile>
-    <canCreateUser>true</canCreateUser>
-    <canEditRoles>true</canEditRoles>
-   </role>
-   <role name="WARRANTY APPROVER">
-    <canEditProfile>true</canEditProfile>
-    <canCreateUser>true</canCreateUser>
-    <canEditRoles>true</canEditRoles>
+	  <role name="SUPERADMIN">
+   	<permissions>View</permissions>
+   	</role>
+   	<role name="ADMIN">
+    	<permissions>Edit</permissions>
+   	</role>
+   	<role name="WARRANTY APPROVER">
+  	<permissions>View</permissions>
    </role>
 		<label>Street Address1</label>
 		<type type="textarea">text</type>
@@ -123,46 +108,39 @@
 	</input>
 
 
-	<input>
+	 <input>
 		<label>Street Address2</label>
 		<type type="textarea">text</type>
 		<name>StreetAddress2</name>
 		<placeholder>Enter Street Address2 here</placeholder>
-	</input>
+	 </input>
 
 	<input>
+	 <role name="SUPERADMIN">
+   <permissions>View</permissions>
+   </role>
+   <role name="ADMIN">
+    <permissions>Edit</permissions>
+   </role>
+   <role name="WARRANTY APPROVER">
+  	<permissions>View</permissions>
+   </role>
 		<label>Street LandMark</label>
 		<type type="text">text</type>
 		<name>Landmark</name>
 		<placeholder>Enter landmark here</placeholder>
 	</input>
 
-	<input>
+	 <input>
 		<label>Name</label>
 		<type type="text">text</type>
 		<name>name</name>
 		<placeholder>Enter Your Name</placeholder>
-	</input>
+	 </input>
 
 
 	<input>
-	<permissions>
-   <role name="SUPERADMIN">
-    <canEditProfile>true</canEditProfile>
-    <canCreateUser>true</canCreateUser>
-   </role>
-   <role name="ADMIN">
-    <canEditProfile>true</canEditProfile>
-    <canCreateUser>true</canCreateUser>
-    <canEditRoles>true</canEditRoles>
-   </role>
-   <role name="WARRANTY APPROVER">
-    <canEditProfile>true</canEditProfile>
-    <canCreateUser>true</canCreateUser>
-    <canEditRoles>true</canEditRoles>
-   </role>
-  <!-- Define permissions for other roles (vendor, dealer, distributor, etc.) -->
- </permissions>
+	
 		<label>UserName</label>
 		<type type="text">text</type>
 		<name>UserName</name>

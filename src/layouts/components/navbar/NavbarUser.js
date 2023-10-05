@@ -19,18 +19,19 @@ import Autocomplete from "../../../components/@vuexy/autoComplete/AutoCompleteCo
 //import { useAuth0 } from "../../../authServices/auth0/auth0Service"
 import { history } from "../../../history";
 import images from "../../assets/img/logo/g.png";
+import logo from "../../assets/img/profile/pages/page-01.jpg";
 import { IntlContext } from "../../../utility/context/Internationalization";
 import { Route, useHistory } from "react-router-dom";
 import ToggleMode from "./ToggleMode";
-const handleNavigation = e => {
+const handleNavigation = (e) => {
   e.preventDefault();
   history.push("/#/pages/profile/userProfile");
 };
-const handleSelect = e => {
+const handleSelect = (e) => {
   e.preventDefault();
   history.push("/#/pages/profile/userProfile");
 };
-const UserDropdown = props => {
+const UserDropdown = (props) => {
   // const { logout, isAuthenticated } = useAuth0()
   return (
     <DropdownMenu right>
@@ -71,7 +72,7 @@ const UserDropdown = props => {
         render={({ history }) => (
           <DropdownItem
             tag="a"
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault();
               history.push("/pages/profile/userProfile");
             }}
@@ -86,7 +87,7 @@ const UserDropdown = props => {
           <DropdownItem
             tag="a"
             href="#"
-            onClick={e => {
+            onClick={(e) => {
               // e.preventDefault();
               const data = new FormData();
               let pageparmission = JSON.parse(localStorage.getItem("userData"));
@@ -94,12 +95,12 @@ const UserDropdown = props => {
               data.append("role", pageparmission?.Userinfo?.role);
               axiosConfig
                 .post("/apiLogout", data)
-                .then(resp => {
+                .then((resp) => {
                   console.log(resp);
                   localStorage.clear();
                   history.push("/#/pages/login");
                 })
-                .catch(err => {
+                .catch((err) => {
                   console.log(err);
                   // swal("Somethig Went Wrong");
                 });
@@ -211,10 +212,10 @@ class NavbarUser extends React.PureComponent {
   //   })
   // }
 
-  removeItem = id => {
+  removeItem = (id) => {
     let cart = this.state.shoppingCart;
 
-    let updatedCart = cart.filter(i => i.id !== id);
+    let updatedCart = cart.filter((i) => i.id !== id);
 
     this.setState({
       shoppingCart: updatedCart,
@@ -228,7 +229,7 @@ class NavbarUser extends React.PureComponent {
     // console.log(pageparmission?.Userinfo.full_name);
     //  console.log('console.log(this.state.userData) ',this.state.userData.image)
     const { userData } = this.state;
-    const renderCartItems = this.state.shoppingCart.map(item => {
+    const renderCartItems = this.state.shoppingCart.map((item) => {
       return (
         <div className="cart-item" key={item.id}>
           <Media
@@ -259,7 +260,7 @@ class NavbarUser extends React.PureComponent {
                 <Icon.X
                   className="danger"
                   size={15}
-                  onClick={e => {
+                  onClick={(e) => {
                     e.stopPropagation();
                     this.removeItem(item.id);
                   }}
@@ -274,7 +275,7 @@ class NavbarUser extends React.PureComponent {
     return (
       <ul className="nav navbar-nav navbar-nav-user float-right">
         <IntlContext.Consumer>
-          {context => {
+          {(context) => {
             let langArr = {
               // "en" : "English",
               // "de" : "German",
@@ -472,6 +473,7 @@ class NavbarUser extends React.PureComponent {
             <div className="user-nav d-sm-flex d-none">
               <span className="user-name text-bold-600">
                 {pageparmission?.Userinfo?.full_name}
+                softNumen
                 {/* {userData.name === undefined ? userData.name : null} */}
               </span>
               {/* <span className="user-status">{this.state.userData.name}</span> */}
@@ -480,7 +482,8 @@ class NavbarUser extends React.PureComponent {
               {/* userimage integrated here */}
               <img
                 // src={userData?.image}
-                src={images}
+                src={logo}
+                // src={images}
                 // src={userData.image === undefined ? userData.image : null}
                 className="round"
                 height="40"

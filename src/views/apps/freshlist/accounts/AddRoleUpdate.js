@@ -88,7 +88,7 @@ export default function AddRoleNew(args) {
     console.log(Selected);
   }, [Selected]);
 
-  const handleSumit = e => {
+  const handleSumit = (e) => {
     e.preventDefault();
     let userdata = JSON.parse(localStorage.getItem("userData"));
 
@@ -101,7 +101,7 @@ export default function AddRoleNew(args) {
 
     axiosConfig
       .post(`/addroles`, formdata)
-      .then(res => {
+      .then((res) => {
         console.log(res);
         swal("Success", "Role Created");
         setSelected("");
@@ -112,13 +112,13 @@ export default function AddRoleNew(args) {
           checkbox.checked = false;
         }
       })
-      .catch(er => {
+      .catch((er) => {
         console.log(er);
       });
   };
   const handleopentoggle = () => {
     CreateAccountView()
-      .then(res => {
+      .then((res) => {
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
         // console.log(JSON.parse(jsonData)?.CreateAccount?.MyDropdown?.dropdown);
         setCreatAccountView(
@@ -126,7 +126,7 @@ export default function AddRoleNew(args) {
         );
         setdropdownValue(JSON.parse(jsonData));
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
     toggle();
@@ -137,7 +137,7 @@ export default function AddRoleNew(args) {
     setShow(value);
     setIndex(index);
   };
-  const HandleSelectRole = val => {
+  const HandleSelectRole = (val) => {
     setRole(val?._attributes?.value);
     toggle();
   };
@@ -156,7 +156,7 @@ export default function AddRoleNew(args) {
                       <Input
                         disabled
                         value={Role}
-                        onChange={e => setRole(e.target.value)}
+                        onChange={(e) => setRole(e.target.value)}
                         type="text"
                         placeholder="Choose Role"
                         className="form-control inputs"
@@ -168,7 +168,7 @@ export default function AddRoleNew(args) {
                         className="mybtn primary"
                       >
                         <AiOutlineSearch
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                           fill="white"
                         />
                       </Button>
@@ -179,7 +179,7 @@ export default function AddRoleNew(args) {
                     <Input
                       required
                       value={Desc}
-                      onChange={e => setDesc(e.target.value)}
+                      onChange={(e) => setDesc(e.target.value)}
                       type="text"
                       placeholder="Enter Role Desc.."
                       // className="form-control"
@@ -219,7 +219,7 @@ export default function AddRoleNew(args) {
                                 className="mt-1"
                                 name="check"
                                 id={`head_${value?.title}`}
-                                onClick={e => {
+                                onClick={(e) => {
                                   handlesetparent(e.target.checked, index);
                                   handleSelectPage(
                                     e.target.value,
@@ -277,7 +277,7 @@ export default function AddRoleNew(args) {
                                             <input
                                               name="check"
                                               id={`item_${permit}`}
-                                              onClick={e => {
+                                              onClick={(e) => {
                                                 handleSelectPage(
                                                   e.target.value,
                                                   e.target.checked,
@@ -335,7 +335,15 @@ export default function AddRoleNew(args) {
         <ModalBody>
           <div className="modalheaderaddrol p-1">
             <h3>Role List</h3>
-            <Table bordered borderless hover responsive size="sm" striped>
+            <Table
+              className="tableofrole"
+              bordered
+              borderless
+              hover
+              responsive
+              size="sm"
+              striped
+            >
               <thead>
                 <tr>
                   <th>S.No.</th>
@@ -347,7 +355,8 @@ export default function AddRoleNew(args) {
                   CreatAccountView?.option?.map((ele, i) => {
                     return (
                       <tr
-                        onClick={e => HandleSelectRole(ele)}
+                        className="tabletr"
+                        onClick={(e) => HandleSelectRole(ele)}
                         style={{ cursor: "pointer" }}
                         key={i}
                       >

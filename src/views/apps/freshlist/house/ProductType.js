@@ -22,7 +22,7 @@ import EditAccount from "../../freshlist/accounts/EditAccount";
 import ViewAccount from "../../freshlist/accounts/ViewAccount";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-
+import Logo from "../../../../assets/img/profile/pages/logomain.png";
 import Papa from "papaparse";
 import { Eye, Trash2, ChevronDown, Edit, CloudLightning } from "react-feather";
 import { IoMdRemoveCircleOutline } from "react-icons/io";
@@ -345,17 +345,26 @@ class ProductType extends React.Component {
     });
   }
   generatePDF(parsedData) {
-    const doc = new jsPDF("landscape", "mm", "a4", false);
-    // const headingBgColor = "yellow";
-    // doc.setFillColor(headingBgColor);
+    let pdfsize = [Object.keys(parsedData[0])][0].length;
+    let size = pdfsize > 15 ? "a1" : pdfsize < 14 > 10 ? "a3" : "a4";
+
+    const doc = new jsPDF("landscape", "mm", size, false);
+    doc.setTextColor(5, 87, 97);
     const tableData = parsedData.map((row) => Object.values(row));
-    doc.text("UserAccount", 10, 10);
+    doc.addImage(Logo, "JPEG", 10, 10, 50, 30);
+    let date = new Date();
+    doc.setCreationDate(date);
+    doc.text("UserAccount", 14, 51);
     doc.autoTable({
       head: [Object.keys(parsedData[0])],
       body: tableData,
-      startY: 20,
+      startY: 60,
     });
+    // doc.setDrawColor("UserList.pdf");
+    // doc.setFont("UserList.pdf");
 
+    // doc.addImage("UserList.pdf");
+    // doc.setLanguage("UserList.pdf");
     doc.save("UserList.pdf");
   }
 
@@ -487,7 +496,6 @@ class ProductType extends React.Component {
     }
   };
   convertCsvToXml = () => {
-    debugger;
     const CsvData = this.gridApi.getDataAsCsv({
       processCellCallback: this.processCell,
     });
