@@ -52,7 +52,7 @@ const importData = [
   "Customer Data",
   "Campaigns",
 ];
-const AddProduct = () => {
+const Scheduler = () => {
   // const [Address, setAddress] = useState("");
   const [Viewpermisson, setViewpermisson] = useState(null);
   const [Editpermisson, setEditpermisson] = useState(null);
@@ -100,7 +100,7 @@ const AddProduct = () => {
     setAllPart(importData);
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let newparmisson = pageparmission?.role?.find(
-      value => value?.pageName === "Create Account"
+      (value) => value?.pageName === "Create Account"
     );
     setViewpermisson(newparmisson?.permission.includes("View"));
     setCreatepermisson(newparmisson?.permission.includes("Create"));
@@ -114,22 +114,10 @@ const AddProduct = () => {
   }, []);
 
   const handleopentoggle = () => {
-    // setAllPart(importData);
-    // CreateAccountView()
-    //   .then(res => {
-    //     const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-    //     setCreatAccountView(
-    //       JSON.parse(jsonData)?.CreateAccount?.MyDropdown?.dropdown
-    //     );
-    //     setdropdownValue(JSON.parse(jsonData));
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
     toggle();
   };
 
-  const submitHandler = e => {
+  const submitHandler = (e) => {
     e.preventDefault();
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let uniqueChars = [...new Set(selectItem1)];
@@ -171,7 +159,7 @@ const AddProduct = () => {
 
     axiosConfig
       .post("/createuser", formdata)
-      .then(response => {
+      .then((response) => {
         if (response.data?.success) {
           swal("Success!", "Submitted SuccessFull!", "success");
           setAssignRole("");
@@ -188,72 +176,16 @@ const AddProduct = () => {
           setS_Street("");
           setS_PinCode("");
         }
-        // this.props.history.push("/app/softNumen/order/placeorder");
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
 
-  const HandleSelectRole = val => {
+  const HandleSelectRole = (val) => {
     setRole(val);
     toggle();
   };
-  const handleMatchaddress = (e, value) => {
-    setcheckbox(value);
-    if (value) {
-      setS_Country(B_Country);
-      setS_State(B_State);
-      setS_City(B_City);
-      setS_Street(B_Street);
-      setS_PinCode(B_PinCode);
-    } else {
-      setS_Country("");
-      setS_State("");
-      setS_City("");
-      setS_Street("");
-      setS_PinCode("");
-    }
-  };
-  const onSelect = (selectedList, selectedItem) => {
-    console.log(selectedList);
-
-    if (selectedList.length) {
-      for (var i = 0; i < selectedList.length; i++) {
-        selectItem1.push(selectedList[i].id);
-      }
-    }
-  };
-  const onSelect1 = (selectedList, selectedItem) => {
-    if (selectedList.length) {
-      for (var i = 0; i < selectedList.length; i++) {
-        selectedOptions.push(selectedList[i].id);
-      }
-    }
-
-    let arr = selectedList.map(ele => ele.id);
-    setmultiSelect(arr);
-    // console.log(multiSelect);
-
-    let uniqueChars = [...new Set(selectedOptions)];
-
-    if (uniqueChars.length === 1) {
-      let value = uniqueChars[0];
-      const formdata = new FormData();
-      formdata.append("state_id", value);
-      axiosConfig
-        .post(`/getcity`, formdata)
-        .then(res => {
-          setCityList(res?.data?.cities);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    } else {
-      setCityList([]);
-    }
-  };
-
   return (
     <div>
       <div>
@@ -273,10 +205,9 @@ const AddProduct = () => {
                     <Input
                       required
                       type="date"
-                      //   placeholder="Enter Your Name"
                       name="date"
                       value={fullname}
-                      onChange={e => setfullname(e.target.value)}
+                      onChange={(e) => setfullname(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -299,7 +230,7 @@ const AddProduct = () => {
                   <Label>Recurrence Pattern</Label>
                   <div
                     className="form-label-group mt-2"
-                    onChange={e => {
+                    onChange={(e) => {
                       setstatus(e.target.value), console.log(e.target.value);
                     }}
                   >
@@ -379,7 +310,6 @@ const AddProduct = () => {
                         name="name"
                         value=""
                       />
-                      {/* <Label>Hours</Label> */}
                     </div>
                   </FormGroup>
                 </Col>
@@ -467,7 +397,7 @@ const AddProduct = () => {
                     <Input
                       disabled
                       value={Role}
-                      onChange={e => setRole(e.target.value)}
+                      onChange={(e) => setRole(e.target.value)}
                       type="text"
                       placeholder="Import Search"
                       className="form-control inputs"
@@ -478,7 +408,7 @@ const AddProduct = () => {
                       className="mybtn primary"
                     >
                       <AiOutlineSearch
-                        onClick={e => e.preventDefault()}
+                        onClick={(e) => e.preventDefault()}
                         fill="white"
                       />
                     </Button>
@@ -523,27 +453,46 @@ const AddProduct = () => {
           // {...args}
         >
           <ModalHeader toggle={toggle}>Import Type List</ModalHeader>
-          <ModalBody>
+          <ModalBody className="table-body shedulemodalbody">
             <div className="modalheaderaddrol p-1">
-              <h3>Import Type</h3>
-              <ol>
-                {allPart.map((ele, i) => {
-                  return (
-                    <li
-                      key={i}
-                      onClick={e => HandleSelectRole(ele)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      {ele}
-                    </li>
-                  );
-                })}
-              </ol>
+              <h3 className="table-item">Import Type</h3>
+
+              <Table
+                className="scheduletble_heading"
+                bordered
+                hover
+                responsive
+                size="sm"
+              >
+                <thead className="tableRowStyle">
+                  <tr className="tableRowStyle">
+                    <th>S.No.</th>
+                    <th>Import Type Name</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {allPart.map((ele, i) => {
+                    return (
+                      <tr
+                        className="tableRowStyles"
+                        key={i}
+                        onClick={(e) => HandleSelectRole(ele)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <th scope="row" className="tableRowStyles">
+                          {i + 1}
+                        </th>
+                        <td className="tableRowStyles"> {ele}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
             </div>
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={toggle}>
-              Done
+              Submit
             </Button>
             <Button color="secondary" onClick={toggle}>
               Cancel
@@ -554,4 +503,4 @@ const AddProduct = () => {
     </div>
   );
 };
-export default AddProduct;
+export default Scheduler;

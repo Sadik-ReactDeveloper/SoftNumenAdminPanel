@@ -369,14 +369,14 @@ export default function AddRoleNew(args) {
             </Table>
           </div>
         </ModalBody>
-        <ModalFooter>
+        {/* <ModalFooter>
           <Button color="primary" onClick={toggle}>
             Do Something
           </Button>{" "}
           <Button color="secondary" onClick={toggle}>
             Cancel
           </Button>
-        </ModalFooter>
+        </ModalFooter> */}
       </Modal>
     </>
   );
