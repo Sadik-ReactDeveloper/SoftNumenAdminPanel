@@ -103,11 +103,10 @@ class All extends React.Component {
     let elementWithMaxKeys = null;
     OrderPartsList()
       .then(resp => {
-        // console.log(resp?.FrontPartDetail);
+        console.log(resp?.FrontPartDetail);
 
         // Iterate through the array
         for (const element of resp?.FrontPartDetail) {
-          debugger;
           const numKeys = Object.keys(element).length; // Get the number of keys in the current element
 
           // Check if the current element has more keys than the previous maximum
@@ -718,11 +717,23 @@ class All extends React.Component {
                                     0
                                       ? this.state.currenPageSize *
                                         this.state.getPageSize
-                                      : this.state.rowData.length}{" "}
+                                      : this.state.rowData.length}
                                     of {this.state.rowData.length}
                                     <ChevronDown className="ml-50" size={15} />
                                   </DropdownToggle>
                                   <DropdownMenu right>
+                                    <DropdownItem
+                                      tag="div"
+                                      onClick={() => this.filterSize(5)}
+                                    >
+                                      05
+                                    </DropdownItem>
+                                    <DropdownItem
+                                      tag="div"
+                                      onClick={() => this.filterSize(10)}
+                                    >
+                                      10
+                                    </DropdownItem>
                                     <DropdownItem
                                       tag="div"
                                       onClick={() => this.filterSize(20)}
