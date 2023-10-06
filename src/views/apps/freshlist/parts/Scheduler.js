@@ -87,7 +87,6 @@ const Scheduler = () => {
     console.log(scheduler);
     console.log(Adhocfile);
   }, [scheduler, Adhocfile]);
-
   const handleInputChange = (e) => {
     const { name, value, checked } = e.target;
     setScheduler({
@@ -113,9 +112,7 @@ const Scheduler = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    debugger;
     let formdata = new FormData();
-    debugger;
     // console.log(Adhocfile[0].name.split(".")[0]);
     console.log(Role.split(" ").join(""));
     let adhodfile = Adhocfile[0].name.split(".")[0];
@@ -127,15 +124,16 @@ const Scheduler = () => {
       PartCatelougue(formdata)
         .then((res) => {
           console.log(res);
-          swal(`${Role} Uploaded Successfully`);
+          swal(`${Role} File Uploaded Successfully`);
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
       swal(
-        "Error",
-        `Note: ${Role} Name and ${adhodfile} Name Prefix Should be Match`
+        "Error!",
+        `Note: ${Role} Name and ${adhodfile} Name Prefix Should be Match`,
+        "error"
       );
     }
   };
