@@ -113,7 +113,6 @@ class ProductType extends React.Component {
             sortable: true,
             cellRendererFramework: (params) => {
               console.log(params.data);
-              debugger;
               return params.data?.Status === "Active" ? (
                 <div className="badge badge-pill badge-success">
                   {params.data.Status}
@@ -146,8 +145,6 @@ class ProductType extends React.Component {
             filter: true,
             sortable: true,
             cellRendererFramework: (params) => {
-              // debugger;
-              // console.log(params.data);
               return params.data?.Status === "Active" ? (
                 <div className="badge badge-pill badge-success">
                   {params.data.Status}
@@ -323,8 +320,6 @@ class ProductType extends React.Component {
 
       SelectedCols?.splice(delindex, 1);
     }
-    // this.setState({ setMySelectedarr: [...SelectedCols] });
-    // console.log(this.state.setMySelectedarr);
   };
   parseCsv(csvData) {
     return new Promise((resolve, reject) => {

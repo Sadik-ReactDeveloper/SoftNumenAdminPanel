@@ -29,6 +29,7 @@ import "../../../../../src/layouts/assets/scss/pages/users.scss";
 import { Route } from "react-router-dom";
 import { CloudLightning } from "react-feather";
 import { timers } from "jquery";
+import { PartCatelougue } from "../../../../ApiEndPoint/ApiCalling";
 const selectItem1 = [];
 const selectstate2 = [];
 
@@ -85,7 +86,7 @@ const Scheduler = () => {
     console.log(scheduler);
     console.log(Adhocfile);
   }, [scheduler, Adhocfile]);
-  const handleInputChange = e => {
+  const handleInputChange = (e) => {
     const { name, value, checked } = e.target;
     setScheduler({
       ...scheduler,
@@ -96,16 +97,45 @@ const Scheduler = () => {
     toggle();
   };
 
-  const submitHandler = e => {
+  const submitHandler = (e) => {
     e.preventDefault();
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let uniqueChars = [...new Set(selectItem1)];
     let selectedOption = [...new Set(selectedOptions)];
   };
 
-  const HandleSelectRole = val => {
+  const HandleSelectRole = (val) => {
     setRole(val);
     toggle();
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    debugger;
+    let formdata = new FormData();
+    debugger;
+    // console.log(Adhocfile[0].name.split(".")[0]);
+    console.log(Role.split(" ").join(""));
+    let adhodfile = Adhocfile[0].name.split(".")[0];
+    let selectType = Role.split(" ").join("");
+    // console.log(adhodfile.includes(selectType));
+    if (adhodfile.includes(selectType)) {
+      formdata.append("file", Adhocfile[0]);
+      formdata.append("partType", selectType);
+      PartCatelougue(formdata)
+        .then((res) => {
+          console.log(res);
+          swal(`${Role} Uploaded Successfully`);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      swal(
+        "Error",
+        `Note: ${Role} Name and ${adhodfile} Name Prefix Should be Match`
+      );
+    }
   };
   return (
     <div>
@@ -128,7 +158,7 @@ const Scheduler = () => {
                       type="date"
                       name="StartDate"
                       value={scheduler?.StartDate}
-                      onChange={e => handleInputChange(e)}
+                      onChange={(e) => handleInputChange(e)}
                     />
                   </FormGroup>
                 </Col>
@@ -141,7 +171,7 @@ const Scheduler = () => {
                       type="time"
                       name="Start_Time"
                       value={scheduler?.Start_Time}
-                      onChange={e => handleInputChange(e)}
+                      onChange={(e) => handleInputChange(e)}
                     />
                   </FormGroup>
                 </Col>
@@ -155,7 +185,7 @@ const Scheduler = () => {
                         type="radio"
                         name="Pattern"
                         value="Yearly"
-                        onChange={e => handleInputChange(e)}
+                        onChange={(e) => handleInputChange(e)}
                       />
                       <span style={{ marginRight: "3px" }}>Yearly</span>
                     </div>
@@ -165,7 +195,7 @@ const Scheduler = () => {
                         type="radio"
                         name="Pattern"
                         value="Monthly"
-                        onChange={e => handleInputChange(e)}
+                        onChange={(e) => handleInputChange(e)}
                       />
                       <span style={{ marginRight: "3px" }}>Monthly</span>
                     </div>
@@ -175,7 +205,7 @@ const Scheduler = () => {
                         type="radio"
                         name="Pattern"
                         value="Weekly"
-                        onChange={e => handleInputChange(e)}
+                        onChange={(e) => handleInputChange(e)}
                       />
                       <span style={{ marginRight: "3px" }}>Weekly</span>
                     </div>
@@ -185,7 +215,7 @@ const Scheduler = () => {
                         type="radio"
                         name="Pattern"
                         value="Daily"
-                        onChange={e => handleInputChange(e)}
+                        onChange={(e) => handleInputChange(e)}
                       />
                       <span style={{ marginRight: "3px" }}>Daily</span>
                     </div>
@@ -195,7 +225,7 @@ const Scheduler = () => {
                         type="radio"
                         name="Pattern"
                         value="Hourly"
-                        onChange={e => handleInputChange(e)}
+                        onChange={(e) => handleInputChange(e)}
                       />
                       <span style={{ marginRight: "3px" }}>Hourly</span>
                     </div>
@@ -205,7 +235,7 @@ const Scheduler = () => {
                         type="radio"
                         name="Pattern"
                         value="Minuts"
-                        onChange={e => handleInputChange(e)}
+                        onChange={(e) => handleInputChange(e)}
                       />
                       <span style={{ marginRight: "20px" }}>Minuts</span>
                     </div>
@@ -225,7 +255,7 @@ const Scheduler = () => {
                             type="radio"
                             name="Repeat_time"
                             value="Every"
-                            onChange={e => handleInputChange(e)}
+                            onChange={(e) => handleInputChange(e)}
                           />
                           <span style={{ marginRight: "3px" }}>Every</span>
                         </div>
@@ -237,7 +267,7 @@ const Scheduler = () => {
                             placeholder={scheduler?.Pattern}
                             name="Every_Interval"
                             value={scheduler?.Every_Interval}
-                            onChange={e => handleInputChange(e)}
+                            onChange={(e) => handleInputChange(e)}
                             // value=""
                           />
                         </div>
@@ -255,7 +285,7 @@ const Scheduler = () => {
                         type="radio"
                         name="Recurrence"
                         value="No_End_Date"
-                        onChange={e => handleInputChange(e)}
+                        onChange={(e) => handleInputChange(e)}
                       />
                       <span style={{ marginRight: "3px" }}>No End Date</span>
                     </div>
@@ -265,7 +295,7 @@ const Scheduler = () => {
                         type="radio"
                         name="Recurrence"
                         value="End_After"
-                        onChange={e => handleInputChange(e)}
+                        onChange={(e) => handleInputChange(e)}
                       />
                       <span style={{ marginRight: "3px" }}>End After</span>
                     </div>
@@ -282,7 +312,7 @@ const Scheduler = () => {
                               marginBottom: "2px",
                             }}
                             value={scheduler?.Occurance_frequency}
-                            onChange={e => handleInputChange(e)}
+                            onChange={(e) => handleInputChange(e)}
                             type="number"
                             name="Occurance_frequency"
                             placeholder="Occurrences Time"
@@ -301,7 +331,7 @@ const Scheduler = () => {
                         type="radio"
                         name="Recurrence"
                         value="End_by"
-                        onChange={e => handleInputChange(e)}
+                        onChange={(e) => handleInputChange(e)}
                       />
                       <span style={{ marginRight: "3px" }}>End by</span>
                     </div>
@@ -310,7 +340,7 @@ const Scheduler = () => {
                         value={scheduler?.End_by_date}
                         type="date"
                         name="End_by_date"
-                        onChange={e => handleInputChange(e)}
+                        onChange={(e) => handleInputChange(e)}
                       />
                     )}
                   </FormGroup>
@@ -338,7 +368,7 @@ const Scheduler = () => {
                       disabled
                       name="Role"
                       value={Role}
-                      onChange={e => handleInputChange(e)}
+                      onChange={(e) => handleInputChange(e)}
                       type="text"
                       placeholder="Import Search"
                       className="form-control inputs"
@@ -349,7 +379,7 @@ const Scheduler = () => {
                       className="mybtn primary"
                     >
                       <AiOutlineSearch
-                        onClick={e => e.preventDefault()}
+                        onClick={(e) => e.preventDefault()}
                         fill="white"
                       />
                     </Button>
@@ -366,7 +396,7 @@ const Scheduler = () => {
                     style={{ marginRight: "3px" }}
                     name="adhocfiles"
                     type="file"
-                    onChange={e => setAdhocfile(e.target.files)}
+                    onChange={(e) => setAdhocfile(e.target.files)}
                   />
                 </Col>
                 <Col
@@ -377,7 +407,7 @@ const Scheduler = () => {
                 >
                   <Button.Ripple
                     color="primary"
-                    type="submit"
+                    onClick={(e) => handleSubmit(e)}
                     className="mr-1 mt-2 mx-2"
                   >
                     Upload
@@ -420,7 +450,7 @@ const Scheduler = () => {
                         className="tableRowStyles"
                         key={i}
                         name="Role"
-                        onClick={e => HandleSelectRole(ele)}
+                        onClick={(e) => HandleSelectRole(ele)}
                         // onClick={(e) => {
                         //   setScheduler({ ...scheduler, ["Role"]: ele });
                         //   HandleSelectRole(ele);
