@@ -84,7 +84,8 @@ const Scheduler = () => {
   useEffect(() => {
     console.log(scheduler);
     console.log(Adhocfile);
-  }, [scheduler, Adhocfile]);
+    console.log(Adhocfile);
+  }, [scheduler, Adhocfile, Adhocfile]);
   const handleInputChange = (e) => {
     const { name, value, checked } = e.target;
     setScheduler({
