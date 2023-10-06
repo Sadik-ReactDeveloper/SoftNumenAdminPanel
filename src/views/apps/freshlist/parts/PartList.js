@@ -44,6 +44,7 @@ import {
   CreateAccountList,
   CreateAccountView,
   DeleteAccount,
+  PartsCatalogueList,
 } from "../../../../ApiEndPoint/ApiCalling";
 import {
   BsCloudDownloadFill,
@@ -97,99 +98,35 @@ class PartList extends React.Component {
   };
 
   async componentDidMount() {
-    // PartsCatalogueList();
-    await CreateAccountView()
-      .then(res => {
-        var mydropdownArray = [];
-        var adddropdown = [];
-        const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        console.log(JSON.parse(jsonData));
-        const checkboxinput = JSON.parse(
-          jsonData
-        ).CreateAccount?.CheckBox?.input?.map(ele => {
-          return {
-            headerName: ele?.label?._text,
-            field: ele?.name?._text,
-            filter: true,
-            sortable: true,
-            cellRendererFramework: params => {
-              console.log(params.data);
-              return params.data?.Status === "Active" ? (
-                <div className="badge badge-pill badge-success">
-                  {params.data.Status}
-                </div>
-              ) : params.data?.Status === "Deactive" ? (
-                <div className="badge badge-pill badge-warning">
-                  {params.data.Status}
-                </div>
-              ) : (
-                "NA"
-              );
-            },
-          };
-        });
-        const inputs = JSON.parse(jsonData).CreateAccount?.input?.map(ele => {
-          return {
-            headerName: ele?.label._text,
-            field: ele?.name._text,
-            filter: true,
-            sortable: true,
-          };
-        });
-        let Radioinput =
-          JSON.parse(jsonData).CreateAccount?.Radiobutton?.input[0]?.name
-            ?._text;
-        const addRadio = [
-          {
-            headerName: Radioinput,
-            field: Radioinput,
-            filter: true,
-            sortable: true,
-            cellRendererFramework: params => {
-              return params.data?.Status === "Active" ? (
-                <div className="badge badge-pill badge-success">
-                  {params.data.Status}
-                </div>
-              ) : params.data?.Status === "Deactive" ? (
-                <div className="badge badge-pill badge-warning">
-                  {params.data.Status}
-                </div>
-              ) : (
-                "NA"
-              );
-            },
-          },
-        ];
+    let headings;
+    let maxKeys = 0;
+    let elementWithMaxKeys = null;
+    PartsCatalogueList()
+      .then(resp => {
+        console.log(resp?.FrontPartDetail);
 
-        let dropdown = JSON.parse(jsonData).CreateAccount?.MyDropdown?.dropdown;
-        if (dropdown.length) {
-          var mydropdownArray = dropdown?.map(ele => {
-            return {
-              headerName: ele?.label,
-              field: ele?.name,
-              filter: true,
-              sortable: true,
-            };
-          });
-        } else {
-          var adddropdown = [
-            {
-              headerName: dropdown?.label._text,
-              field: dropdown?.name._text,
-              filter: true,
-              sortable: true,
-            },
-          ];
+        // Iterate through the array
+        for (const element of resp?.FrontPartDetail) {
+          const numKeys = Object.keys(element).length; // Get the number of keys in the current element
+
+          // Check if the current element has more keys than the previous maximum
+          if (numKeys > maxKeys) {
+            maxKeys = numKeys; // Update the maximum number of keys
+            elementWithMaxKeys = element; // Update the element with maximum keys
+          }
         }
+        // console.log(elementWithMaxKeys);
+        let findheading = Object.keys(elementWithMaxKeys);
 
-        let myHeadings = [
-          ...checkboxinput,
-          ...inputs,
-          ...adddropdown,
-          ...addRadio,
-          ...mydropdownArray,
-        ];
-        // console.log(myHeadings);
+        headings = findheading?.map(ele => {
+          return {
+            headerName: ele,
+            field: ele,
+            filter: true,
+            sortable: true,
+          };
+        });
+        console.log(headings);
         let Product = [
           {
             headerName: "Actions",
@@ -240,10 +177,108 @@ class PartList extends React.Component {
               );
             },
           },
-          ...myHeadings,
+          ...headings,
         ];
         this.setState({ columnDefs: Product });
         this.setState({ AllcolumnDefs: Product });
+        this.setState({ rowData: resp?.FrontPartDetail });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    // Use the map function to iterate through the array
+
+    await CreateAccountView()
+      .then(res => {
+        var mydropdownArray = [];
+        var adddropdown = [];
+        const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
+        console.log(JSON.parse(jsonData));
+        // const checkboxinput = JSON.parse(
+        //   jsonData
+        // ).CreateAccount?.CheckBox?.input?.map(ele => {
+        //   return {
+        //     headerName: ele?.label?._text,
+        //     field: ele?.name?._text,
+        //     filter: true,
+        //     sortable: true,
+        //     cellRendererFramework: params => {
+        //       // console.log(params.data);
+        //       return params.data?.Status === "Active" ? (
+        //         <div className="badge badge-pill badge-success">
+        //           {params.data.Status}
+        //         </div>
+        //       ) : params.data?.Status === "Deactive" ? (
+        //         <div className="badge badge-pill badge-warning">
+        //           {params.data.Status}
+        //         </div>
+        //       ) : (
+        //         "NA"
+        //       );
+        //     },
+        //   };
+        // });
+        // const inputs = JSON.parse(jsonData).CreateAccount?.input?.map(ele => {
+        //   return {
+        //     headerName: ele?.label._text,
+        //     field: ele?.name._text,
+        //     filter: true,
+        //     sortable: true,
+        //   };
+        // });
+        let Radioinput =
+          JSON.parse(jsonData).CreateAccount?.Radiobutton?.input[0]?.name
+            ?._text;
+        // const addRadio = [
+        //   {
+        //     headerName: Radioinput,
+        //     field: Radioinput,
+        //     filter: true,
+        //     sortable: true,
+        //     cellRendererFramework: params => {
+        //       return params.data?.Status === "Active" ? (
+        //         <div className="badge badge-pill badge-success">
+        //           {params.data.Status}
+        //         </div>
+        //       ) : params.data?.Status === "Deactive" ? (
+        //         <div className="badge badge-pill badge-warning">
+        //           {params.data.Status}
+        //         </div>
+        //       ) : (
+        //         "NA"
+        //       );
+        //     },
+        //   },
+        // ];
+
+        let dropdown = JSON.parse(jsonData).CreateAccount?.MyDropdown?.dropdown;
+        if (dropdown.length) {
+          // var mydropdownArray = dropdown?.map(ele => {
+          //   return {
+          //     headerName: ele?.label,
+          //     field: ele?.name,
+          //     filter: true,
+          //     sortable: true,
+          //   };
+          // });
+        } else {
+          // var adddropdown = [
+          //   {
+          //     headerName: dropdown?.label._text,
+          //     field: dropdown?.name._text,
+          //     filter: true,
+          //     sortable: true,
+          //   },
+          // ];
+        }
+
+        // let myHeadings = [
+        // ...adddropdown,
+        // ...addRadio,
+        // ...mydropdownArray,
+        // ];
+        // console.log(myHeadings);
       })
       .catch(err => {
         console.log(err);
@@ -587,7 +622,7 @@ class PartList extends React.Component {
                     <Card>
                       <Row className="m-2">
                         <Col>
-                          <h1 className="float-left">Part List</h1>
+                          <h1 className="float-left">Place Order</h1>
                         </Col>
                         <Col>
                           <span className="mx-1">
@@ -682,11 +717,23 @@ class PartList extends React.Component {
                                     0
                                       ? this.state.currenPageSize *
                                         this.state.getPageSize
-                                      : this.state.rowData.length}{" "}
+                                      : this.state.rowData.length}
                                     of {this.state.rowData.length}
                                     <ChevronDown className="ml-50" size={15} />
                                   </DropdownToggle>
                                   <DropdownMenu right>
+                                    <DropdownItem
+                                      tag="div"
+                                      onClick={() => this.filterSize(5)}
+                                    >
+                                      05
+                                    </DropdownItem>
+                                    <DropdownItem
+                                      tag="div"
+                                      onClick={() => this.filterSize(10)}
+                                    >
+                                      10
+                                    </DropdownItem>
                                     <DropdownItem
                                       tag="div"
                                       onClick={() => this.filterSize(20)}
