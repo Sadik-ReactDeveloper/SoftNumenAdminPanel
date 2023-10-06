@@ -53,8 +53,8 @@ const importData = [
   "Campaigns",
 ];
 const Scheduler = () => {
-  // const [Address, setAddress] = useState("");
   const [scheduler, setScheduler] = useState({});
+  const [Adhocfile, setAdhocfile] = useState({});
   const [Viewpermisson, setViewpermisson] = useState(null);
   const [Editpermisson, setEditpermisson] = useState(null);
   const [Createpermisson, setCreatepermisson] = useState(null);
@@ -67,9 +67,7 @@ const Scheduler = () => {
   const toggle = () => setModal(!modal);
   const [Role, setRole] = useState("");
   const [allPart, setAllPart] = useState([]);
-  // const [formValues, setFormValues] = useState([
-  //   { partname: "", partseriel: "", quantity: "" },
-  // ]);
+
   useEffect(() => {
     setAllPart(importData);
     // let pageparmission = JSON.parse(localStorage.getItem("userData"));
@@ -85,7 +83,8 @@ const Scheduler = () => {
 
   useEffect(() => {
     console.log(scheduler);
-  }, [scheduler]);
+    console.log(Adhocfile);
+  }, [scheduler, Adhocfile]);
   const handleInputChange = (e) => {
     const { name, value, checked } = e.target;
     setScheduler({
@@ -365,7 +364,9 @@ const Scheduler = () => {
                     multiple
                     className="form-control"
                     style={{ marginRight: "3px" }}
+                    name="adhocfiles"
                     type="file"
+                    onChange={(e) => setAdhocfile(e.target.files)}
                   />
                 </Col>
                 <Col
@@ -420,6 +421,10 @@ const Scheduler = () => {
                         key={i}
                         name="Role"
                         onClick={(e) => HandleSelectRole(ele)}
+                        // onClick={(e) => {
+                        //   setScheduler({ ...scheduler, ["Role"]: ele });
+                        //   HandleSelectRole(ele);
+                        // }}
                         style={{ cursor: "pointer" }}
                       >
                         <th scope="row" className="tableRowStyles">
