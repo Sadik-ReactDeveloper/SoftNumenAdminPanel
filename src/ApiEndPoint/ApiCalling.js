@@ -73,13 +73,7 @@ export const Customer_Registration = async () => {
   return response;
 };
 
-// export const ProductRegistration = async () => {
-//   let response = await axiosConfig
-//     .get(`${Product_Registration}`)
-//     .then((res) => res.data);
-//   return response;
-// };
-// part
+//Add Part
 export const PartCatelougue = async (formdata) => {
   console.log(formdata);
   let response = await axiosConfig
