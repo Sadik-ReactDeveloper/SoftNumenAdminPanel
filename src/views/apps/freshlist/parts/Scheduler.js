@@ -100,7 +100,7 @@ const Scheduler = () => {
     setAllPart(importData);
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let newparmisson = pageparmission?.role?.find(
-      (value) => value?.pageName === "Create Account"
+      value => value?.pageName === "Create Account"
     );
     setViewpermisson(newparmisson?.permission.includes("View"));
     setCreatepermisson(newparmisson?.permission.includes("Create"));
@@ -117,7 +117,7 @@ const Scheduler = () => {
     toggle();
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = e => {
     e.preventDefault();
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let uniqueChars = [...new Set(selectItem1)];
@@ -159,7 +159,7 @@ const Scheduler = () => {
 
     axiosConfig
       .post("/createuser", formdata)
-      .then((response) => {
+      .then(response => {
         if (response.data?.success) {
           swal("Success!", "Submitted SuccessFull!", "success");
           setAssignRole("");
@@ -177,12 +177,12 @@ const Scheduler = () => {
           setS_PinCode("");
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   };
 
-  const HandleSelectRole = (val) => {
+  const HandleSelectRole = val => {
     setRole(val);
     toggle();
   };
@@ -207,7 +207,7 @@ const Scheduler = () => {
                       type="date"
                       name="date"
                       value={fullname}
-                      onChange={(e) => setfullname(e.target.value)}
+                      onChange={e => setfullname(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -230,7 +230,7 @@ const Scheduler = () => {
                   <Label>Recurrence Pattern</Label>
                   <div
                     className="form-label-group mt-2"
-                    onChange={(e) => {
+                    onChange={e => {
                       setstatus(e.target.value), console.log(e.target.value);
                     }}
                   >
@@ -397,7 +397,7 @@ const Scheduler = () => {
                     <Input
                       disabled
                       value={Role}
-                      onChange={(e) => setRole(e.target.value)}
+                      onChange={e => setRole(e.target.value)}
                       type="text"
                       placeholder="Import Search"
                       className="form-control inputs"
@@ -408,7 +408,7 @@ const Scheduler = () => {
                       className="mybtn primary"
                     >
                       <AiOutlineSearch
-                        onClick={(e) => e.preventDefault()}
+                        onClick={e => e.preventDefault()}
                         fill="white"
                       />
                     </Button>
@@ -450,11 +450,10 @@ const Scheduler = () => {
           backdrop={false}
           isOpen={modal}
           toggle={toggle}
-          // {...args}
         >
           <ModalHeader toggle={toggle}>Import Type List</ModalHeader>
           <ModalBody className="table-body shedulemodalbody">
-            <div className="modalheaderaddrol p-1">
+            <div className="modalheader p-1">
               <h3 className="table-item">Import Type</h3>
 
               <Table
@@ -476,7 +475,7 @@ const Scheduler = () => {
                       <tr
                         className="tableRowStyles"
                         key={i}
-                        onClick={(e) => HandleSelectRole(ele)}
+                        onClick={e => HandleSelectRole(ele)}
                         style={{ cursor: "pointer" }}
                       >
                         <th scope="row" className="tableRowStyles">
@@ -490,14 +489,6 @@ const Scheduler = () => {
               </Table>
             </div>
           </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={toggle}>
-              Submit
-            </Button>
-            <Button color="secondary" onClick={toggle}>
-              Cancel
-            </Button>
-          </ModalFooter>
         </Modal>
       </div>
     </div>
