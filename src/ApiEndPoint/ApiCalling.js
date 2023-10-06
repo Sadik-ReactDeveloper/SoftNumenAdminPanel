@@ -8,6 +8,7 @@ import {
   Create_Account_List,
   Delete_Account_List,
   Create_Account_Update,
+  Part_catelougue,
 } from "./Api";
 import axiosConfig from "../axiosConfig";
 
@@ -71,9 +72,18 @@ export const Customer_Registration = async () => {
     .then((res) => res.data);
   return response;
 };
-export const ProductRegistration = async () => {
+
+// export const ProductRegistration = async () => {
+//   let response = await axiosConfig
+//     .get(`${Product_Registration}`)
+//     .then((res) => res.data);
+//   return response;
+// };
+// part
+export const PartCatelougue = async (formdata) => {
+  console.log(formdata);
   let response = await axiosConfig
-    .get(`${Product_Registration}`)
+    .post(`${Part_catelougue}`, formdata)
     .then((res) => res.data);
   return response;
 };

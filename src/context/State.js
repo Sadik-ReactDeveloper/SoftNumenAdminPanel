@@ -1,12 +1,25 @@
 import React, { useEffect, useState } from "react";
 import UserContext from "./Context";
+import { CreateAccountView } from "../ApiEndPoint/ApiCalling";
+import xmlJs from "xml-js";
 
 const State = (props) => {
-  const [UserData, setUserData] = useState({});
+  const [crateUserXmlView, setcreateUserXmlView] = useState({});
   const [Mode, setMode] = useState("semi-dark");
 
+  useEffect(() => {
+    CreateAccountView()
+      .then((res) => {
+        const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
+        console.log(res);
+        setcreateUserXmlView(jsonData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
-    <UserContext.Provider value={{ UserData, setUserData, setMode, Mode }}>
+    <UserContext.Provider value={{ crateUserXmlView, setMode, Mode }}>
       {props.children}
     </UserContext.Provider>
   );

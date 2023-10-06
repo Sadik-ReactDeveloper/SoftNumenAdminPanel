@@ -29,6 +29,7 @@ import "../../../../../src/layouts/assets/scss/pages/users.scss";
 import { Route } from "react-router-dom";
 import { CloudLightning } from "react-feather";
 import { timers } from "jquery";
+import { PartCatelougue } from "../../../../ApiEndPoint/ApiCalling";
 const selectItem1 = [];
 const selectstate2 = [];
 
@@ -84,8 +85,7 @@ const Scheduler = () => {
   useEffect(() => {
     console.log(scheduler);
     console.log(Adhocfile);
-    console.log(Adhocfile);
-  }, [scheduler, Adhocfile, Adhocfile]);
+  }, [scheduler, Adhocfile]);
   const handleInputChange = (e) => {
     const { name, value, checked } = e.target;
     setScheduler({
@@ -107,6 +107,35 @@ const Scheduler = () => {
   const HandleSelectRole = (val) => {
     setRole(val);
     toggle();
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    debugger;
+    let formdata = new FormData();
+    debugger;
+    // console.log(Adhocfile[0].name.split(".")[0]);
+    console.log(Role.split(" ").join(""));
+    let adhodfile = Adhocfile[0].name.split(".")[0];
+    let selectType = Role.split(" ").join("");
+    // console.log(adhodfile.includes(selectType));
+    if (adhodfile.includes(selectType)) {
+      formdata.append("file", Adhocfile[0]);
+      formdata.append("partType", selectType);
+      PartCatelougue(formdata)
+        .then((res) => {
+          console.log(res);
+          swal(`${Role} Uploaded Successfully`);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      swal(
+        "Error",
+        `Note: ${Role} Name and ${adhodfile} Name Prefix Should be Match`
+      );
+    }
   };
   return (
     <div>
@@ -378,7 +407,7 @@ const Scheduler = () => {
                 >
                   <Button.Ripple
                     color="primary"
-                    type="submit"
+                    onClick={(e) => handleSubmit(e)}
                     className="mr-1 mt-2 mx-2"
                   >
                     Upload

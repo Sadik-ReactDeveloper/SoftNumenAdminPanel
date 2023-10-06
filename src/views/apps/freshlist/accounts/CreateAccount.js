@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import xmlJs from "xml-js";
 import {
   Card,
@@ -29,6 +29,7 @@ import { BiEnvelope } from "react-icons/bi";
 import { FcPhoneAndroid } from "react-icons/fc";
 import { BsWhatsapp } from "react-icons/bs";
 import "../../../../assets/scss/pages/users.scss";
+import UserContext from "../../../../context/Context";
 
 const CreateAccount = () => {
   const [CreatAccountView, setCreatAccountView] = useState({});
@@ -37,6 +38,8 @@ const CreateAccount = () => {
   const [index, setindex] = useState("");
   const [error, setError] = useState("");
   const [permissions, setpermissions] = useState({});
+
+  const createUserXmlView = useContext(UserContext);
   // const [selectedCountry, setSelectedCountry] = useState(null);
   // const [selectedState, setSelectedState] = useState(null);
   // const [selectedCity, setSelectedCity] = useState(null);
@@ -97,11 +100,11 @@ const CreateAccount = () => {
         console.log(JSON.parse(jsonData));
         let origionalpermission =
           JSON.parse(jsonData)?.CreateAccount?.input[14].permissions?.role;
-        const rolePermissions = origionalpermission?.find(
-          (role) => role._attributes?.name === "SUPERADMIN"
-        );
+        // const rolePermissions = origionalpermission?.find(
+        //   (role) => role._attributes?.name === "SUPERADMIN"
+        // );
         // console.log(rolePermissions);
-        setpermissions(rolePermissions);
+        // setpermissions(rolePermissions);
         // console.log(permissions);
         // console.log(rolePermissions?.canCreateUser._text.includes("true"));
         // console.log(rolePermissions?.canEditProfile._text.includes("true"));
@@ -187,18 +190,18 @@ const CreateAccount = () => {
 
                 {CreatAccountView &&
                   CreatAccountView?.CreateAccount?.input?.map((ele, i) => {
-                    debugger;
                     let View = "";
                     let Edit = "";
                     if (ele?.role) {
                       let roles = ele?.role?.find(
                         (role) => role._attributes?.name === "WARRANTY APPROVER"
                       );
-                      console.log(roles?.permissions?._text.includes("View"));
-                      console.log(roles?.permissions?._text.includes("Edit"));
+
                       View = roles?.permissions?._text.includes("View");
                       Edit = roles?.permissions?._text.includes("Edit");
-                      console.log(View, Edit);
+                      {
+                        /* console.log(View, Edit); */
+                      }
                     }
                     if (!!ele?.phoneinput) {
                       return (
@@ -504,8 +507,7 @@ const CreateAccount = () => {
                       );
                     }
                   })}
-                {/* <Row>
-                  <Col> */}
+
                 <div className="container">
                   <Label className="py-1">Notification</Label>
                   <div>
@@ -577,42 +579,8 @@ const CreateAccount = () => {
                       )}
                   </div>
                 </div>
-                {/* </Col>
-                </Row> */}
               </Row>
-              {/* <div className="mx-1 mb-1">
-                <Row>
-                  <Col lg="3" md="3" sm="3" xs="6">
-                    <Input
-                      style={{ marginRight: "3px" }}
-                      type="checkbox"
-                      name="whatsapp"
-                      onChange={(e) => handleInputChange(e, "checkbox")}
-                    />{" "}
-                    <span style={{ marginRight: "40px" }}>
-                      <BsWhatsapp className="mx-1" color="#59CE72" size={25} />
-                    </span>
-                    <Input
-                      style={{ marginRight: "3px" }}
-                      type="checkbox"
-                      name="SMS"
-                      onChange={(e) => handleInputChange(e, "checkbox")}
-                    />{" "}
-                    <span style={{ marginRight: "40px" }}>
-                      <FcPhoneAndroid size={30} />
-                    </span>
-                    <Input
-                      style={{ marginRight: "3px" }}
-                      type="checkbox"
-                      name="Mail"
-                      onChange={(e) => handleInputChange(e, "checkbox")}
-                    />{" "}
-                    <span style={{ marginRight: "40px" }}>
-                      <BiEnvelope className="" size={30} />
-                    </span>
-                  </Col>
-                </Row>
-              </div> */}
+
               <hr />
               <Row className="mt-2 ">
                 <Col lg="6" md="6" sm="6" className="mb-2">
