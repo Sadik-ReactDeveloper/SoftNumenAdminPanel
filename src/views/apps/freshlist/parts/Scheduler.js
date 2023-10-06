@@ -53,66 +53,45 @@ const importData = [
   "Campaigns",
 ];
 const Scheduler = () => {
-  // const [Address, setAddress] = useState("");
+  const [scheduler, setScheduler] = useState({});
+  const [Adhocfile, setAdhocfile] = useState({});
   const [Viewpermisson, setViewpermisson] = useState(null);
   const [Editpermisson, setEditpermisson] = useState(null);
   const [Createpermisson, setCreatepermisson] = useState(null);
   const [Deletepermisson, setDeletepermisson] = useState(null);
-  const [fullname, setfullname] = useState("");
-  const [GSTIN, setGSTIN] = useState("");
-  const [StateList, setStateList] = useState([]);
-  const [CityList, setCityList] = useState([]);
-  const [SelectedSCity, setSelectedSCity] = useState([]);
-  const [SelectedState, setSelectedState] = useState([]);
-  const [B_City, setB_City] = useState("");
-  const [checkbox, setcheckbox] = useState("");
-  const [S_City, setS_City] = useState("");
-  const [Mobile_no, setMobile_no] = useState("");
-  const [B_Country, setB_Country] = useState("");
-  const [S_Country, setS_Country] = useState("");
-  const [Phone_no, setPhone_no] = useState("");
-  const [Place_of_Supply, setPlace_of_Supply] = useState("");
-  const [B_State, setB_State] = useState("");
-  const [S_State, setS_State] = useState("");
-  const [B_Street, setB_Street] = useState("");
-  const [S_Street, setS_Street] = useState("");
-  const [B_PinCode, setB_PinCode] = useState("");
-  const [S_PinCode, setS_PinCode] = useState("");
-  const [multiSelect, setmultiSelect] = useState([]);
+
   const [selectedOptions, setselectedOptions] = useState([]);
-  const [password, setpassword] = useState("");
-  const [email, setemail] = useState("");
-  const [status, setstatus] = useState("");
-  const [AssignRole, setAssignRole] = useState("");
-  const [CompanyName, setCompanyName] = useState("");
-  const [Companytype, setCompanytype] = useState("");
-  const [UserName, setUserName] = useState("");
-  const [productName, setproductName] = useState("");
+
   const [modal, setModal] = useState(false);
-  const [City, setCity] = useState("");
+
   const toggle = () => setModal(!modal);
   const [Role, setRole] = useState("");
   const [allPart, setAllPart] = useState([]);
-  const [formValues, setFormValues] = useState([
-    { partname: "", partseriel: "", quantity: "" },
-  ]);
+
   useEffect(() => {
     setAllPart(importData);
-    let pageparmission = JSON.parse(localStorage.getItem("userData"));
-    let newparmisson = pageparmission?.role?.find(
-      value => value?.pageName === "Create Account"
-    );
-    setViewpermisson(newparmisson?.permission.includes("View"));
-    setCreatepermisson(newparmisson?.permission.includes("Create"));
-    setEditpermisson(newparmisson?.permission.includes("Edit"));
+    // let pageparmission = JSON.parse(localStorage.getItem("userData"));
+    // let newparmisson = pageparmission?.role?.find(
+    //   (value) => value?.pageName === "Create Account"
+    // );
+    // setViewpermisson(newparmisson?.permission.includes("View"));
+    // setCreatepermisson(newparmisson?.permission.includes("Create"));
+    // setEditpermisson(newparmisson?.permission.includes("Edit"));
 
-    setDeletepermisson(newparmisson?.permission.includes("Delete"));
-
-    const formdata = new FormData();
-    formdata.append("user_id", pageparmission?.Userinfo?.id);
-    formdata.append("role", pageparmission?.Userinfo?.role);
+    // setDeletepermisson(newparmisson?.permission.includes("Delete"));
   }, []);
 
+  useEffect(() => {
+    console.log(scheduler);
+    console.log(Adhocfile);
+  }, [scheduler, Adhocfile]);
+  const handleInputChange = e => {
+    const { name, value, checked } = e.target;
+    setScheduler({
+      ...scheduler,
+      [name]: value,
+    });
+  };
   const handleopentoggle = () => {
     toggle();
   };
@@ -122,64 +101,6 @@ const Scheduler = () => {
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     let uniqueChars = [...new Set(selectItem1)];
     let selectedOption = [...new Set(selectedOptions)];
-
-    const formdata = new FormData();
-
-    formdata.append("created_by", pageparmission?.Userinfo?.id);
-    formdata.append("password", password);
-    formdata.append("full_name", fullname);
-    formdata.append("gstin_no", GSTIN);
-    formdata.append("username", UserName);
-    formdata.append("city", B_City);
-    formdata.append("mobile", Mobile_no);
-    formdata.append("email", email);
-    formdata.append("status", status);
-    formdata.append("role", AssignRole);
-    formdata.append("company_name", CompanyName);
-    formdata.append("company_type", Companytype);
-    formdata.append("place_supply", Place_of_Supply);
-    formdata.append("billing_street", B_Street);
-    formdata.append("billing_city", B_City);
-    formdata.append("billing_state", B_State);
-    formdata.append("billing_country", B_Country);
-    formdata.append("billing_pincode", B_PinCode);
-    formdata.append("shipping_street", S_Street);
-    formdata.append("shipping_city", S_City);
-    formdata.append("shipping_state", S_State);
-    formdata.append("shipping_country", S_Country);
-    formdata.append("shipping_pincode", S_PinCode);
-    formdata.append("phone_no", Phone_no);
-    if (selectedOption.length > 0) {
-      formdata.append("state_id", multiSelect.toString());
-    } else {
-      formdata.append("state_id", SelectedState);
-    }
-
-    formdata.append("city_id", uniqueChars);
-
-    axiosConfig
-      .post("/createuser", formdata)
-      .then(response => {
-        if (response.data?.success) {
-          swal("Success!", "Submitted SuccessFull!", "success");
-          setAssignRole("");
-          setstatus("");
-          setemail("");
-          setCity("");
-          setPhone_no("");
-          setUserName("");
-          setfullname("");
-          setpassword("");
-          setS_Country("");
-          setS_State("");
-          setS_City("");
-          setS_Street("");
-          setS_PinCode("");
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
   };
 
   const HandleSelectRole = val => {
@@ -205,9 +126,9 @@ const Scheduler = () => {
                     <Input
                       required
                       type="date"
-                      name="date"
-                      value={fullname}
-                      onChange={e => setfullname(e.target.value)}
+                      name="StartDate"
+                      value={scheduler?.StartDate}
+                      onChange={e => handleInputChange(e)}
                     />
                   </FormGroup>
                 </Col>
@@ -218,59 +139,25 @@ const Scheduler = () => {
                     <Input
                       required
                       type="time"
-                      //   placeholder="Enter Your Name"
-                      //   name="fullname"
-                      //   value={fullname}
-                      //   onChange={e => setfullname(e.target.value)}
+                      name="Start_Time"
+                      value={scheduler?.Start_Time}
+                      onChange={e => handleInputChange(e)}
                     />
                   </FormGroup>
                 </Col>
 
                 <Col lg="6" md="6" sm="6" className="mb-2">
                   <Label>Recurrence Pattern</Label>
-                  <div
-                    className="form-label-group mt-2"
-                    onChange={e => {
-                      setstatus(e.target.value), console.log(e.target.value);
-                    }}
-                  >
+                  <div className="form-label-group mt-2">
                     <div>
                       <input
                         style={{ marginRight: "3px" }}
                         type="radio"
                         name="Pattern"
-                        value="Minuts"
+                        value="Yearly"
+                        onChange={e => handleInputChange(e)}
                       />
-                      <span style={{ marginRight: "20px" }}>Minuts</span>
-                    </div>
-
-                    <div>
-                      <input
-                        style={{ marginRight: "3px" }}
-                        type="radio"
-                        name="Pattern"
-                        value="Hourly"
-                      />
-                      <span style={{ marginRight: "3px" }}>Hourly</span>
-                    </div>
-
-                    <div>
-                      <input
-                        style={{ marginRight: "3px" }}
-                        type="radio"
-                        name="Pattern"
-                        value="Daily"
-                      />
-                      <span style={{ marginRight: "3px" }}>Daily</span>
-                    </div>
-                    <div>
-                      <input
-                        style={{ marginRight: "3px" }}
-                        type="radio"
-                        name="Pattern"
-                        value="Weekly"
-                      />
-                      <span style={{ marginRight: "3px" }}>Weekly</span>
+                      <span style={{ marginRight: "3px" }}>Yearly</span>
                     </div>
                     <div>
                       <input
@@ -278,6 +165,7 @@ const Scheduler = () => {
                         type="radio"
                         name="Pattern"
                         value="Monthly"
+                        onChange={e => handleInputChange(e)}
                       />
                       <span style={{ marginRight: "3px" }}>Monthly</span>
                     </div>
@@ -286,32 +174,76 @@ const Scheduler = () => {
                         style={{ marginRight: "3px" }}
                         type="radio"
                         name="Pattern"
-                        value="Yearly"
+                        value="Weekly"
+                        onChange={e => handleInputChange(e)}
                       />
-                      <span style={{ marginRight: "3px" }}>Yearly</span>
+                      <span style={{ marginRight: "3px" }}>Weekly</span>
+                    </div>
+                    <div>
+                      <input
+                        style={{ marginRight: "3px" }}
+                        type="radio"
+                        name="Pattern"
+                        value="Daily"
+                        onChange={e => handleInputChange(e)}
+                      />
+                      <span style={{ marginRight: "3px" }}>Daily</span>
+                    </div>
+                    <div>
+                      <input
+                        style={{ marginRight: "3px" }}
+                        type="radio"
+                        name="Pattern"
+                        value="Hourly"
+                        onChange={e => handleInputChange(e)}
+                      />
+                      <span style={{ marginRight: "3px" }}>Hourly</span>
+                    </div>
+                    <div>
+                      <input
+                        style={{ marginRight: "3px" }}
+                        type="radio"
+                        name="Pattern"
+                        value="Minuts"
+                        onChange={e => handleInputChange(e)}
+                      />
+                      <span style={{ marginRight: "20px" }}>Minuts</span>
                     </div>
                   </div>
                 </Col>
 
                 <Col lg="6" md="6">
-                  <Label className="mb-1">If you want to Repeated Time</Label>
+                  {scheduler?.Pattern && scheduler?.Pattern && (
+                    <>
+                      <Label className="mb-1">
+                        If you want to Repeated Time
+                      </Label>
 
-                  <FormGroup className="d-flex">
-                    <div className="mx-2">
-                      <Input type="radio" name="Pattern" value="Yearly" />
-                      <span style={{ marginRight: "3px" }}>Every</span>
-                    </div>
-                    <div>
-                      <Input
-                        className="every"
-                        style={{ marginRight: "3px", width: "80px" }}
-                        type="text"
-                        placeholder="minute"
-                        name="name"
-                        value=""
-                      />
-                    </div>
-                  </FormGroup>
+                      <FormGroup className="d-flex">
+                        <div className="mx-2">
+                          <Input
+                            type="radio"
+                            name="Repeat_time"
+                            value="Every"
+                            onChange={e => handleInputChange(e)}
+                          />
+                          <span style={{ marginRight: "3px" }}>Every</span>
+                        </div>
+                        <div>
+                          <Input
+                            className="every"
+                            style={{ marginRight: "3px", width: "80px" }}
+                            type="text"
+                            placeholder={scheduler?.Pattern}
+                            name="Every_Interval"
+                            value={scheduler?.Every_Interval}
+                            onChange={e => handleInputChange(e)}
+                            // value=""
+                          />
+                        </div>
+                      </FormGroup>
+                    </>
+                  )}
                 </Col>
                 <hr />
                 <Col lg="6" md="6">
@@ -321,8 +253,9 @@ const Scheduler = () => {
                       <Input
                         style={{ marginRight: "3px" }}
                         type="radio"
-                        name="Range"
-                        value="Range"
+                        name="Recurrence"
+                        value="No_End_Date"
+                        onChange={e => handleInputChange(e)}
                       />
                       <span style={{ marginRight: "3px" }}>No End Date</span>
                     </div>
@@ -330,50 +263,57 @@ const Scheduler = () => {
                       <Input
                         style={{ marginRight: "3px" }}
                         type="radio"
-                        name="end"
-                        value="end"
+                        name="Recurrence"
+                        value="End_After"
+                        onChange={e => handleInputChange(e)}
                       />
                       <span style={{ marginRight: "3px" }}>End After</span>
                     </div>
-                  </FormGroup>
-                  <div className="d-flex">
-                    <div
-                      className="OccurrencesStyle"
-                      style={{ marginTop: "-5px" }}
-                    >
+                    {scheduler?.Recurrence == "End_After" && (
+                      <div className="d-flex py-1">
+                        <div
+                          className="OccurrencesStyle"
+                          style={{ marginTop: "-5px" }}
+                        >
+                          <Input
+                            style={{
+                              marginRight: "3px",
+                              width: "100px",
+                              marginBottom: "2px",
+                            }}
+                            value={scheduler?.Occurance_frequency}
+                            onChange={e => handleInputChange(e)}
+                            type="number"
+                            name="Occurance_frequency"
+                            placeholder="Occurrences Time"
+                          />
+                        </div>
+                        <div>
+                          <span style={{ marginLeft: "10px" }}>
+                            <b>Occurrences</b>
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                    <div className="ml-2">
                       <Input
-                        style={{
-                          marginRight: "3px",
-                          width: "100px",
-                          marginBottom: "2px",
-                        }}
-                        type="text"
-                        name="Pattern"
-                        placeholder="Occurrences Time"
-                        //   value="Yearly"
+                        style={{ marginRight: "3px" }}
+                        type="radio"
+                        name="Recurrence"
+                        value="End_by"
+                        onChange={e => handleInputChange(e)}
                       />
+                      <span style={{ marginRight: "3px" }}>End by</span>
                     </div>
-                    <div>
-                      <span style={{ marginLeft: "10px" }}>
-                        <b>Occurrences</b>
-                      </span>
-                    </div>
-                  </div>
-                  <div className="ml-2 my-2">
-                    <Input
-                      style={{ marginRight: "3px" }}
-                      type="radio"
-                      name="by"
-                      value="by"
-                    />
-                    <span style={{ marginRight: "3px" }}>End by</span>
-                  </div>
-                  <Input
-                    //   style={{ marginRight: "3px", width: "100px" }}
-                    type="date"
-                    name="date"
-                    //   value="Yearly"
-                  />
+                    {scheduler?.Recurrence == "End_by" && (
+                      <Input
+                        value={scheduler?.End_by_date}
+                        type="date"
+                        name="End_by_date"
+                        onChange={e => handleInputChange(e)}
+                      />
+                    )}
+                  </FormGroup>
                 </Col>
               </Row>
               <Row>
@@ -396,8 +336,9 @@ const Scheduler = () => {
                   <InputGroup className="maininput">
                     <Input
                       disabled
+                      name="Role"
                       value={Role}
-                      onChange={e => setRole(e.target.value)}
+                      onChange={e => handleInputChange(e)}
                       type="text"
                       placeholder="Import Search"
                       className="form-control inputs"
@@ -423,7 +364,9 @@ const Scheduler = () => {
                     multiple
                     className="form-control"
                     style={{ marginRight: "3px" }}
+                    name="adhocfiles"
                     type="file"
+                    onChange={e => setAdhocfile(e.target.files)}
                   />
                 </Col>
                 <Col
@@ -450,10 +393,11 @@ const Scheduler = () => {
           backdrop={false}
           isOpen={modal}
           toggle={toggle}
+          // {...args}
         >
           <ModalHeader toggle={toggle}>Import Type List</ModalHeader>
           <ModalBody className="table-body shedulemodalbody">
-            <div className="modalheader p-1">
+            <div className="modalheaderaddrol p-1">
               <h3 className="table-item">Import Type</h3>
 
               <Table
@@ -475,7 +419,12 @@ const Scheduler = () => {
                       <tr
                         className="tableRowStyles"
                         key={i}
+                        name="Role"
                         onClick={e => HandleSelectRole(ele)}
+                        // onClick={(e) => {
+                        //   setScheduler({ ...scheduler, ["Role"]: ele });
+                        //   HandleSelectRole(ele);
+                        // }}
                         style={{ cursor: "pointer" }}
                       >
                         <th scope="row" className="tableRowStyles">
@@ -489,6 +438,14 @@ const Scheduler = () => {
               </Table>
             </div>
           </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={toggle}>
+              Submit
+            </Button>
+            <Button color="secondary" onClick={toggle}>
+              Cancel
+            </Button>
+          </ModalFooter>
         </Modal>
       </div>
     </div>
