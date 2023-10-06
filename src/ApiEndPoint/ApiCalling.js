@@ -93,6 +93,7 @@ export const SparesPartsList = async () => {
   let response = await axiosConfig.get(`${Spare_Parts}`).then(res => res.data);
   return response;
 };
+
 export const PartsCatalogueList = async () => {
   let response = await axiosConfig
     .get(`${Parts_Catalogue}`)
