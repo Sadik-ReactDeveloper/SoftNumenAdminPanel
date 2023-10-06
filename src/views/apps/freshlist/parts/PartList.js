@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   Card,
   CardBody,
@@ -11,21 +11,19 @@ import {
   DropdownItem,
   DropdownToggle,
   Button,
-  Form,
   ModalHeader,
   ModalBody,
-  CustomInput,
-  FormGroup,
 } from "reactstrap";
-// import XMLParser from "react-xml-parser";
-import axiosConfig from "../../../../axiosConfig";
-import Part from "./PartConfig.xml";
-import ReactHtmlParser from "react-html-parser";
+import ExcelReader from "../parts/ExcelReader";
 import { ContextLayout } from "../../../../utility/context/Layout";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
+import EditAccount from "../../freshlist/accounts/EditAccount";
+import ViewAccount from "../../freshlist/accounts/ViewAccount";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import Logo from "../../../../assets/img/profile/pages/logomain.png";
+import Papa from "papaparse";
 import { Eye, Trash2, ChevronDown, Edit, CloudLightning } from "react-feather";
 import { IoMdRemoveCircleOutline } from "react-icons/io";
 import { history } from "../../../../history";
@@ -33,14 +31,12 @@ import "../../../../assets/scss/plugins/tables/_agGridStyleOverride.scss";
 import "../../../../assets/scss/pages/users.scss";
 import Moment from "react-moment";
 import { Route } from "react-router-dom";
-import xmlJs, { xml2js } from "xml-js";
+import xmlJs from "xml-js";
 
 import {
   FaArrowAltCircleLeft,
   FaArrowAltCircleRight,
-  FaFileDownload,
   FaFilter,
-  FaLock,
 } from "react-icons/fa";
 import "moment-timezone";
 import swal from "sweetalert";
@@ -50,19 +46,19 @@ import {
   DeleteAccount,
 } from "../../../../ApiEndPoint/ApiCalling";
 import {
+  BsCloudDownloadFill,
   BsFillArrowDownSquareFill,
   BsFillArrowUpSquareFill,
 } from "react-icons/bs";
-// import * as XLSX from "xlsx";
+import * as XLSX from "xlsx";
 
 const SelectedCols = [];
 
-const partList = [{ partName: "abc" }];
 class PartList extends React.Component {
   constructor(props) {
     super(props);
     this.gridRef = React.createRef();
-    // this.gridApi = null;
+    this.gridApi = null;
     this.state = {
       isOpen: false,
       Arrindex: "",
@@ -83,56 +79,55 @@ class PartList extends React.Component {
     };
   }
 
-  // local file
-
-  componentDidMount() {
-    // fetch("/PartConfig.xml") // Adjust the path to your XML file.
-    //   .then(response => response.text())
-    //   .then(xmlText => {
-    //     // Parse the XML into a JavaScript object.
-    //     xml2js.parseString(xmlText, (err, result) => {
-    //       if (err) {
-    //         console.error("Error parsing XML:", err);
-    //       } else {
-    //         console.log(result);
-    //         // this.setState({ xmlData: result });
-    //       }
-    //     });
-    //   })
-    //   .catch(error => {
-    //     console.error("Error loading XML file:", error);
-    //   });
-
-    fetch(Part) // Adjust the path to your XML file.
-      .then(response => response.text())
-      .then(xmlText => {
-        const parser = new xml2js.Parser();
-        parser.parseString(xmlText, (err, result) => {
-          if (err) {
-            console.error("Error parsing XML:", err);
-          } else {
-            this.setState({ xmlData: result });
-          }
-        });
-      })
-      .catch(error => {
-        console.error("Error loading XML file:", error);
-      });
-  }
-
   toggleModal = () => {
     this.setState(prevState => ({
       modal: !prevState.modal,
     }));
   };
 
+  handleChangeEdit = (data, types) => {
+    let type = types;
+    if (type == "readonly") {
+      this.setState({ ViewOneUserView: true });
+      this.setState({ ViewOneData: data });
+    } else {
+      this.setState({ EditOneUserView: true });
+      this.setState({ EditOneData: data });
+    }
+  };
+
   async componentDidMount() {
-    CreateAccountView()
+    // PartsCatalogueList();
+    await CreateAccountView()
       .then(res => {
         var mydropdownArray = [];
         var adddropdown = [];
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        // console.log(JSON.parse(jsonData));
+        console.log(JSON.parse(jsonData));
+        const checkboxinput = JSON.parse(
+          jsonData
+        ).CreateAccount?.CheckBox?.input?.map(ele => {
+          return {
+            headerName: ele?.label?._text,
+            field: ele?.name?._text,
+            filter: true,
+            sortable: true,
+            cellRendererFramework: params => {
+              console.log(params.data);
+              return params.data?.Status === "Active" ? (
+                <div className="badge badge-pill badge-success">
+                  {params.data.Status}
+                </div>
+              ) : params.data?.Status === "Deactive" ? (
+                <div className="badge badge-pill badge-warning">
+                  {params.data.Status}
+                </div>
+              ) : (
+                "NA"
+              );
+            },
+          };
+        });
         const inputs = JSON.parse(jsonData).CreateAccount?.input?.map(ele => {
           return {
             headerName: ele?.label._text,
@@ -141,7 +136,6 @@ class PartList extends React.Component {
             sortable: true,
           };
         });
-
         let Radioinput =
           JSON.parse(jsonData).CreateAccount?.Radiobutton?.input[0]?.name
             ?._text;
@@ -151,6 +145,19 @@ class PartList extends React.Component {
             field: Radioinput,
             filter: true,
             sortable: true,
+            cellRendererFramework: params => {
+              return params.data?.Status === "Active" ? (
+                <div className="badge badge-pill badge-success">
+                  {params.data.Status}
+                </div>
+              ) : params.data?.Status === "Deactive" ? (
+                <div className="badge badge-pill badge-warning">
+                  {params.data.Status}
+                </div>
+              ) : (
+                "NA"
+              );
+            },
           },
         ];
 
@@ -176,6 +183,7 @@ class PartList extends React.Component {
         }
 
         let myHeadings = [
+          ...checkboxinput,
           ...inputs,
           ...adddropdown,
           ...addRadio,
@@ -197,11 +205,9 @@ class PartList extends React.Component {
                         className="mr-50"
                         size="25px"
                         color="green"
-                        onClick={() =>
-                          history.push(
-                            `/app/freshlist/order/EditCompletedorders/${params.data?._id}`
-                          )
-                        }
+                        onClick={() => {
+                          this.handleChangeEdit(params.data, "readonly");
+                        }}
                       />
                     )}
                   />
@@ -211,11 +217,9 @@ class PartList extends React.Component {
                         className="mr-50"
                         size="25px"
                         color="blue"
-                        onClick={() =>
-                          history.push(
-                            `/app/freshlist/order/editplaceorder/${params.data?._id}`
-                          )
-                        }
+                        onClick={() => {
+                          this.handleChangeEdit(params.data, "Editable");
+                        }}
                       />
                     )}
                   />
@@ -227,7 +231,7 @@ class PartList extends React.Component {
                         size="25px"
                         color="red"
                         onClick={() => {
-                          this.runthisfunction(params.data._id);
+                          this.runthisfunction(params?.data?._id);
                         }}
                       />
                     )}
@@ -238,12 +242,12 @@ class PartList extends React.Component {
           },
           ...myHeadings,
         ];
-        // console.log(Product);
         this.setState({ columnDefs: Product });
         this.setState({ AllcolumnDefs: Product });
       })
       .catch(err => {
         console.log(err);
+        swal("Error", "something went wrong try again");
       });
     await CreateAccountList()
       .then(res => {
@@ -267,12 +271,10 @@ class PartList extends React.Component {
     }).then(value => {
       switch (value) {
         case "delete":
-          console.log(id);
           DeleteAccount(id)
             .then(res => {
               let selectedData = this.gridApi.getSelectedRows();
               this.gridApi.updateRowData({ remove: selectedData });
-              console.log(res);
             })
             .catch(err => {
               console.log(err);
@@ -285,6 +287,7 @@ class PartList extends React.Component {
 
   onGridReady = params => {
     this.gridApi = params.api;
+    this.gridRef.current = params.api;
     this.gridColumnApi = params.columnApi;
 
     this.setState({
@@ -318,58 +321,153 @@ class PartList extends React.Component {
 
       SelectedCols?.splice(delindex, 1);
     }
-    // this.setState({ setMySelectedarr: [...SelectedCols] });
-    // console.log(this.state.setMySelectedarr);
   };
-  exportToPDF = () => {
-    const doc = new jsPDF("landscape", "mm", "a1", false);
-    const contentWidth = doc.internal.pageSize.getWidth();
-    const contentHeight = doc.internal.pageSize.getHeight();
+  parseCsv(csvData) {
+    return new Promise((resolve, reject) => {
+      Papa.parse(csvData, {
+        header: true,
+        skipEmptyLines: true,
+        complete: result => {
+          if (result.data && result.data.length > 0) {
+            resolve(result.data);
+          } else {
+            reject(new Error("No data found in the CSV"));
+          }
+        },
+        error: error => {
+          reject(error);
+        },
+      });
+    });
+  }
+  generatePDF(parsedData) {
+    let pdfsize = [Object.keys(parsedData[0])][0].length;
+    let size = pdfsize > 15 ? "a1" : pdfsize < 14 > 10 ? "a3" : "a4";
 
-    const tableWidth = contentWidth;
-    const tableX = 10;
-    const tableY = 10;
-    const data1 = this.gridApi.getDataAsCsv({
+    const doc = new jsPDF("landscape", "mm", size, false);
+    doc.setTextColor(5, 87, 97);
+    const tableData = parsedData.map(row => Object.values(row));
+    doc.addImage(Logo, "JPEG", 10, 10, 50, 30);
+    let date = new Date();
+    doc.setCreationDate(date);
+    doc.text("UserAccount", 14, 51);
+    doc.autoTable({
+      head: [Object.keys(parsedData[0])],
+      body: tableData,
+      startY: 60,
+    });
+    // doc.setDrawColor("UserList.pdf");
+    // doc.setFont("UserList.pdf");
+
+    // doc.addImage("UserList.pdf");
+    // doc.setLanguage("UserList.pdf");
+    doc.save("UserList.pdf");
+  }
+
+  exportToPDF = async () => {
+    const csvData = this.gridApi.getDataAsCsv({
       processCellCallback: this.processCell,
     });
-
-    const lines = data1.split("\n");
-    const header = lines[0].split(",");
-    const data = [];
-
-    for (let i = 1; i < lines.length; i++) {
-      const line = lines[i].split(",");
-      data.push(line);
+    try {
+      const parsedData = await this.parseCsv(csvData);
+      this.generatePDF(parsedData);
+    } catch (error) {
+      console.error("Error parsing CSV:", error);
     }
+    // debugger;
+    // const doc = new jsPDF("landscape", "mm", "a4", false);
+    // const contentWidth = doc.internal.pageSize.getWidth();
+    // const contentHeight = doc.internal.pageSize.getHeight();
+    // // const tableHeight = this.gridApi.getRowHeight();
+    // // console.log(tableHeight);
+    // const tableWidth = contentWidth;
+    // const tableX = 10;
+    // const tableY = 10;
+    // const data1 = this.gridApi.getDataAsCsv({
+    //   processCellCallback: this.processCell,
+    // });
 
-    console.log(data);
-    doc.text("User Account List", 10, 10);
+    // const lines = data1.split("\n");
+    // const header = lines[0].split(",");
+    // const data = [];
 
-    const columns = header;
-    const rows = data;
+    // for (let i = 1; i < lines.length; i++) {
+    //   const line = lines[i].split(",");
+    //   data.push(line);
+    // }
 
-    doc.autoTable({
-      head: [columns],
-      body: rows,
-      startY: 20,
-    });
+    // doc.text("User_Account  ", 10, 10);
 
-    doc.save("agGrid.pdf");
+    // const columns = header;
+    // const rows = data;
+
+    // doc.autoTable({
+    //   head: [columns],
+    //   body: rows,
+    //   startY: 20,
+    // });
+
+    // doc.save("userlist.pdf");
   };
   processCell = params => {
+    // console.log(params);
+    // Customize cell content as needed
     return params.value;
   };
 
-  exportToExcel = () => {
-    const params = {
-      fileName: "my-exported-data.xlsx", // Set the desired file name
-    };
+  convertCsvToExcel(csvData) {
+    return new Promise(resolve => {
+      Papa.parse(csvData, {
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: function (result) {
+          const worksheet = XLSX.utils.json_to_sheet(result.data);
+          const workbook = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+          const excelBuffer = XLSX.write(workbook, {
+            bookType: "xlsx",
+            type: "array",
+          });
+          const blob = new Blob([excelBuffer], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          });
+          resolve(blob);
+        },
+      });
+    });
+  }
+  downloadExcelFile(blob) {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Userlist.xlsx";
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
 
-    const exportParams = {
-      columnWidth: 100, // Set the column width in Excel (optional)
-    };
+  exportToExcel = async e => {
+    const CsvData = this.gridApi.getDataAsCsv({
+      processCellCallback: this.processCell,
+    });
+    const blob = await this.convertCsvToExcel(CsvData);
+    this.downloadExcelFile(blob);
+  };
 
-    this.gridApi.exportDataAsExcel(params, exportParams);
+  convertCSVtoExcel = () => {
+    const CsvData = this.gridApi.getDataAsCsv({
+      processCellCallback: this.processCell,
+    });
+    Papa.parse(CsvData, {
+      complete: result => {
+        const ws = XLSX.utils.json_to_sheet(result.data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        const excelType = "xls";
+        XLSX.writeFile(wb, `UserList.${excelType}`);
+      },
+    });
   };
 
   shiftElementUp = () => {
@@ -393,6 +491,43 @@ class PartList extends React.Component {
       this.setState({ SelectedcolumnDefs: myArrayCopy });
     }
   };
+  convertCsvToXml = () => {
+    const CsvData = this.gridApi.getDataAsCsv({
+      processCellCallback: this.processCell,
+    });
+    Papa.parse(CsvData, {
+      complete: result => {
+        const rows = result.data;
+
+        // Create XML
+        let xmlString = "<root>\n";
+
+        rows.forEach(row => {
+          xmlString += "  <row>\n";
+          row.forEach((cell, index) => {
+            xmlString += `    <field${index + 1}>${cell}</field${index + 1}>\n`;
+          });
+          xmlString += "  </row>\n";
+        });
+
+        xmlString += "</root>";
+
+        // setXmlData(xmlString);
+
+        // Create a download link
+        const blob = new Blob([xmlString], { type: "text/xml" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "output.xml";
+        link.click();
+      },
+    });
+  };
+  handleChangeView = e => {
+    e.preventDefault();
+    this.setState({ columnDefs: this.state.SelectedcolumnDefs });
+    this.toggleModal();
+  };
 
   render() {
     const {
@@ -405,183 +540,235 @@ class PartList extends React.Component {
     } = this.state;
     return (
       <>
+        {/* <ExcelReader /> */}
         <Row className="app-user-list">
-          <Col sm="12"></Col>
-          <Col sm="12">
-            <Card>
-              <Row className="m-2">
-                <Col>
-                  <h1 className="float-left">Part List </h1>
-                </Col>
-                <Col>
-                  <span className="mx-1">
-                    <FaFilter
-                      style={{ cursor: "pointer" }}
-                      title="filter coloumn"
-                      size="25px"
-                      onClick={e => {
-                        e.preventDefault();
-                        this.toggleModal();
-                      }}
-                      color="blue"
-                      className="float-right"
-                    />
-                  </span>
-                  <span className="mx-1">
-                    <div className="dropdown-container float-right">
-                      <FaFileDownload
-                        style={{ cursor: "pointer" }}
-                        title="download file"
-                        size="25px"
-                        className="dropdown-button "
-                        color="blue"
-                        onClick={this.toggleDropdown}
-                      />
-                      {isOpen && (
-                        <div
-                          style={{
-                            position: "absolute",
-                            // backgroundColor: "grey",
-                            zIndex: "1",
-                          }}
-                          className="dropdown-content dropdownmy"
-                        >
-                          <h5
-                            onClick={() => this.exportToPDF()}
-                            style={{ cursor: "pointer" }}
-                            className=" mx-1 myactive mt-1"
-                          >
-                            PDF
-                          </h5>
-                          <h5
-                            onClick={() => this.gridApi.exportDataAsCsv()}
-                            style={{ cursor: "pointer" }}
-                            className=" mx-1 myactive"
-                          >
-                            CSV
-                          </h5>
-                          <h5
-                            onClick={() => this.gridApi.exportDataAsExcel()}
-                            style={{ cursor: "pointer" }}
-                            className=" mx-1 myactive"
-                          >
-                            XLS
-                          </h5>
-                          <h5
-                            onClick={() => this.exportToExcel()}
-                            style={{ cursor: "pointer" }}
-                            className=" mx-1 myactive"
-                          >
-                            XML
-                          </h5>
-                        </div>
-                      )}
-                    </div>
-                  </span>
-                </Col>
-              </Row>
-              <CardBody>
-                {this.state.rowData === null ? null : (
-                  <div className="ag-theme-material w-100 my-2 ag-grid-table">
-                    <div className="d-flex flex-wrap justify-content-between align-items-center">
-                      <div className="mb-1">
-                        <UncontrolledDropdown className="p-1 ag-dropdown">
-                          <DropdownToggle tag="div">
-                            {this.gridApi
-                              ? this.state.currenPageSize
-                              : "" * this.state.getPageSize -
-                                (this.state.getPageSize - 1)}{" "}
-                            -{" "}
-                            {this.state.rowData.length -
-                              this.state.currenPageSize *
-                                this.state.getPageSize >
-                            0
-                              ? this.state.currenPageSize *
-                                this.state.getPageSize
-                              : this.state.rowData.length}{" "}
-                            of {this.state.rowData.length}
-                            <ChevronDown className="ml-50" size={15} />
-                          </DropdownToggle>
-                          <DropdownMenu right>
-                            <DropdownItem
-                              tag="div"
-                              onClick={() => this.filterSize(20)}
-                            >
-                              20
-                            </DropdownItem>
-                            <DropdownItem
-                              tag="div"
-                              onClick={() => this.filterSize(50)}
-                            >
-                              50
-                            </DropdownItem>
-                            <DropdownItem
-                              tag="div"
-                              onClick={() => this.filterSize(100)}
-                            >
-                              100
-                            </DropdownItem>
-                            <DropdownItem
-                              tag="div"
-                              onClick={() => this.filterSize(134)}
-                            >
-                              134
-                            </DropdownItem>
-                          </DropdownMenu>
-                        </UncontrolledDropdown>
-                      </div>
-                      <div className="d-flex flex-wrap justify-content-between mb-1">
-                        <div className="table-input mr-1">
-                          <Input
-                            placeholder="search..."
-                            onChange={e =>
-                              this.updateSearchQuery(e.target.value)
-                            }
-                            value={this.state.value}
-                          />
-                        </div>
+          {this.state.EditOneUserView && this.state.EditOneUserView ? (
+            <Row className="card">
+              <Col>
+                <div className="d-flex justify-content-end p-1">
+                  <Button
+                    onClick={e => {
+                      e.preventDefault();
+                      this.setState({ EditOneUserView: false });
+                    }}
+                    color="danger"
+                  >
+                    Back
+                  </Button>
+                </div>
+              </Col>
 
-                        <div className="export-btn">
-                          <Button.Ripple
-                            color="primary"
-                            onClick={() => this.gridApi.exportDataAsCsv()}
-                          >
-                            Export as CSV
-                          </Button.Ripple>
-                        </div>
-                      </div>
-                    </div>
-                    <ContextLayout.Consumer className="ag-theme-alpine">
-                      {context => (
-                        <AgGridReact
-                          id="myAgGrid"
-                          gridOptions={{
-                            domLayout: "autoHeight", // or other layout options
+              <EditAccount EditOneData={this.state.EditOneData} />
+            </Row>
+          ) : (
+            <>
+              {this.state.ViewOneUserView && this.state.ViewOneUserView ? (
+                <>
+                  <Row className="card">
+                    <Col>
+                      <div className="d-flex justify-content-end p-1">
+                        <Button
+                          onClick={e => {
+                            e.preventDefault();
+                            this.setState({ ViewOneUserView: false });
                           }}
-                          // gridOptions={this.gridOptions}
-                          rowSelection="multiple"
-                          defaultColDef={defaultColDef}
-                          columnDefs={columnDefs}
-                          rowData={rowData}
-                          onGridReady={this.onGridReady}
-                          colResizeDefault={"shift"}
-                          animateRows={true}
-                          floatingFilter={false}
-                          pagination={true}
-                          paginationPageSize={this.state.paginationPageSize}
-                          pivotPanelShow="always"
-                          enableRtl={context.state.direction === "rtl"}
-                          ref={this.gridRef} // Attach the ref to the grid
-                          domLayout="autoHeight" // Adjust layout as needed
-                        />
-                      )}
-                    </ContextLayout.Consumer>
-                  </div>
-                )}
-              </CardBody>
-            </Card>
-          </Col>
+                          color="danger"
+                        >
+                          Back
+                        </Button>
+                      </div>
+                    </Col>
+                    <ViewAccount ViewOneData={this.state.ViewOneData} />
+                  </Row>
+                </>
+              ) : (
+                <>
+                  <Col sm="12">
+                    <Card>
+                      <Row className="m-2">
+                        <Col>
+                          <h1 className="float-left">Part List</h1>
+                        </Col>
+                        <Col>
+                          <span className="mx-1">
+                            <FaFilter
+                              style={{ cursor: "pointer" }}
+                              title="filter coloumn"
+                              size="30px"
+                              onClick={e => {
+                                e.preventDefault();
+                                this.toggleModal();
+                              }}
+                              color="blue"
+                              className="float-right"
+                            />
+                          </span>
+                          <span className="mx-1">
+                            <div className="dropdown-container float-right">
+                              <BsCloudDownloadFill
+                                style={{ cursor: "pointer" }}
+                                title="download file"
+                                size="30px"
+                                className="dropdown-button "
+                                color="blue"
+                                onClick={this.toggleDropdown}
+                              />
+                              {isOpen && (
+                                <div
+                                  style={{
+                                    position: "absolute",
+                                    zIndex: "1",
+                                  }}
+                                  className="dropdown-content dropdownmy"
+                                >
+                                  <h5
+                                    onClick={() => this.exportToPDF()}
+                                    style={{ cursor: "pointer" }}
+                                    className=" mx-1 myactive mt-1"
+                                  >
+                                    .PDF
+                                  </h5>
+                                  <h5
+                                    onClick={() =>
+                                      this.gridApi.exportDataAsCsv()
+                                    }
+                                    style={{ cursor: "pointer" }}
+                                    className=" mx-1 myactive"
+                                  >
+                                    .CSV
+                                  </h5>
+                                  <h5
+                                    onClick={this.convertCSVtoExcel}
+                                    style={{ cursor: "pointer" }}
+                                    className=" mx-1 myactive"
+                                  >
+                                    .XLS
+                                  </h5>
+                                  <h5
+                                    onClick={this.exportToExcel}
+                                    style={{ cursor: "pointer" }}
+                                    className=" mx-1 myactive"
+                                  >
+                                    .XLSX
+                                  </h5>
+                                  <h5
+                                    onClick={() => this.convertCsvToXml()}
+                                    style={{ cursor: "pointer" }}
+                                    className=" mx-1 myactive"
+                                  >
+                                    .XML
+                                  </h5>
+                                </div>
+                              )}
+                            </div>
+                          </span>
+                        </Col>
+                      </Row>
+                      <CardBody>
+                        {this.state.rowData === null ? null : (
+                          <div className="ag-theme-material w-100 my-2 ag-grid-table">
+                            <div className="d-flex flex-wrap justify-content-between align-items-center">
+                              <div className="mb-1">
+                                <UncontrolledDropdown className="p-1 ag-dropdown">
+                                  <DropdownToggle tag="div">
+                                    {this.gridApi
+                                      ? this.state.currenPageSize
+                                      : "" * this.state.getPageSize -
+                                        (this.state.getPageSize - 1)}{" "}
+                                    -{" "}
+                                    {this.state.rowData.length -
+                                      this.state.currenPageSize *
+                                        this.state.getPageSize >
+                                    0
+                                      ? this.state.currenPageSize *
+                                        this.state.getPageSize
+                                      : this.state.rowData.length}{" "}
+                                    of {this.state.rowData.length}
+                                    <ChevronDown className="ml-50" size={15} />
+                                  </DropdownToggle>
+                                  <DropdownMenu right>
+                                    <DropdownItem
+                                      tag="div"
+                                      onClick={() => this.filterSize(20)}
+                                    >
+                                      20
+                                    </DropdownItem>
+                                    <DropdownItem
+                                      tag="div"
+                                      onClick={() => this.filterSize(50)}
+                                    >
+                                      50
+                                    </DropdownItem>
+                                    <DropdownItem
+                                      tag="div"
+                                      onClick={() => this.filterSize(100)}
+                                    >
+                                      100
+                                    </DropdownItem>
+                                    <DropdownItem
+                                      tag="div"
+                                      onClick={() => this.filterSize(134)}
+                                    >
+                                      134
+                                    </DropdownItem>
+                                  </DropdownMenu>
+                                </UncontrolledDropdown>
+                              </div>
+                              <div className="d-flex flex-wrap justify-content-end mb-1">
+                                <div className="table-input mr-1">
+                                  <Input
+                                    placeholder="search Item here..."
+                                    onChange={e =>
+                                      this.updateSearchQuery(e.target.value)
+                                    }
+                                    value={this.state.value}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <ContextLayout.Consumer className="ag-theme-alpine">
+                              {context => (
+                                <AgGridReact
+                                  id="myAgGrid"
+                                  gridOptions={{
+                                    domLayout: "autoHeight", // or other layout options
+                                  }}
+                                  // gridOptions={this.gridOptions}
+                                  rowSelection="multiple"
+                                  defaultColDef={defaultColDef}
+                                  columnDefs={columnDefs}
+                                  rowData={rowData}
+                                  onGridReady={params => {
+                                    this.gridApi = params.api;
+                                    this.gridColumnApi = params.columnApi;
+                                    this.gridRef.current = params.api;
+                                  }}
+                                  // onGridReady={this.onGridReady}
+                                  colResizeDefault={"shift"}
+                                  animateRows={true}
+                                  floatingFilter={false}
+                                  pagination={true}
+                                  paginationPageSize={
+                                    this.state.paginationPageSize
+                                  }
+                                  pivotPanelShow="always"
+                                  enableRtl={context.state.direction === "rtl"}
+                                  ref={this.gridRef} // Attach the ref to the grid
+                                  domLayout="autoHeight" // Adjust layout as needed
+                                />
+                              )}
+                            </ContextLayout.Consumer>
+                          </div>
+                        )}
+                      </CardBody>
+                    </Card>
+                  </Col>
+                </>
+              )}
+            </>
+          )}
         </Row>
+
         <Modal
           isOpen={this.state.modal}
           toggle={this.toggleModal}
@@ -591,18 +778,12 @@ class PartList extends React.Component {
           <ModalHeader toggle={this.toggleModal}>Change Fileds</ModalHeader>
           <ModalBody className="modalbodyhead">
             <Row>
-              <Col lg="4" md="4" sm="4" xl="4" xs="12">
+              <Col lg="4" md="4" sm="12" xl="4" xs="12">
                 <h4>Columns</h4>
                 <div className="mainshffling">
                   <div class="ex1">
                     {AllcolumnDefs &&
                       AllcolumnDefs?.map((ele, i) => {
-                        let check =
-                          SelectedcolumnDefs &&
-                          SelectedcolumnDefs?.some(item => {
-                            item?.headerName == ele?.headerName;
-                          });
-
                         return (
                           <>
                             <div
@@ -631,7 +812,7 @@ class PartList extends React.Component {
                   </div>
                 </div>
               </Col>
-              <Col lg="2" md="2" sm="2" xl="2" xs="12" className="colarrowbtn">
+              <Col lg="2" md="2" sm="12" xl="2" xs="12" className="colarrowbtn">
                 <div className="mainarrowbtn">
                   <div style={{ cursor: "pointer" }}>
                     <FaArrowAltCircleRight
@@ -657,9 +838,9 @@ class PartList extends React.Component {
                   </div>
                 </div>
               </Col>
-              <Col lg="6" md="6" sm="6" xl="6" xs="12">
+              <Col lg="6" md="6" sm="12" xl="6" xs="12">
                 <Row>
-                  <Col lg="8" md="8" sm="8" xs="12">
+                  <Col lg="8" md="8" sm="12" xs="12">
                     <h4>Selected Columns</h4>
                     <div className="mainshffling">
                       <div class="ex1">
@@ -713,7 +894,7 @@ class PartList extends React.Component {
                       </div>
                     </div>
                   </Col>
-                  <Col lg="4" md="4" sm="4" xs="12">
+                  <Col lg="4" md="4" sm="12" xs="12">
                     <div className="updownbtn justify-content-center">
                       <div>
                         <BsFillArrowUpSquareFill
@@ -738,15 +919,7 @@ class PartList extends React.Component {
               <Col>
                 <div className="d-flex justify-content-center">
                   <Button
-                    onClick={e => {
-                      e.preventDefault();
-                      debugger;
-                      console.log(SelectedCols);
-                      this.setState({ columnDefs: SelectedcolumnDefs });
-                      // this.setState({ columnDefs: SelectedCols });
-
-                      this.toggleModal();
-                    }}
+                    onClick={e => this.handleChangeView(e)}
                     color="primary"
                   >
                     Submit
