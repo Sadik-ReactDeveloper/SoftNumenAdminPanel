@@ -193,101 +193,6 @@ class All extends React.Component {
 
     // Use the map function to iterate through the array
 
-    await CreateAccountView()
-      .then((res) => {
-        var mydropdownArray = [];
-        var adddropdown = [];
-        const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        console.log(JSON.parse(jsonData));
-        // const checkboxinput = JSON.parse(
-        //   jsonData
-        // ).CreateAccount?.CheckBox?.input?.map(ele => {
-        //   return {
-        //     headerName: ele?.label?._text,
-        //     field: ele?.name?._text,
-        //     filter: true,
-        //     sortable: true,
-        //     cellRendererFramework: params => {
-        //       // console.log(params.data);
-        //       return params.data?.Status === "Active" ? (
-        //         <div className="badge badge-pill badge-success">
-        //           {params.data.Status}
-        //         </div>
-        //       ) : params.data?.Status === "Deactive" ? (
-        //         <div className="badge badge-pill badge-warning">
-        //           {params.data.Status}
-        //         </div>
-        //       ) : (
-        //         "NA"
-        //       );
-        //     },
-        //   };
-        // });
-        // const inputs = JSON.parse(jsonData).CreateAccount?.input?.map(ele => {
-        //   return {
-        //     headerName: ele?.label._text,
-        //     field: ele?.name._text,
-        //     filter: true,
-        //     sortable: true,
-        //   };
-        // });
-        let Radioinput =
-          JSON.parse(jsonData).CreateAccount?.Radiobutton?.input[0]?.name
-            ?._text;
-        // const addRadio = [
-        //   {
-        //     headerName: Radioinput,
-        //     field: Radioinput,
-        //     filter: true,
-        //     sortable: true,
-        //     cellRendererFramework: params => {
-        //       return params.data?.Status === "Active" ? (
-        //         <div className="badge badge-pill badge-success">
-        //           {params.data.Status}
-        //         </div>
-        //       ) : params.data?.Status === "Deactive" ? (
-        //         <div className="badge badge-pill badge-warning">
-        //           {params.data.Status}
-        //         </div>
-        //       ) : (
-        //         "NA"
-        //       );
-        //     },
-        //   },
-        // ];
-
-        let dropdown = JSON.parse(jsonData).CreateAccount?.MyDropdown?.dropdown;
-        if (dropdown.length) {
-          // var mydropdownArray = dropdown?.map(ele => {
-          //   return {
-          //     headerName: ele?.label,
-          //     field: ele?.name,
-          //     filter: true,
-          //     sortable: true,
-          //   };
-          // });
-        } else {
-          // var adddropdown = [
-          //   {
-          //     headerName: dropdown?.label._text,
-          //     field: dropdown?.name._text,
-          //     filter: true,
-          //     sortable: true,
-          //   },
-          // ];
-        }
-
-        // let myHeadings = [
-        // ...adddropdown,
-        // ...addRadio,
-        // ...mydropdownArray,
-        // ];
-        // console.log(myHeadings);
-      })
-      .catch((err) => {
-        console.log(err);
-        swal("Error", "something went wrong try again");
-      });
     await CreateAccountList()
       .then((res) => {
         let value = res?.CreateAccount;
@@ -626,7 +531,7 @@ class All extends React.Component {
                     <Card>
                       <Row className="m-2">
                         <Col>
-                          <h1 className="float-left">Place Order</h1>
+                          <h1 className="float-left">Create Order</h1>
                         </Col>
                         <Col>
                           <span className="mx-1">
@@ -765,15 +670,25 @@ class All extends React.Component {
                                   </DropdownMenu>
                                 </UncontrolledDropdown>
                               </div>
-                              <div className="d-flex flex-wrap justify-content-end mb-1">
+                              <div className="d-flex flex-wrap justify-content-between mb-1">
                                 <div className="table-input mr-1">
                                   <Input
-                                    placeholder="search Item here..."
+                                    placeholder="search..."
                                     onChange={(e) =>
                                       this.updateSearchQuery(e.target.value)
                                     }
                                     value={this.state.value}
                                   />
+                                </div>
+                                <div className="export-btn">
+                                  <Button.Ripple
+                                    color="primary"
+                                    onClick={() =>
+                                      this.gridApi.exportDataAsCsv()
+                                    }
+                                  >
+                                    Create Order
+                                  </Button.Ripple>
                                 </div>
                               </div>
                             </div>

@@ -200,9 +200,7 @@ const AddGallery = lazy(() =>
 //order
 const OrderOne = lazy(() => import("./views/apps/freshlist/order/OrderOne"));
 const All = lazy(() => import("./views/apps/freshlist/order/All"));
-const Placeorder = lazy(() =>
-  import("./views/apps/freshlist/order/Placeorder")
-);
+
 const Selectedorder = lazy(() =>
   import("./views/apps/freshlist/order/Selectedorder")
 );
@@ -443,6 +441,9 @@ const StockTransfer = lazy(() =>
 );
 const SupplierWarranty = lazy(() =>
   import("./views/apps/freshlist/customer/WarrantyCLaims/SupplierWarranty")
+);
+const Placeorder = lazy(() =>
+  import("./views/apps/freshlist/order/Placeorder")
 );
 const InvoiceGenerator = lazy(() =>
   import("./views/apps/freshlist/subcategory/InvoiceGenerator")
@@ -952,10 +953,10 @@ const accessControl = lazy(() =>
 const RouteConfig = ({ component: Component, fullLayout, ...rest }) => (
   <Route
     {...rest}
-    render={props => {
+    render={(props) => {
       return (
         <ContextLayout.Consumer>
-          {context => {
+          {(context) => {
             let LayoutTag =
               fullLayout === true
                 ? context.fullLayout
@@ -975,7 +976,7 @@ const RouteConfig = ({ component: Component, fullLayout, ...rest }) => (
     }}
   />
 );
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     user: state.auth.login.userRole,
   };
@@ -1218,12 +1219,12 @@ class AppRouter extends React.Component {
             component={AddGallery}
           />
           {/* order */}
-          <AppRoute path="/app/softNumen/order/OrderOne" component={OrderOne} />
-          <AppRoute path="/app/softNumen/order/placeorder" component={All} />
           <AppRoute
-            path="/app/freshlist/order/Placeorder"
+            path="/app/softnumen/order/createorder"
             component={Placeorder}
           />
+          <AppRoute path="/app/softNumen/order/OrderOne" component={OrderOne} />
+          <AppRoute path="/app/softNumen/order/placeorder" component={All} />
           <AppRoute
             path="/app/freshlist/order/Selectedorder"
             component={Selectedorder}
