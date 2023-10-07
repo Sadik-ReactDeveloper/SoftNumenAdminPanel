@@ -12,6 +12,8 @@ import {
   Spare_Parts,
   Parts_Catalogue,
   Order_Parts,
+  Login_User,
+  Login_OTP,
 } from "./Api";
 import axiosConfig from "../axiosConfig";
 
@@ -24,6 +26,18 @@ dotenv.config();
 // console.log(`API Key: ${apiKey}`);
 // console.log(`Secret Key: ${secretKey}`);
 
+export const UserLogin = async (data) => {
+  let response = await axiosConfig
+    .post(Login_User, data)
+    .then((res) => res.data);
+  return response;
+};
+export const UserOTPVerify = async (data) => {
+  let response = await axiosConfig
+    .post(Login_OTP, data)
+    .then((res) => res.data);
+  return response;
+};
 export const CreateRole = async () => {
   let response = await axiosConfig
     .post(`/admin/getProduct`)

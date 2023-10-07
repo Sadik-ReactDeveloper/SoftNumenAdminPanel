@@ -206,48 +206,48 @@ const CreateAccount = () => {
                     if (!!ele?.phoneinput) {
                       return (
                         <>
-                          {Edit && Edit ? (
-                            <>
-                              <Col key={i} lg="6" md="6" sm="12">
-                                <FormGroup>
-                                  <Label>{ele?.label?._text}</Label>
-                                  <PhoneInput
-                                    inputClass="myphoneinput"
-                                    country={"us"}
-                                    onKeyDown={(e) => {
-                                      if (
-                                        ele?.type?._attributes?.type == "number"
-                                      ) {
-                                        ["e", "E", "+", "-"].includes(e.key) &&
-                                          e.preventDefault();
-                                      }
-                                    }}
-                                    countryCodeEditable={false}
-                                    name={ele?.name?._text}
-                                    value={formData[ele?.name?._text]}
-                                    onChange={(phone) => {
-                                      setFormData({
-                                        ...formData,
-                                        [ele?.name?._text]: phone,
-                                      });
-                                    }}
-                                    // onChange={handleInputChange}
-                                  />
-                                  {index === i ? (
-                                    <>
-                                      {error && (
-                                        <span style={{ color: "red" }}>
-                                          {error}
-                                        </span>
-                                      )}
-                                    </>
-                                  ) : (
-                                    <></>
-                                  )}
-                                </FormGroup>
-                              </Col>
-                            </>
-                          ) : (
+                          {/* {Edit && Edit ? ( */}
+                          <>
+                            <Col key={i} lg="6" md="6" sm="12">
+                              <FormGroup>
+                                <Label>{ele?.label?._text}</Label>
+                                <PhoneInput
+                                  inputClass="myphoneinput"
+                                  country={"us"}
+                                  onKeyDown={(e) => {
+                                    if (
+                                      ele?.type?._attributes?.type == "number"
+                                    ) {
+                                      ["e", "E", "+", "-"].includes(e.key) &&
+                                        e.preventDefault();
+                                    }
+                                  }}
+                                  countryCodeEditable={false}
+                                  name={ele?.name?._text}
+                                  value={formData[ele?.name?._text]}
+                                  onChange={(phone) => {
+                                    setFormData({
+                                      ...formData,
+                                      [ele?.name?._text]: phone,
+                                    });
+                                  }}
+                                  // onChange={handleInputChange}
+                                />
+                                {index === i ? (
+                                  <>
+                                    {error && (
+                                      <span style={{ color: "red" }}>
+                                        {error}
+                                      </span>
+                                    )}
+                                  </>
+                                ) : (
+                                  <></>
+                                )}
+                              </FormGroup>
+                            </Col>
+                          </>
+                          {/* ) : (
                             <>
                               {View && View ? (
                                 <>
@@ -295,7 +295,7 @@ const CreateAccount = () => {
                                 </>
                               ) : null}
                             </>
-                          )}
+                          )} */}
                         </>
                       );
                     } else if (!!ele?.library) {
@@ -415,46 +415,46 @@ const CreateAccount = () => {
                     } else {
                       return (
                         <>
-                          {Edit && Edit ? (
-                            <Col key={i} lg="6" md="6" sm="12">
-                              <FormGroup>
-                                <Label>{ele?.label?._text}</Label>
+                          {/* {Edit && Edit ? ( */}
+                          <Col key={i} lg="6" md="6" sm="12">
+                            <FormGroup>
+                              <Label>{ele?.label?._text}</Label>
 
-                                <Input
-                                  onKeyDown={(e) => {
-                                    if (
-                                      ele?.type?._attributes?.type == "number"
-                                    ) {
-                                      ["e", "E", "+", "-"].includes(e.key) &&
-                                        e.preventDefault();
-                                    }
-                                  }}
-                                  type={ele?.type?._attributes?.type}
-                                  placeholder={ele?.placeholder?._text}
-                                  name={ele?.name?._text}
-                                  value={formData[ele?.name?._text]}
-                                  onChange={(e) =>
-                                    handleInputChange(
-                                      e,
-                                      ele?.type?._attributes?.type,
-                                      i
-                                    )
+                              <Input
+                                onKeyDown={(e) => {
+                                  if (
+                                    ele?.type?._attributes?.type == "number"
+                                  ) {
+                                    ["e", "E", "+", "-"].includes(e.key) &&
+                                      e.preventDefault();
                                   }
-                                />
-                                {index === i ? (
-                                  <>
-                                    {error && (
-                                      <span style={{ color: "red" }}>
-                                        {error}
-                                      </span>
-                                    )}
-                                  </>
-                                ) : (
-                                  <></>
-                                )}
-                              </FormGroup>
-                            </Col>
-                          ) : (
+                                }}
+                                type={ele?.type?._attributes?.type}
+                                placeholder={ele?.placeholder?._text}
+                                name={ele?.name?._text}
+                                value={formData[ele?.name?._text]}
+                                onChange={(e) =>
+                                  handleInputChange(
+                                    e,
+                                    ele?.type?._attributes?.type,
+                                    i
+                                  )
+                                }
+                              />
+                              {index === i ? (
+                                <>
+                                  {error && (
+                                    <span style={{ color: "red" }}>
+                                      {error}
+                                    </span>
+                                  )}
+                                </>
+                              ) : (
+                                <></>
+                              )}
+                            </FormGroup>
+                          </Col>
+                          {/* ) : (
                             <>
                               {View && View ? (
                                 <>
@@ -502,7 +502,7 @@ const CreateAccount = () => {
                                 </>
                               ) : null}
                             </>
-                          )}
+                          )} */}
                         </>
                       );
                     }
