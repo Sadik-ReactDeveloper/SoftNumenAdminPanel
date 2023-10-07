@@ -9,3 +9,7 @@ export const Part_catelougue = "/part-catalogue/save-part";
 export const Spare_Parts = "/part-catalogue/get-spare-parts";
 export const Parts_Catalogue = "/part-catalogue/get-partscatalogue-parts";
 export const Order_Parts = "/part-catalogue/get-orders-parts";
+
+// login Api End  Points
+export const Login_User = "/create-account/signin";
+export const Login_OTP = "/create-account/verify-otp";

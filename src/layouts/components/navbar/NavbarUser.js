@@ -226,6 +226,8 @@ class NavbarUser extends React.PureComponent {
     this.setState({ langDropdown: !this.state.langDropdown });
   render() {
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
+    console.log(pageparmission);
+
     // console.log(pageparmission?.Userinfo.full_name);
     //  console.log('console.log(this.state.userData) ',this.state.userData.image)
     const { userData } = this.state;
@@ -471,11 +473,10 @@ class NavbarUser extends React.PureComponent {
         <UncontrolledDropdown tag="li" className="dropdown-user nav-item">
           <DropdownToggle tag="a" className="nav-link dropdown-user-link">
             <div className="user-nav d-sm-flex d-none">
-              <span className="user-name text-bold-600">
-                {pageparmission?.Userinfo?.full_name}
-                softNumen
-                {/* {userData.name === undefined ? userData.name : null} */}
-              </span>
+              <div className="user-name text-bold-600">
+                {pageparmission && pageparmission?.UserName}{" "}
+              </div>
+              <div>{pageparmission && pageparmission?.Role}</div>
               {/* <span className="user-status">{this.state.userData.name}</span> */}
             </div>
             <span data-tour="user">

@@ -28,6 +28,7 @@ import { connect } from "react-redux";
 import OtpInput from "react-otp-input";
 import swal from "sweetalert";
 import axiosConfig from "../../../../axiosConfig";
+import { UserLogin, UserOTPVerify } from "../../../../ApiEndPoint/ApiCalling";
 
 class Login extends React.Component {
   // static contextType = UserContext;
@@ -46,10 +47,95 @@ class Login extends React.Component {
     e.preventDefault();
     this.setState({ [e.target.name]: e.target.value });
   };
-
-  loginHandler = (e) => {
-    this.setState({ OtpScreen: true });
+  loginOTPHandler = async (e) => {
     e.preventDefault();
+    if (this.state.Otp?.length == 6) {
+      console.log(this.state.Otp);
+      let Opt = { otp: this.state.Otp, email: this.state.email };
+      await UserOTPVerify(Opt)
+        .then((response) => {
+          debugger;
+          // console.log(response);
+          if (response?.status) {
+            localStorage.setItem("userData", JSON.stringify(response?.user));
+            setTimeout(() => {
+              this.props.history.push("/dashboard");
+            }, 2000);
+            swal(
+              "Sucessfully login",
+              "You are LoggedIn!",
+              "Success",
+
+              {
+                buttons: {
+                  ok: { text: "Ok", value: "ok" },
+                },
+              }
+            ).then((value) => {
+              switch (value) {
+                case "ok":
+                  break;
+                default:
+              }
+            });
+          } else {
+            swal("Something Went Wrong");
+          }
+        })
+        .then((err) => {
+          console.log(err);
+        });
+    } else {
+      // swal("Please Enter Correct OTP");
+      swal({
+        title: "Are you sure?",
+        text: "Are you sure that you want to leave this page?",
+        icon: "warning",
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+          swal("Deleted!", "Your imaginary file has been deleted!", "success");
+        }
+      });
+    }
+  };
+
+  loginHandler = async (e) => {
+    e.preventDefault();
+    let data = { email: this.state.email, password: this.state.password };
+    console.log(data);
+    await UserLogin(data)
+      .then((res) => {
+        console.log(res);
+        if (res?.status) {
+          swal("Success", "OTP sent to Your Register mail id");
+          this.setState({ OtpScreen: true });
+        }
+      })
+      .catch((err) => {
+        console.log(err.response);
+        let Incorrectpassword =
+          err.response?.data.message == "Incorrect password";
+        let IncorrectEmail = err.response?.data.message == "Incorrect Email";
+        if (Incorrectpassword) {
+          swal({
+            title: "Some Error Occurred",
+            text: `Incorrect Password`,
+            icon: "warning",
+            dangerMode: false,
+          });
+        }
+        if (IncorrectEmail) {
+          // swal("Error", "Please Enter Correct Password");
+          swal({
+            title: "Some Error Occurred",
+            text: `Incorrect Email`,
+            icon: "warning",
+            dangerMode: false,
+          });
+        }
+      });
+
     // const fromdata = new FormData();
     // fromdata.append("username", this.state.email);
     // fromdata.append("password", this.state.password);
@@ -128,7 +214,7 @@ class Login extends React.Component {
                       <img
                         src={logo}
                         alt="loginImg"
-                        width="210px"
+                        width="90%"
                         height="150px"
                       />
                     </div>
@@ -179,7 +265,7 @@ class Login extends React.Component {
                               <p className="px-2 auth-title mb-2">
                                 Welcome , Enter Email OTP to Login your Account.
                               </p>
-                              <Form onSubmit={this.loginHandler}>
+                              <Form onSubmit={this.loginOTPHandler}>
                                 <FormGroup className="otpscreeen d-flex justify-content-center">
                                   <OtpInput
                                     containerStyle="true inputdata"
@@ -196,8 +282,8 @@ class Login extends React.Component {
                                   />
                                 </FormGroup>
 
-                                <div className="d-flex justify-content-between">
-                                  <Button.Ripple
+                                <div className="d-flex justify-content-center">
+                                  {/* <Button.Ripple
                                     color="primary"
                                     outline
                                     onClick={(e) => {
@@ -209,8 +295,12 @@ class Login extends React.Component {
                                     // }}
                                   >
                                     Forget Password
-                                  </Button.Ripple>
-                                  <Button.Ripple color="primary" type="submit">
+                                  </Button.Ripple> */}
+                                  <Button.Ripple
+                                    width="80%"
+                                    color="primary"
+                                    type="submit"
+                                  >
                                     Login
                                   </Button.Ripple>
                                   <TabContent activeTab={this.state.activeTab}>
@@ -241,7 +331,7 @@ class Login extends React.Component {
                                 <FormGroup className="form-label-group position-relative has-icon-left">
                                   <InputGroup>
                                     <InputGroupAddon addonType="prepend">
-                                      Email
+                                      username
                                     </InputGroupAddon>
                                     <Input
                                       type="text"
@@ -249,7 +339,7 @@ class Login extends React.Component {
                                       placeholder="User Name"
                                       value={this.state.email}
                                       onChange={this.handlechange}
-                                      // required
+                                      required
                                     />
                                   </InputGroup>
                                 </FormGroup>
@@ -266,7 +356,7 @@ class Login extends React.Component {
                                       placeholder="Password"
                                       value={this.state.password}
                                       onChange={this.handlechange}
-                                      // required
+                                      required
                                     />
                                   </InputGroup>
                                 </FormGroup>
