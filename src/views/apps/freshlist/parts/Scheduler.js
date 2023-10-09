@@ -30,11 +30,12 @@ import { Route } from "react-router-dom";
 import { CloudLightning } from "react-feather";
 import { timers } from "jquery";
 import { PartCatelougue } from "../../../../ApiEndPoint/ApiCalling";
-const selectItem1 = [];
-const selectstate2 = [];
+// import { dummytest } from "./test";
+import HtmlParser from "react-html-parser";
+import Pickers from "../../../forms/form-elements/datepicker/Pickers";
+// const selectItem1 = [];
 
-const AllunSelectedCity = [];
-const Selectedarray = [];
+// const Selectedarray = [];
 
 const importData = [
   "Product Registration",
@@ -70,20 +71,18 @@ const Scheduler = () => {
   const [allPart, setAllPart] = useState([]);
 
   useEffect(() => {
+    // console.log(dummytest);
+    // console.log("answer_steps--->", JSON.parse(dummytest?.answer_steps));
+    // console.log("plan--->", dummytest?.plan);
+    // console.log("question_text-->", dummytest?.question_text);
     setAllPart(importData);
     // let pageparmission = JSON.parse(localStorage.getItem("userData"));
     // let newparmisson = pageparmission?.role?.find(
     //   (value) => value?.pageName === "Create Account"
     // );
-    // setViewpermisson(newparmisson?.permission.includes("View"));
-    // setCreatepermisson(newparmisson?.permission.includes("Create"));
-    // setEditpermisson(newparmisson?.permission.includes("Edit"));
-
-    // setDeletepermisson(newparmisson?.permission.includes("Delete"));
   }, []);
 
   useEffect(() => {
-    debugger;
     console.log(scheduler);
     console.log(Adhocfile);
   }, [scheduler, Adhocfile]);
@@ -101,8 +100,8 @@ const Scheduler = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
-    let uniqueChars = [...new Set(selectItem1)];
-    let selectedOption = [...new Set(selectedOptions)];
+    // let uniqueChars = [...new Set(selectItem1)];
+    // let selectedOption = [...new Set(selectedOptions)];
   };
 
   const HandleSelectRole = (val) => {
@@ -140,7 +139,31 @@ const Scheduler = () => {
   return (
     <div>
       <div>
+        <Row>
+          <Col>
+            <Pickers />
+          </Col>
+        </Row>
         <Card>
+          {/* <Row className="p-3">
+            <Col>
+              {JSON.parse(dummytest?.answer_steps)?.map((ele) => {
+                console.log(ele);
+                return (
+                  <>
+                    <div>{ele?.sequence}</div>
+                    <div>{ele?.header}</div>
+                    <div>{HtmlParser(ele?.text)}</div>
+                  </>
+                );
+              })}
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: dummytest?.plan.replace(/\n/g, "<br/>"),
+                }}
+              />
+            </Col>
+          </Row> */}
           <Row className="m-2">
             <Col>
               <h1 className="float-left">Scheduler Time</h1>
@@ -238,6 +261,16 @@ const Scheduler = () => {
                         onChange={(e) => handleInputChange(e)}
                       />
                       <span style={{ marginRight: "20px" }}>Minuts</span>
+                    </div>
+                    <div>
+                      <input
+                        style={{ marginRight: "3px" }}
+                        type="radio"
+                        name="Pattern"
+                        value="Second"
+                        onChange={(e) => handleInputChange(e)}
+                      />
+                      <span style={{ marginRight: "20px" }}>Second</span>
                     </div>
                   </div>
                 </Col>

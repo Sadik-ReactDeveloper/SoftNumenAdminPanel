@@ -681,14 +681,21 @@ class All extends React.Component {
                                   />
                                 </div>
                                 <div className="export-btn">
-                                  <Button.Ripple
-                                    color="primary"
-                                    onClick={() =>
-                                      this.gridApi.exportDataAsCsv()
-                                    }
-                                  >
-                                    Create Order
-                                  </Button.Ripple>
+                                  <Route
+                                    render={({ history }) => (
+                                      <Button
+                                        className="btn float-right"
+                                        color="primary"
+                                        onClick={() =>
+                                          history.push(
+                                            "/app/softnumen/order/createorder"
+                                          )
+                                        }
+                                      >
+                                        Create Order
+                                      </Button>
+                                    )}
+                                  />
                                 </div>
                               </div>
                             </div>

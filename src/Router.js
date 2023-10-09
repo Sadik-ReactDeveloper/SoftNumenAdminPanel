@@ -433,6 +433,30 @@ const HelpandSupports = lazy(() =>
 const OemWarranty = lazy(() =>
   import("./views/apps/freshlist/customer/WarrantyCLaims/OemWarranty")
 );
+const CreateWarrenty = lazy(() =>
+  import("./views/apps/freshlist/customer/WarrantyCLaims/CreateWarrenty")
+);
+const SearchWarrenty = lazy(() =>
+  import("./views/apps/freshlist/customer/WarrantyCLaims/SearchWarrenty")
+);
+const Campaignlist = lazy(() =>
+  import("./views/apps/freshlist/customer/Campaign/Campaignlist")
+);
+const CreateWiki = lazy(() =>
+  import("./views/apps/freshlist/customer/ProductWIKI/CreateWiki")
+);
+const CreateSupport = lazy(() =>
+  import("./views/apps/freshlist/customer/Support/CreateSupport")
+);
+const SupportSearch = lazy(() =>
+  import("./views/apps/freshlist/customer/Support/SupportSearch")
+);
+const WikiList = lazy(() =>
+  import("./views/apps/freshlist/customer/ProductWIKI/WikiList")
+);
+const CreateCampaign = lazy(() =>
+  import("./views/apps/freshlist/customer/Campaign/CreateCampaign")
+);
 const StockReport = lazy(() =>
   import("./views/apps/freshlist/customer/StockManagement/StockReport")
 );
@@ -454,8 +478,14 @@ const AddTaxSoft = lazy(() =>
 const CourierShipping = lazy(() =>
   import("./views/apps/freshlist/subcategory/CourierShipping")
 );
+const AddCourierCharges = lazy(() =>
+  import("./views/apps/freshlist/subcategory/AddCourierCharges")
+);
 const AddSupplier = lazy(() =>
   import("./views/apps/freshlist/customer/Quotation/AddSupplier")
+);
+const AddNewSupplier = lazy(() =>
+  import("./views/apps/freshlist/customer/Quotation/AddNewSupplier")
 );
 const CreateQuote = lazy(() =>
   import("./views/apps/freshlist/customer/Quotation/CreateQuote")
@@ -483,6 +513,9 @@ const PartsCatelogueSystem = lazy(() =>
 );
 const ScrutinySystem = lazy(() =>
   import("./views/apps/freshlist/customer/SystemManagement/Scrutiny")
+);
+const AddScrutinySystem = lazy(() =>
+  import("./views/apps/freshlist/customer/SystemManagement/AddScrutiny")
 );
 const ServiceSystem = lazy(() =>
   import("./views/apps/freshlist/customer/SystemManagement/Service")
@@ -1336,6 +1369,10 @@ class AppRouter extends React.Component {
             component={CourierShipping}
           />
           <AppRoute
+            path="/app/softnumen/addcouriercharges"
+            component={AddCourierCharges}
+          />
+          <AppRoute
             path="/app/freshlist/refundrequest/addrefund"
             component={AddRefund}
           />
@@ -1552,8 +1589,44 @@ class AppRouter extends React.Component {
             component={OemWarranty}
           />
           <AppRoute
-            path="/app/softNumen/system/AddSupplier"
+            path="/app/softNumen/warranty/createWarrenty"
+            component={CreateWarrenty}
+          />
+          <AppRoute
+            path="/app/softNumen/warranty/SearchWarrenty"
+            component={SearchWarrenty}
+          />
+          <AppRoute
+            path="/app/softNumen/warranty/Campaignlist"
+            component={Campaignlist}
+          />
+          <AppRoute
+            path="/app/softNumen/warranty/CreateWiki"
+            component={CreateWiki}
+          />
+          <AppRoute
+            path="/app/softNumen/warranty/CreateSupport"
+            component={CreateSupport}
+          />
+          <AppRoute
+            path="/app/softNumen/warranty/SupportSearch"
+            component={SupportSearch}
+          />
+          <AppRoute
+            path="/app/softNumen/warranty/WikiList"
+            component={WikiList}
+          />
+          <AppRoute
+            path="/app/softNumen/warranty/createCampaign"
+            component={CreateCampaign}
+          />
+          <AppRoute
+            path="/app/softNumen/system/SupplierList"
             component={AddSupplier}
+          />
+          <AppRoute
+            path="/app/softNumen/system/AddSupplier"
+            component={AddNewSupplier}
           />
           <AppRoute
             path="/app/softNumen/system/CreateQuote"
@@ -1590,6 +1663,10 @@ class AppRouter extends React.Component {
           <AppRoute
             path="/app/softNumen/system/ScrutinySystem"
             component={ScrutinySystem}
+          />
+          <AppRoute
+            path="/app/softNumen/system/AddScrutiny"
+            component={AddScrutinySystem}
           />
           <AppRoute
             path="/app/softNumen/system/PartsCatelogueSystem"

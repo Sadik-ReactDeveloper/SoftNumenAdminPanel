@@ -1,11 +1,11 @@
-import React from "react"
-import { Row, Col } from "reactstrap"
-import Breadcrumbs from "../../../../components/@vuexy/breadCrumbs/BreadCrumb"
-import Datepickers from "./Datepickers"
-import Timepickers from "./Timepicker"
+import React from "react";
+import { Row, Col } from "reactstrap";
+import Breadcrumbs from "../../../../components/@vuexy/breadCrumbs/BreadCrumb";
+import Datepickers from "./Datepickers";
+import Timepickers from "./Timepicker";
 
 import "flatpickr/dist/themes/light.css";
-import "../../../../assets/scss/plugins/forms/flatpickr/flatpickr.scss"
+import "../../../../assets/scss/plugins/forms/flatpickr/flatpickr.scss";
 
 class Pickers extends React.Component {
   render() {
@@ -25,7 +25,7 @@ class Pickers extends React.Component {
           </Col>
         </Row>
       </React.Fragment>
-    )
+    );
   }
 }
-export default Pickers
+export default Pickers;

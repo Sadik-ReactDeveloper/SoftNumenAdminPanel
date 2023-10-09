@@ -14,7 +14,7 @@ import {
   ModalHeader,
   ModalBody,
 } from "reactstrap";
-import ExcelReader from "../parts/ExcelReader";
+// import ExcelReader from "../../parts/ExcelReader";
 import { ContextLayout } from "../../../../utility/context/Layout";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
@@ -44,7 +44,7 @@ import {
   CreateAccountList,
   CreateAccountView,
   DeleteAccount,
-  PartsCatalogueList,
+  OrderPartsList,
 } from "../../../../ApiEndPoint/ApiCalling";
 import {
   BsCloudDownloadFill,
@@ -52,6 +52,7 @@ import {
   BsFillArrowUpSquareFill,
 } from "react-icons/bs";
 import * as XLSX from "xlsx";
+import { SparesPartsList } from "../../../../ApiEndPoint/ApiCalling";
 
 const SelectedCols = [];
 
@@ -81,7 +82,7 @@ class PartList extends React.Component {
   }
 
   toggleModal = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       modal: !prevState.modal,
     }));
   };
@@ -101,8 +102,8 @@ class PartList extends React.Component {
     let headings;
     let maxKeys = 0;
     let elementWithMaxKeys = null;
-    PartsCatalogueList()
-      .then(resp => {
+    SparesPartsList()
+      .then((resp) => {
         console.log(resp?.FrontPartDetail);
 
         // Iterate through the array
@@ -118,7 +119,7 @@ class PartList extends React.Component {
         // console.log(elementWithMaxKeys);
         let findheading = Object.keys(elementWithMaxKeys);
 
-        headings = findheading?.map(ele => {
+        headings = findheading?.map((ele) => {
           return {
             headerName: ele,
             field: ele,
@@ -133,7 +134,7 @@ class PartList extends React.Component {
             field: "sortorder",
             field: "transactions",
             width: 190,
-            cellRendererFramework: params => {
+            cellRendererFramework: (params) => {
               return (
                 <div className="actions cursor-pointer">
                   <Route
@@ -183,14 +184,14 @@ class PartList extends React.Component {
         this.setState({ AllcolumnDefs: Product });
         this.setState({ rowData: resp?.FrontPartDetail });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
 
     // Use the map function to iterate through the array
 
     await CreateAccountView()
-      .then(res => {
+      .then((res) => {
         var mydropdownArray = [];
         var adddropdown = [];
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
@@ -280,21 +281,21 @@ class PartList extends React.Component {
         // ];
         // console.log(myHeadings);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         swal("Error", "something went wrong try again");
       });
     await CreateAccountList()
-      .then(res => {
+      .then((res) => {
         let value = res?.CreateAccount;
         this.setState({ rowData: value });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }
   toggleDropdown = () => {
-    this.setState(prevState => ({ isOpen: !prevState.isOpen }));
+    this.setState((prevState) => ({ isOpen: !prevState.isOpen }));
   };
 
   runthisfunction(id) {
@@ -303,15 +304,15 @@ class PartList extends React.Component {
         cancel: "cancel",
         catch: { text: "Delete ", value: "delete" },
       },
-    }).then(value => {
+    }).then((value) => {
       switch (value) {
         case "delete":
           DeleteAccount(id)
-            .then(res => {
+            .then((res) => {
               let selectedData = this.gridApi.getSelectedRows();
               this.gridApi.updateRowData({ remove: selectedData });
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(err);
             });
           break;
@@ -320,7 +321,7 @@ class PartList extends React.Component {
     });
   }
 
-  onGridReady = params => {
+  onGridReady = (params) => {
     this.gridApi = params.api;
     this.gridRef.current = params.api;
     this.gridColumnApi = params.columnApi;
@@ -332,11 +333,11 @@ class PartList extends React.Component {
     });
   };
 
-  updateSearchQuery = val => {
+  updateSearchQuery = (val) => {
     this.gridApi.setQuickFilter(val);
   };
 
-  filterSize = val => {
+  filterSize = (val) => {
     if (this.gridApi) {
       this.gridApi.paginationSetPageSize(Number(val));
       this.setState({
@@ -351,7 +352,7 @@ class PartList extends React.Component {
       SelectedCols.push(value);
     } else {
       const delindex = SelectedCols.findIndex(
-        ele => ele?.headerName === value?.headerName
+        (ele) => ele?.headerName === value?.headerName
       );
 
       SelectedCols?.splice(delindex, 1);
@@ -362,14 +363,14 @@ class PartList extends React.Component {
       Papa.parse(csvData, {
         header: true,
         skipEmptyLines: true,
-        complete: result => {
+        complete: (result) => {
           if (result.data && result.data.length > 0) {
             resolve(result.data);
           } else {
             reject(new Error("No data found in the CSV"));
           }
         },
-        error: error => {
+        error: (error) => {
           reject(error);
         },
       });
@@ -381,7 +382,7 @@ class PartList extends React.Component {
 
     const doc = new jsPDF("landscape", "mm", size, false);
     doc.setTextColor(5, 87, 97);
-    const tableData = parsedData.map(row => Object.values(row));
+    const tableData = parsedData.map((row) => Object.values(row));
     doc.addImage(Logo, "JPEG", 10, 10, 50, 30);
     let date = new Date();
     doc.setCreationDate(date);
@@ -444,14 +445,14 @@ class PartList extends React.Component {
 
     // doc.save("userlist.pdf");
   };
-  processCell = params => {
+  processCell = (params) => {
     // console.log(params);
     // Customize cell content as needed
     return params.value;
   };
 
   convertCsvToExcel(csvData) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       Papa.parse(csvData, {
         header: true,
         dynamicTyping: true,
@@ -482,7 +483,7 @@ class PartList extends React.Component {
     window.URL.revokeObjectURL(url);
   }
 
-  exportToExcel = async e => {
+  exportToExcel = async (e) => {
     const CsvData = this.gridApi.getDataAsCsv({
       processCellCallback: this.processCell,
     });
@@ -495,7 +496,7 @@ class PartList extends React.Component {
       processCellCallback: this.processCell,
     });
     Papa.parse(CsvData, {
-      complete: result => {
+      complete: (result) => {
         const ws = XLSX.utils.json_to_sheet(result.data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
@@ -531,13 +532,13 @@ class PartList extends React.Component {
       processCellCallback: this.processCell,
     });
     Papa.parse(CsvData, {
-      complete: result => {
+      complete: (result) => {
         const rows = result.data;
 
         // Create XML
         let xmlString = "<root>\n";
 
-        rows.forEach(row => {
+        rows.forEach((row) => {
           xmlString += "  <row>\n";
           row.forEach((cell, index) => {
             xmlString += `    <field${index + 1}>${cell}</field${index + 1}>\n`;
@@ -558,7 +559,7 @@ class PartList extends React.Component {
       },
     });
   };
-  handleChangeView = e => {
+  handleChangeView = (e) => {
     e.preventDefault();
     this.setState({ columnDefs: this.state.SelectedcolumnDefs });
     this.toggleModal();
@@ -582,7 +583,7 @@ class PartList extends React.Component {
               <Col>
                 <div className="d-flex justify-content-end p-1">
                   <Button
-                    onClick={e => {
+                    onClick={(e) => {
                       e.preventDefault();
                       this.setState({ EditOneUserView: false });
                     }}
@@ -603,7 +604,7 @@ class PartList extends React.Component {
                     <Col>
                       <div className="d-flex justify-content-end p-1">
                         <Button
-                          onClick={e => {
+                          onClick={(e) => {
                             e.preventDefault();
                             this.setState({ ViewOneUserView: false });
                           }}
@@ -622,7 +623,7 @@ class PartList extends React.Component {
                     <Card>
                       <Row className="m-2">
                         <Col>
-                          <h1 className="float-left">Place Order</h1>
+                          <h1 className="float-left">Parts List</h1>
                         </Col>
                         <Col>
                           <span className="mx-1">
@@ -630,7 +631,7 @@ class PartList extends React.Component {
                               style={{ cursor: "pointer" }}
                               title="filter coloumn"
                               size="30px"
-                              onClick={e => {
+                              onClick={(e) => {
                                 e.preventDefault();
                                 this.toggleModal();
                               }}
@@ -761,20 +762,37 @@ class PartList extends React.Component {
                                   </DropdownMenu>
                                 </UncontrolledDropdown>
                               </div>
-                              <div className="d-flex flex-wrap justify-content-end mb-1">
+                              <div className="d-flex flex-wrap justify-content-between mb-1">
                                 <div className="table-input mr-1">
                                   <Input
-                                    placeholder="search Item here..."
-                                    onChange={e =>
+                                    placeholder="search..."
+                                    onChange={(e) =>
                                       this.updateSearchQuery(e.target.value)
                                     }
                                     value={this.state.value}
                                   />
                                 </div>
+                                <div className="export-btn">
+                                  <Route
+                                    render={({ history }) => (
+                                      <Button
+                                        className="btn float-right"
+                                        color="primary"
+                                        onClick={() =>
+                                          history.push(
+                                            "/app/SoftNumen/parts/AddPart"
+                                          )
+                                        }
+                                      >
+                                        Create Parts
+                                      </Button>
+                                    )}
+                                  />
+                                </div>
                               </div>
                             </div>
                             <ContextLayout.Consumer className="ag-theme-alpine">
-                              {context => (
+                              {(context) => (
                                 <AgGridReact
                                   id="myAgGrid"
                                   gridOptions={{
@@ -785,7 +803,7 @@ class PartList extends React.Component {
                                   defaultColDef={defaultColDef}
                                   columnDefs={columnDefs}
                                   rowData={rowData}
-                                  onGridReady={params => {
+                                  onGridReady={(params) => {
                                     this.gridApi = params.api;
                                     this.gridColumnApi = params.columnApi;
                                     this.gridRef.current = params.api;
@@ -834,7 +852,9 @@ class PartList extends React.Component {
                         return (
                           <>
                             <div
-                              onClick={e => this.handleChangeHeader(e, ele, i)}
+                              onClick={(e) =>
+                                this.handleChangeHeader(e, ele, i)
+                              }
                               key={i}
                               className="mycustomtag mt-1"
                             >
@@ -915,7 +935,7 @@ class PartList extends React.Component {
                                         onClick={() => {
                                           const delindex =
                                             SelectedCols.findIndex(
-                                              element =>
+                                              (element) =>
                                                 element?.headerName ===
                                                 ele?.headerName
                                             );
@@ -966,7 +986,7 @@ class PartList extends React.Component {
               <Col>
                 <div className="d-flex justify-content-center">
                   <Button
-                    onClick={e => this.handleChangeView(e)}
+                    onClick={(e) => this.handleChangeView(e)}
                     color="primary"
                   >
                     Submit
