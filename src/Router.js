@@ -200,9 +200,7 @@ const AddGallery = lazy(() =>
 //order
 const OrderOne = lazy(() => import("./views/apps/freshlist/order/OrderOne"));
 const All = lazy(() => import("./views/apps/freshlist/order/All"));
-const Placeorder = lazy(() =>
-  import("./views/apps/freshlist/order/Placeorder")
-);
+
 const Selectedorder = lazy(() =>
   import("./views/apps/freshlist/order/Selectedorder")
 );
@@ -435,6 +433,30 @@ const HelpandSupports = lazy(() =>
 const OemWarranty = lazy(() =>
   import("./views/apps/freshlist/customer/WarrantyCLaims/OemWarranty")
 );
+const CreateWarrenty = lazy(() =>
+  import("./views/apps/freshlist/customer/WarrantyCLaims/CreateWarrenty")
+);
+const SearchWarrenty = lazy(() =>
+  import("./views/apps/freshlist/customer/WarrantyCLaims/SearchWarrenty")
+);
+const Campaignlist = lazy(() =>
+  import("./views/apps/freshlist/customer/Campaign/Campaignlist")
+);
+const CreateWiki = lazy(() =>
+  import("./views/apps/freshlist/customer/ProductWIKI/CreateWiki")
+);
+const CreateSupport = lazy(() =>
+  import("./views/apps/freshlist/customer/Support/CreateSupport")
+);
+const SupportSearch = lazy(() =>
+  import("./views/apps/freshlist/customer/Support/SupportSearch")
+);
+const WikiList = lazy(() =>
+  import("./views/apps/freshlist/customer/ProductWIKI/WikiList")
+);
+const CreateCampaign = lazy(() =>
+  import("./views/apps/freshlist/customer/Campaign/CreateCampaign")
+);
 const StockReport = lazy(() =>
   import("./views/apps/freshlist/customer/StockManagement/StockReport")
 );
@@ -443,6 +465,9 @@ const StockTransfer = lazy(() =>
 );
 const SupplierWarranty = lazy(() =>
   import("./views/apps/freshlist/customer/WarrantyCLaims/SupplierWarranty")
+);
+const Placeorder = lazy(() =>
+  import("./views/apps/freshlist/order/Placeorder")
 );
 const InvoiceGenerator = lazy(() =>
   import("./views/apps/freshlist/subcategory/InvoiceGenerator")
@@ -453,8 +478,14 @@ const AddTaxSoft = lazy(() =>
 const CourierShipping = lazy(() =>
   import("./views/apps/freshlist/subcategory/CourierShipping")
 );
+const AddCourierCharges = lazy(() =>
+  import("./views/apps/freshlist/subcategory/AddCourierCharges")
+);
 const AddSupplier = lazy(() =>
   import("./views/apps/freshlist/customer/Quotation/AddSupplier")
+);
+const AddNewSupplier = lazy(() =>
+  import("./views/apps/freshlist/customer/Quotation/AddNewSupplier")
 );
 const CreateQuote = lazy(() =>
   import("./views/apps/freshlist/customer/Quotation/CreateQuote")
@@ -482,6 +513,9 @@ const PartsCatelogueSystem = lazy(() =>
 );
 const ScrutinySystem = lazy(() =>
   import("./views/apps/freshlist/customer/SystemManagement/Scrutiny")
+);
+const AddScrutinySystem = lazy(() =>
+  import("./views/apps/freshlist/customer/SystemManagement/AddScrutiny")
 );
 const ServiceSystem = lazy(() =>
   import("./views/apps/freshlist/customer/SystemManagement/Service")
@@ -952,10 +986,10 @@ const accessControl = lazy(() =>
 const RouteConfig = ({ component: Component, fullLayout, ...rest }) => (
   <Route
     {...rest}
-    render={props => {
+    render={(props) => {
       return (
         <ContextLayout.Consumer>
-          {context => {
+          {(context) => {
             let LayoutTag =
               fullLayout === true
                 ? context.fullLayout
@@ -975,7 +1009,7 @@ const RouteConfig = ({ component: Component, fullLayout, ...rest }) => (
     }}
   />
 );
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     user: state.auth.login.userRole,
   };
@@ -1218,12 +1252,12 @@ class AppRouter extends React.Component {
             component={AddGallery}
           />
           {/* order */}
-          <AppRoute path="/app/softNumen/order/OrderOne" component={OrderOne} />
-          <AppRoute path="/app/softNumen/order/placeorder" component={All} />
           <AppRoute
-            path="/app/freshlist/order/Placeorder"
+            path="/app/softnumen/order/createorder"
             component={Placeorder}
           />
+          <AppRoute path="/app/softNumen/order/OrderOne" component={OrderOne} />
+          <AppRoute path="/app/softNumen/order/placeorder" component={All} />
           <AppRoute
             path="/app/freshlist/order/Selectedorder"
             component={Selectedorder}
@@ -1333,6 +1367,10 @@ class AppRouter extends React.Component {
           <AppRoute
             path="/app/softnumen/CourierShipping"
             component={CourierShipping}
+          />
+          <AppRoute
+            path="/app/softnumen/addcouriercharges"
+            component={AddCourierCharges}
           />
           <AppRoute
             path="/app/freshlist/refundrequest/addrefund"
@@ -1551,8 +1589,44 @@ class AppRouter extends React.Component {
             component={OemWarranty}
           />
           <AppRoute
-            path="/app/softNumen/system/AddSupplier"
+            path="/app/softNumen/warranty/createWarrenty"
+            component={CreateWarrenty}
+          />
+          <AppRoute
+            path="/app/softNumen/warranty/SearchWarrenty"
+            component={SearchWarrenty}
+          />
+          <AppRoute
+            path="/app/softNumen/warranty/Campaignlist"
+            component={Campaignlist}
+          />
+          <AppRoute
+            path="/app/softNumen/warranty/CreateWiki"
+            component={CreateWiki}
+          />
+          <AppRoute
+            path="/app/softNumen/warranty/CreateSupport"
+            component={CreateSupport}
+          />
+          <AppRoute
+            path="/app/softNumen/warranty/SupportSearch"
+            component={SupportSearch}
+          />
+          <AppRoute
+            path="/app/softNumen/warranty/WikiList"
+            component={WikiList}
+          />
+          <AppRoute
+            path="/app/softNumen/warranty/createCampaign"
+            component={CreateCampaign}
+          />
+          <AppRoute
+            path="/app/softNumen/system/SupplierList"
             component={AddSupplier}
+          />
+          <AppRoute
+            path="/app/softNumen/system/AddSupplier"
+            component={AddNewSupplier}
           />
           <AppRoute
             path="/app/softNumen/system/CreateQuote"
@@ -1589,6 +1663,10 @@ class AppRouter extends React.Component {
           <AppRoute
             path="/app/softNumen/system/ScrutinySystem"
             component={ScrutinySystem}
+          />
+          <AppRoute
+            path="/app/softNumen/system/AddScrutiny"
+            component={AddScrutinySystem}
           />
           <AppRoute
             path="/app/softNumen/system/PartsCatelogueSystem"

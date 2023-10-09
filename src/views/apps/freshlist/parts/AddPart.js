@@ -53,7 +53,7 @@ const AddPart = () => {
   useEffect(() => {
     CreateParts()
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
         const jsonAllData = xmlJs.xml2json(res.data, {
           compact: true,
           spaces: 2,
