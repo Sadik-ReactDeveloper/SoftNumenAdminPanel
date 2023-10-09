@@ -162,11 +162,11 @@ const navigationConfig = [
 
       {
         id: "Parts Catelog",
-        title: "Parts Catelog",
+        title: "Parts Catelogue",
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/softNumen/system/PartsCatelogueSystem",
+        navLink: "/app/SoftNumen/parts/PartCatalougue",
       },
       {
         id: "Scrutiny/inspections",
@@ -411,7 +411,7 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/freshlist/brand/BrandList",
+        navLink: "/app/SoftNumen/parts/PartCatalougue",
       },
       {
         id: "Product Type",

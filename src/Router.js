@@ -36,6 +36,9 @@ const CustomerRegistration = lazy(() =>
 // Parts
 const AddPart = lazy(() => import("./views/apps/freshlist/parts/AddPart"));
 const PartList = lazy(() => import("./views/apps/freshlist/parts/PartList"));
+const PartCatalougue = lazy(() =>
+  import("./views/apps/freshlist/parts/PartCatalougue")
+);
 const Scheduler = lazy(() => import("./views/apps/freshlist/parts/Scheduler"));
 const ReviewTable = lazy(() =>
   import("./views/apps/freshlist/customer/ReviewTable")
@@ -1059,6 +1062,10 @@ class AppRouter extends React.Component {
             component={Scheduler}
           />
           <AppRoute path="/app/SoftNumen/parts/PartList" component={PartList} />
+          <AppRoute
+            path="/app/SoftNumen/parts/PartCatalougue"
+            component={PartCatalougue}
+          />
           <AppRoute
             path="/app/freshlist/customer/viewCustomer/:id"
             component={ViewCustomer}
