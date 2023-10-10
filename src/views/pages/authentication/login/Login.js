@@ -50,11 +50,11 @@ class Login extends React.Component {
   loginOTPHandler = async (e) => {
     e.preventDefault();
     if (this.state.Otp?.length == 6) {
-      console.log(this.state.Otp);
+      // console.log(this.state.Otp);
       let Opt = { otp: this.state.Otp, email: this.state.email };
       await UserOTPVerify(Opt)
         .then((response) => {
-          debugger;
+          // debugger;
           // console.log(response);
           if (response?.status) {
             localStorage.setItem("userData", JSON.stringify(response?.user));
@@ -82,8 +82,9 @@ class Login extends React.Component {
             swal("Something Went Wrong");
           }
         })
-        .then((err) => {
-          console.log(err);
+        .catch((err) => {
+          console.log(err.response);
+          swal(`Error`, `${err.response?.data.message}`);
         });
     } else {
       // swal("Please Enter Correct OTP");
@@ -102,11 +103,11 @@ class Login extends React.Component {
 
   loginHandler = async (e) => {
     e.preventDefault();
-    let data = { email: this.state.email, password: this.state.password };
-    console.log(data);
+    let data = { username: this.state.email, password: this.state.password };
+    // console.log(data);
     await UserLogin(data)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res?.status) {
           swal("Success", "OTP sent to Your Register mail id");
           this.setState({ OtpScreen: true });
@@ -191,7 +192,7 @@ class Login extends React.Component {
       });
   };
   handleChangeOTP = (otp) => {
-    console.log(otp);
+    // console.log(otp);
     this.setState({ Otp: otp });
   };
 
@@ -235,7 +236,7 @@ class Login extends React.Component {
                           <Label>Email</Label>
                           <FormGroup className="form-label-group position-relative has-icon-left">
                             <Input
-                              type="email"
+                              type="text"
                               name="email"
                               placeholder="Username"
                               value={this.state.email}

@@ -14,6 +14,7 @@ import {
   Order_Parts,
   Login_User,
   Login_OTP,
+  Part_CatalogueView,
 } from "./Api";
 import axiosConfig from "../axiosConfig";
 
@@ -95,6 +96,12 @@ export const PartCatelougue = async (formdata) => {
   console.log(formdata);
   let response = await axiosConfig
     .post(`${Part_catelougue}`, formdata)
+    .then((res) => res.data);
+  return response;
+};
+export const PartCatalogueView = async () => {
+  let response = await axiosConfig
+    .get(`${Part_CatalogueView}`)
     .then((res) => res.data);
   return response;
 };
