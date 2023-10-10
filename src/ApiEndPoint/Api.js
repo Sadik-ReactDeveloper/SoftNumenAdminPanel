@@ -13,3 +13,7 @@ export const Order_Parts = "/part-catalogue/get-orders-parts";
 // login Api End  Points
 export const Login_User = "/create-account/signin";
 export const Login_OTP = "/create-account/verify-otp";
+
+// part catalougue
+
+export const Part_CatalogueView = "/part-catalogue/view-parts";

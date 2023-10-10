@@ -226,7 +226,7 @@ class NavbarUser extends React.PureComponent {
     this.setState({ langDropdown: !this.state.langDropdown });
   render() {
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
-    console.log(pageparmission);
+    // console.log(pageparmission);
 
     // console.log(pageparmission?.Userinfo.full_name);
     //  console.log('console.log(this.state.userData) ',this.state.userData.image)

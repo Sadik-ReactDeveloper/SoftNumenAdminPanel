@@ -27,3 +27,9 @@ img {
   overflow-x: scroll;
  
 }
+
+.cardheadercustme.card-header {
+  display: flex;
+  padding: 10px;
+  justify-content: space-evenly;
+}
