@@ -39,6 +39,7 @@ class Login extends React.Component {
       email: "",
       Otp: "",
       OtpScreen: false,
+      UserCredential: {},
       password: "",
       resetpassword: false,
     };
@@ -107,10 +108,17 @@ class Login extends React.Component {
     // console.log(data);
     await UserLogin(data)
       .then((res) => {
-        // console.log(res);
+        console.log(res?.user?.gmail);
+        console.log(res?.user?.whatsapp);
+        console.log(res?.user?.sms);
+        debugger;
+        this.setState({ UserCredential: res?.user });
+        if (res?.user?.gmail || res?.user?.whatsapp || res?.user?.sms) {
+          console.log("object");
+        }
         if (res?.status) {
           swal("Success", "OTP sent to Your Register mail id");
-          this.setState({ OtpScreen: true });
+          // this.setState({ OtpScreen: true });
         }
       })
       .catch((err) => {

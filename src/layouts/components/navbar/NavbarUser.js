@@ -23,6 +23,7 @@ import logo from "../../assets/img/profile/pages/page-01.jpg";
 import { IntlContext } from "../../../utility/context/Internationalization";
 import { Route, useHistory } from "react-router-dom";
 import ToggleMode from "./ToggleMode";
+import { BsCartCheckFill } from "react-icons/bs";
 const handleNavigation = (e) => {
   e.preventDefault();
   history.push("/#/pages/profile/userProfile");
@@ -306,6 +307,17 @@ class NavbarUser extends React.PureComponent {
           }}
         </IntlContext.Consumer>
 
+        <UncontrolledDropdown
+          tag="li"
+          className="dropdown-notification nav-item"
+        >
+          <DropdownToggle tag="a" className="nav-link nav-link-label">
+            <BsCartCheckFill color="#055761" size={21} />
+            <Badge pill color="primary" className="badge-up">
+              1
+            </Badge>
+          </DropdownToggle>
+        </UncontrolledDropdown>
         <UncontrolledDropdown
           tag="li"
           className="dropdown-notification nav-item"
