@@ -9,20 +9,24 @@ import {
   Row,
   Col,
   Table,
+  Breadcrumb,
+  BreadcrumbItem,
 } from "reactstrap";
 import "./Magnify.css";
 import { AiFillDownCircle, AiFillUpCircle } from "react-icons/ai";
 import { PartCatalogueView } from "../../../../ApiEndPoint/ApiCalling";
+import { BsFillArrowRightSquareFill } from "react-icons/bs";
 
 function PartCatalougue() {
   const [CollapseIndex, setCollapseIndex] = useState("");
   const [frontSide, setfrontSide] = useState([]);
   const [AllData, setAllData] = useState({});
   const [ListData, setListData] = useState([]);
+  const [Fullimage, setFullimage] = useState(false);
 
   useEffect(() => {
     PartCatalogueView()
-      .then(res => {
+      .then((res) => {
         console.log(res?.Parts_Catalogue);
         setAllData(res?.Parts_Catalogue);
         let keys = Object.keys(res?.Parts_Catalogue);
@@ -31,14 +35,15 @@ function PartCatalougue() {
         setfrontSide(keys);
         // console.log(keys);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }, []);
   const toggleCollapse = (ele, i) => {
-    // debugger;
+    if (ele) {
+      setFullimage(true);
+    }
     console.log(ele, AllData[ele]);
-    // console.log("lll", AllData.includes(ele));
     setListData(AllData[ele]);
     setCollapseIndex(i);
   };
@@ -46,57 +51,104 @@ function PartCatalougue() {
   return (
     <>
       <Row>
-        <Col lg="3" md="3" sm="3" xs="12">
-          <div className="collapse-bordered accordion-icon-rotate collapse-border">
-            {frontSide?.map((ele, i) => {
-              return (
-                <>
-                  <Card
-                    style={{
-                      backgroundColor: `${
-                        CollapseIndex === i ? "#055761" : ""
-                      }`,
-                      color: `${CollapseIndex === i ? "white" : ""}`,
-                    }}
-                    className="collapse-border-item"
-                    key={i}
-                    onClick={() => toggleCollapse(ele, i)}
-                  >
-                    <CardHeader className="cardheadercustme">
-                      <CardTitle className={`lead collapse-title `}>
-                        <div className="">
-                          <Row>
-                            <Col>
-                              <div className="arrowdowandup">
-                                <div className="d-flex">
-                                  <span>{ele.substring(0, 15)}</span>
-                                  {CollapseIndex === i ? (
-                                    <>
-                                      <span className="ml-2">
-                                        <AiFillDownCircle className="aiarrow " />
-                                      </span>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <span className="ml-2">
-                                        <AiFillUpCircle className="aiarrow" />
-                                      </span>
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-                            </Col>
-                          </Row>
-                        </div>
-                      </CardTitle>
-                    </CardHeader>
-                  </Card>
-                </>
-              );
-            })}
-          </div>
+        <Col>
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <a href="#">Home</a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+              <a href="#">Library</a>
+            </BreadcrumbItem>
+            <BreadcrumbItem active>Product</BreadcrumbItem>
+          </Breadcrumb>
         </Col>
-        <Col lg="5" md="5" sm="5" xs="12">
+      </Row>
+
+      <Row>
+        {!Fullimage && (
+          <>
+            <Col lg="3" md="3" sm="3" xs="12">
+              <div className="collapse-bordered collapse-border">
+                {frontSide?.map((ele, i) => {
+                  return (
+                    <>
+                      <Card
+                        style={{
+                          backgroundColor: `${
+                            CollapseIndex === i ? "#055761" : ""
+                          }`,
+                          color: `${CollapseIndex === i ? "white" : ""}`,
+                        }}
+                        className="collapse-border-item"
+                        key={i}
+                        onClick={() => toggleCollapse(ele, i)}
+                      >
+                        <CardHeader className="cardheadercustme">
+                          <CardTitle className={`lead collapse-title `}>
+                            <div className="">
+                              <Row>
+                                <Col>
+                                  <div className="arrowdowandup">
+                                    <div className="d-flex">
+                                      <span
+                                        style={{
+                                          backgroundColor: `${
+                                            CollapseIndex === i ? "#055761" : ""
+                                          }`,
+                                          color: `${
+                                            CollapseIndex === i ? "white" : ""
+                                          }`,
+                                        }}
+                                      >
+                                        {ele.substring(0, 15)}
+                                      </span>
+                                      {CollapseIndex === i ? (
+                                        <>
+                                          <span className="ml-2">
+                                            <AiFillDownCircle className="aiarrow " />
+                                          </span>
+                                        </>
+                                      ) : (
+                                        <>
+                                          <span className="ml-2">
+                                            <AiFillUpCircle className="aiarrow" />
+                                          </span>
+                                        </>
+                                      )}
+                                    </div>
+                                  </div>
+                                </Col>
+                              </Row>
+                            </div>
+                          </CardTitle>
+                        </CardHeader>
+                      </Card>
+                    </>
+                  );
+                })}
+              </div>
+            </Col>
+          </>
+        )}
+        <Col
+          lg={Fullimage ? "8" : "5"}
+          md={Fullimage ? "8" : "5"}
+          sm={Fullimage ? "8" : "5"}
+          xs="12"
+        >
+          <div className="d-flex justify-content-start">
+            {Fullimage ? (
+              <BsFillArrowRightSquareFill
+                style={{ cursor: "pointer" }}
+                onClick={() => setFullimage(false)}
+                size="25px"
+                fill="#055761"
+                className=""
+              />
+            ) : (
+              ""
+            )}
+          </div>
           {ListData && ListData ? (
             <>
               <Imagemagnify imageSrc={ListData[0]?.Part_Image?.text} />
