@@ -7,7 +7,7 @@
 
 .zoom-controls {
   position: absolute;
-  top: 10px;
+  top: -44px;
   right: 10px;
   z-index: 2;
 }
@@ -25,7 +25,6 @@ img {
 
 .tableheadingmy {
   overflow-x: scroll;
- 
 }
 
 .cardheadercustme.card-header {

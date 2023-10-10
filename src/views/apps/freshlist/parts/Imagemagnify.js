@@ -1,38 +1,6 @@
-// import React, { useState } from "react";
-// import "./Magnify.css"; // Create a CSS file for styling
-
-// const MagnifyImage = ({ imageSrc }) => {
-//   const [scale, setScale] = useState(1);
-
-//   const handleZoomIn = () => {
-//     setScale(scale + 0.1); // Increase the scale factor
-//   };
-
-//   const handleZoomOut = () => {
-//     if (scale > 0.2) {
-//       setScale(scale - 0.1); // Decrease the scale factor, but ensure it doesn't go below 0.2
-//     }
-//   };
-
-//   return (
-//     <div className="magnify-image">
-//       <div className="zoom-controls">
-//         <button onClick={handleZoomIn}>+</button>
-//         <button onClick={handleZoomOut}>-</button>
-//       </div>
-//       <img
-//         src={imageSrc}
-//         alt="Image"
-//         style={{ transform: `scale(${scale})` }}
-//       />
-//     </div>
-//   );
-// };
-
-// export default MagnifyImage;
-
 import React, { useState, useEffect } from "react";
 import "./Magnify.css"; // Create a CSS file for styling
+import { Button } from "reactstrap";
 
 const ImageZoom = ({ imageSrc }) => {
   const [scale, setScale] = useState(1);
@@ -84,22 +52,22 @@ const ImageZoom = ({ imageSrc }) => {
     if (direction === "up") {
       setPosition((prevPosition) => ({
         ...prevPosition,
-        y: prevPosition.y - 10,
+        y: prevPosition.y - 15,
       }));
     } else if (direction === "down") {
       setPosition((prevPosition) => ({
         ...prevPosition,
-        y: prevPosition.y + 10,
+        y: prevPosition.y + 15,
       }));
     } else if (direction === "left") {
       setPosition((prevPosition) => ({
         ...prevPosition,
-        x: prevPosition.x - 10,
+        x: prevPosition.x - 15,
       }));
     } else if (direction === "right") {
       setPosition((prevPosition) => ({
         ...prevPosition,
-        x: prevPosition.x + 10,
+        x: prevPosition.x + 15,
       }));
     }
   };
@@ -124,12 +92,55 @@ const ImageZoom = ({ imageSrc }) => {
   return (
     <div className="image-zoom-container">
       <div className="zoom-controls">
-        <button onClick={handleZoomIn}>+</button>
-        <button onClick={handleZoomOut}>-</button>
-        <button onClick={() => handleMove("up")}>&uarr;</button>
-        <button onClick={() => handleMove("down")}>&darr;</button>
-        <button onClick={() => handleMove("left")}>&larr;</button>
-        <button onClick={() => handleMove("right")}>&rarr;</button>
+        <Button size="sm" onClick={handleZoomIn} color="primary" outline>
+          +
+        </Button>
+        <Button size="sm" onClick={handleZoomOut} color="primary" outline>
+          -
+        </Button>
+        <Button
+          size="sm"
+          onClick={() => handleMove("up")}
+          color="primary"
+          outline
+        >
+          &uarr;
+        </Button>
+        <Button
+          size="sm"
+          onClick={() => handleMove("down")}
+          color="primary"
+          outline
+        >
+          &darr;
+        </Button>
+        <Button
+          size="sm"
+          onClick={() => handleMove("left")}
+          color="primary"
+          outline
+        >
+          &larr;
+        </Button>
+        <Button
+          size="sm"
+          onClick={() => handleMove("right")}
+          color="primary"
+          outline
+        >
+          &rarr;
+        </Button>
+        <Button
+          size="sm"
+          onClick={() => {
+            setScale(1);
+            setPosition({ x: 5, y: 0 });
+          }}
+          color="primary"
+          outline
+        >
+          Reset
+        </Button>
       </div>
       <div className="image-zoom">
         <img
