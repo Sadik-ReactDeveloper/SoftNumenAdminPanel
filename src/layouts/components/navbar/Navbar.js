@@ -11,7 +11,7 @@ import NavbarBookmarks from "./NavbarBookmarks";
 import NavbarUser from "./NavbarUser";
 import userImg from "../../../assets/img/portrait/small/avatar-s-11.jpg";
 
-const PhoneNo = (props) => {
+const PhoneNo = props => {
   console.log(props);
   let phone_no = "";
   if (props.userdata !== undefined) {
@@ -30,7 +30,7 @@ const PhoneNo = (props) => {
 
   return phone_no;
 };
-const ThemeNavbar = (props) => {
+const ThemeNavbar = props => {
   const { user } = useAuth0();
   const colorsArr = ["primary", "danger", "success", "info", "warning", "dark"];
   const navbarTypes = ["floating", "static", "sticky", "hidden"];
@@ -121,7 +121,7 @@ const ThemeNavbar = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     user: state.auth,
   };
