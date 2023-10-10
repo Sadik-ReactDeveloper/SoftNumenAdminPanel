@@ -38,6 +38,9 @@ class Login extends React.Component {
     this.state = {
       email: "",
       Otp: "",
+      emailotp: "",
+      whatsappotp: "",
+      smsotp: "",
       OtpScreen: false,
       UserCredential: {},
       password: "",
@@ -108,17 +111,23 @@ class Login extends React.Component {
     // console.log(data);
     await UserLogin(data)
       .then((res) => {
-        console.log(res?.user?.gmail);
-        console.log(res?.user?.whatsapp);
-        console.log(res?.user?.sms);
         debugger;
-        this.setState({ UserCredential: res?.user });
-        if (res?.user?.gmail || res?.user?.whatsapp || res?.user?.sms) {
-          console.log("object");
-        }
-        if (res?.status) {
-          swal("Success", "OTP sent to Your Register mail id");
-          // this.setState({ OtpScreen: true });
+        if (
+          JSON.parse(res?.user?.gmail) ||
+          JSON.parse(res?.user?.whatsapp) ||
+          JSON.parse(res?.user?.sms)
+        ) {
+          this.setState({ UserCredential: res?.user });
+
+          console.log("gmail", JSON.parse(res?.user?.gmail));
+          console.log("whatsapp", JSON.parse(res?.user?.whatsapp));
+          console.log("sms", JSON.parse(res?.user?.sms));
+          if (res?.status) {
+            swal("Success", "OTP sent");
+            this.setState({ OtpScreen: true });
+          }
+        } else {
+          this.props.history.push("/dashboard");
         }
       })
       .catch((err) => {
@@ -276,11 +285,46 @@ class Login extends React.Component {
                               </p>
                               <Form onSubmit={this.loginOTPHandler}>
                                 <FormGroup className="otpscreeen d-flex justify-content-center">
+                                  <label>Email OTP</label>
                                   <OtpInput
                                     containerStyle="true inputdata"
                                     inputStyle="true inputdataone"
                                     className="otpinputtype mb-2"
                                     value={this.state.Otp}
+                                    name="emailotp"
+                                    onChange={this.handleChangeOTP}
+                                    numInputs={6}
+                                    renderSeparator={<span>-</span>}
+                                    renderInput={(props) => (
+                                      <input className="inputs" {...props} />
+                                    )}
+                                  />
+                                </FormGroup>
+                                <FormGroup className="otpscreeen d-flex justify-content-center">
+                                  <label>whatsapp OTP</label>
+
+                                  <OtpInput
+                                    containerStyle="true inputdata"
+                                    inputStyle="true inputdataone"
+                                    className="otpinputtype mb-2"
+                                    value={this.state.whatsappotp}
+                                    name="emailotp"
+                                    onChange={this.handleChangeOTP}
+                                    numInputs={6}
+                                    renderSeparator={<span>-</span>}
+                                    renderInput={(props) => (
+                                      <input className="inputs" {...props} />
+                                    )}
+                                  />
+                                </FormGroup>
+                                <FormGroup className="otpscreeen d-flex justify-content-center">
+                                  <label>SMS OTP</label>
+
+                                  <OtpInput
+                                    containerStyle="true inputdata"
+                                    inputStyle="true inputdataone"
+                                    className="otpinputtype mb-2"
+                                    value={this.state.smsotp}
                                     name="emailotp"
                                     onChange={this.handleChangeOTP}
                                     numInputs={6}
