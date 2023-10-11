@@ -45,6 +45,7 @@ import {
   CreateAccountView,
   DeleteAccount,
   OrderPartsList,
+  SparesPartsView,
 } from "../../../../../ApiEndPoint/ApiCalling";
 import {
   BsCloudDownloadFill,
@@ -66,7 +67,7 @@ class SpareParts extends React.Component {
       Arrindex: "",
       rowData: [],
       setMySelectedarr: [],
-      paginationPageSize: 20,
+      paginationPageSize: 5,
       currenPageSize: "",
       getPageSize: "",
       columnDefs: [],
@@ -102,23 +103,26 @@ class SpareParts extends React.Component {
     let headings;
     let maxKeys = 0;
     let elementWithMaxKeys = null;
-    SparesPartsList()
-      .then((resp) => {
-        console.log(resp?.FrontPartDetail);
+    await SparesPartsView()
+      .then((res) => {
+        // console.log(res?.SparePart);
 
-        // Iterate through the array
-        for (const element of resp?.FrontPartDetail) {
+        for (const element of res?.SparePart) {
           const numKeys = Object.keys(element).length; // Get the number of keys in the current element
-
-          // Check if the current element has more keys than the previous maximum
           if (numKeys > maxKeys) {
             maxKeys = numKeys; // Update the maximum number of keys
             elementWithMaxKeys = element; // Update the element with maximum keys
           }
         }
-        // console.log(elementWithMaxKeys);
         let findheading = Object.keys(elementWithMaxKeys);
-
+        let index = findheading.indexOf("_id");
+        if (index > -1) {
+          findheading.splice(index, 1);
+        }
+        let index1 = findheading.indexOf("__v");
+        if (index1 > -1) {
+          findheading.splice(index1, 1);
+        }
         headings = findheading?.map((ele) => {
           return {
             headerName: ele,
@@ -127,7 +131,7 @@ class SpareParts extends React.Component {
             sortable: true,
           };
         });
-        console.log(headings);
+        // console.log(headings);
         let Product = [
           {
             headerName: "Actions",
@@ -182,113 +186,7 @@ class SpareParts extends React.Component {
         ];
         this.setState({ columnDefs: Product });
         this.setState({ AllcolumnDefs: Product });
-        this.setState({ rowData: resp?.FrontPartDetail });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    // Use the map function to iterate through the array
-
-    await CreateAccountView()
-      .then((res) => {
-        var mydropdownArray = [];
-        var adddropdown = [];
-        const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        console.log(JSON.parse(jsonData));
-        // const checkboxinput = JSON.parse(
-        //   jsonData
-        // ).CreateAccount?.CheckBox?.input?.map(ele => {
-        //   return {
-        //     headerName: ele?.label?._text,
-        //     field: ele?.name?._text,
-        //     filter: true,
-        //     sortable: true,
-        //     cellRendererFramework: params => {
-        //       // console.log(params.data);
-        //       return params.data?.Status === "Active" ? (
-        //         <div className="badge badge-pill badge-success">
-        //           {params.data.Status}
-        //         </div>
-        //       ) : params.data?.Status === "Deactive" ? (
-        //         <div className="badge badge-pill badge-warning">
-        //           {params.data.Status}
-        //         </div>
-        //       ) : (
-        //         "NA"
-        //       );
-        //     },
-        //   };
-        // });
-        // const inputs = JSON.parse(jsonData).CreateAccount?.input?.map(ele => {
-        //   return {
-        //     headerName: ele?.label._text,
-        //     field: ele?.name._text,
-        //     filter: true,
-        //     sortable: true,
-        //   };
-        // });
-        let Radioinput =
-          JSON.parse(jsonData).CreateAccount?.Radiobutton?.input[0]?.name
-            ?._text;
-        // const addRadio = [
-        //   {
-        //     headerName: Radioinput,
-        //     field: Radioinput,
-        //     filter: true,
-        //     sortable: true,
-        //     cellRendererFramework: params => {
-        //       return params.data?.Status === "Active" ? (
-        //         <div className="badge badge-pill badge-success">
-        //           {params.data.Status}
-        //         </div>
-        //       ) : params.data?.Status === "Deactive" ? (
-        //         <div className="badge badge-pill badge-warning">
-        //           {params.data.Status}
-        //         </div>
-        //       ) : (
-        //         "NA"
-        //       );
-        //     },
-        //   },
-        // ];
-
-        let dropdown = JSON.parse(jsonData).CreateAccount?.MyDropdown?.dropdown;
-        if (dropdown.length) {
-          // var mydropdownArray = dropdown?.map(ele => {
-          //   return {
-          //     headerName: ele?.label,
-          //     field: ele?.name,
-          //     filter: true,
-          //     sortable: true,
-          //   };
-          // });
-        } else {
-          // var adddropdown = [
-          //   {
-          //     headerName: dropdown?.label._text,
-          //     field: dropdown?.name._text,
-          //     filter: true,
-          //     sortable: true,
-          //   },
-          // ];
-        }
-
-        // let myHeadings = [
-        // ...adddropdown,
-        // ...addRadio,
-        // ...mydropdownArray,
-        // ];
-        // console.log(myHeadings);
-      })
-      .catch((err) => {
-        console.log(err);
-        swal("Error", "something went wrong try again");
-      });
-    await CreateAccountList()
-      .then((res) => {
-        let value = res?.CreateAccount;
-        this.setState({ rowData: value });
+        this.setState({ rowData: res?.SparePart });
       })
       .catch((err) => {
         console.log(err);
@@ -623,7 +521,7 @@ class SpareParts extends React.Component {
                     <Card>
                       <Row className="m-2">
                         <Col>
-                          <h1 className="float-left">SpareParts System</h1>
+                          <h1 className="float-left">Spare Parts List</h1>
                         </Col>
                         <Col>
                           <span className="mx-1">

@@ -29,6 +29,7 @@ import OtpInput from "react-otp-input";
 import swal from "sweetalert";
 import axiosConfig from "../../../../axiosConfig";
 import { UserLogin, UserOTPVerify } from "../../../../ApiEndPoint/ApiCalling";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 class Login extends React.Component {
   // static contextType = UserContext;
@@ -39,6 +40,7 @@ class Login extends React.Component {
       email: "",
       Otp: "",
       emailotp: "",
+      type: "password",
       whatsappotp: "",
       smsotp: "",
       OtpScreen: false,
@@ -54,12 +56,9 @@ class Login extends React.Component {
   loginOTPHandler = async (e) => {
     e.preventDefault();
     if (this.state.emailotp?.length == 6) {
-      debugger;
       let Opt = { otp: this.state.emailotp, username: this.state.email };
       await UserOTPVerify(Opt)
         .then((response) => {
-          // debugger;
-          // console.log(response);
           if (response?.status) {
             localStorage.setItem("userData", JSON.stringify(response?.user));
             setTimeout(() => {
@@ -110,20 +109,26 @@ class Login extends React.Component {
     // console.log(data);
     await UserLogin(data)
       .then((res) => {
+        debugger;
         if (
           JSON.parse(res?.user?.gmail) ||
           JSON.parse(res?.user?.whatsapp) ||
           JSON.parse(res?.user?.sms)
         ) {
           this.setState({ UserCredential: res?.user });
-
           if (res?.status) {
             swal("Success", "OTP sent");
             this.setState({ OtpScreen: true });
+          } else {
+            swal("Something Went Wrong");
           }
         } else {
+          debugger;
+
+          localStorage.setItem("userData", JSON.stringify(res?.user));
           this.props.history.push("/dashboard");
         }
+        debugger;
       })
       .catch((err) => {
         console.log(err.response);
@@ -426,13 +431,45 @@ class Login extends React.Component {
                                       Password
                                     </InputGroupAddon>
                                     <Input
-                                      type="password"
+                                      type={this.state.type}
                                       name="password"
                                       placeholder="Password"
                                       value={this.state.password}
                                       onChange={this.handlechange}
                                       required
                                     />
+                                    <span
+                                      className="eyeviewpassword"
+                                      style={{
+                                        position: "absolute",
+                                        cursor: "pointer",
+                                      }}
+                                    >
+                                      {this.state.type == "text" ? (
+                                        <>
+                                          {" "}
+                                          <AiFillEyeInvisible
+                                            onClick={() =>
+                                              this.setState({
+                                                type: "password",
+                                              })
+                                            }
+                                            size="25px"
+                                            color="blue"
+                                          />
+                                        </>
+                                      ) : (
+                                        <>
+                                          <AiFillEye
+                                            onClick={() =>
+                                              this.setState({ type: "text" })
+                                            }
+                                            size="25px"
+                                            color="blue"
+                                          />
+                                        </>
+                                      )}
+                                    </span>
                                   </InputGroup>
                                 </FormGroup>
 
