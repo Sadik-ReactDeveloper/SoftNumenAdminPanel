@@ -111,7 +111,6 @@ class Login extends React.Component {
     // console.log(data);
     await UserLogin(data)
       .then((res) => {
-        debugger;
         if (
           JSON.parse(res?.user?.gmail) ||
           JSON.parse(res?.user?.whatsapp) ||
@@ -119,9 +118,6 @@ class Login extends React.Component {
         ) {
           this.setState({ UserCredential: res?.user });
 
-          console.log("gmail", JSON.parse(res?.user?.gmail));
-          console.log("whatsapp", JSON.parse(res?.user?.whatsapp));
-          console.log("sms", JSON.parse(res?.user?.sms));
           if (res?.status) {
             swal("Success", "OTP sent");
             this.setState({ OtpScreen: true });
@@ -208,12 +204,13 @@ class Login extends React.Component {
         console.log(err);
       });
   };
-  handleChangeOTP = (otp) => {
-    // console.log(otp);
-    this.setState({ Otp: otp });
-  };
+  // handleChangeOTP = (otp) => {
+  //   // console.log(otp);
+  //   this.setState({ emailotp: otp });
+  // };
 
   render() {
+    const { UserCredential } = this.state;
     return (
       <Container>
         <Row className="m-0 justify-content-center">
@@ -273,67 +270,80 @@ class Login extends React.Component {
                         <>
                           {this.state.OtpScreen && this.state.OtpScreen ? (
                             <>
-                              <CardHeader className="pb-1">
+                              <CardHeader className="">
                                 <CardTitle>
                                   <h4 className="mb-0">
                                     <strong>Login</strong>
                                   </h4>
                                 </CardTitle>
                               </CardHeader>
-                              <p className="px-2 auth-title mb-2">
-                                Welcome , Enter Email OTP to Login your Account.
+                              <p className="px-2 auth-title">
+                                Welcome , Enter OTP to Login your Account.
                               </p>
                               <Form onSubmit={this.loginOTPHandler}>
-                                <FormGroup className="otpscreeen d-flex justify-content-center">
-                                  <label>Email OTP</label>
-                                  <OtpInput
-                                    containerStyle="true inputdata"
-                                    inputStyle="true inputdataone"
-                                    className="otpinputtype mb-2"
-                                    value={this.state.Otp}
-                                    name="emailotp"
-                                    onChange={this.handleChangeOTP}
-                                    numInputs={6}
-                                    renderSeparator={<span>-</span>}
-                                    renderInput={(props) => (
-                                      <input className="inputs" {...props} />
-                                    )}
-                                  />
-                                </FormGroup>
-                                <FormGroup className="otpscreeen d-flex justify-content-center">
-                                  <label>whatsapp OTP</label>
-
-                                  <OtpInput
-                                    containerStyle="true inputdata"
-                                    inputStyle="true inputdataone"
-                                    className="otpinputtype mb-2"
-                                    value={this.state.whatsappotp}
-                                    name="emailotp"
-                                    onChange={this.handleChangeOTP}
-                                    numInputs={6}
-                                    renderSeparator={<span>-</span>}
-                                    renderInput={(props) => (
-                                      <input className="inputs" {...props} />
-                                    )}
-                                  />
-                                </FormGroup>
-                                <FormGroup className="otpscreeen d-flex justify-content-center">
-                                  <label>SMS OTP</label>
-
-                                  <OtpInput
-                                    containerStyle="true inputdata"
-                                    inputStyle="true inputdataone"
-                                    className="otpinputtype mb-2"
-                                    value={this.state.smsotp}
-                                    name="emailotp"
-                                    onChange={this.handleChangeOTP}
-                                    numInputs={6}
-                                    renderSeparator={<span>-</span>}
-                                    renderInput={(props) => (
-                                      <input className="inputs" {...props} />
-                                    )}
-                                  />
-                                </FormGroup>
+                                <FormGroup className="otpscreeen d-flex justify-content-center"></FormGroup>
+                                {JSON.parse(UserCredential?.gmail) && (
+                                  <>
+                                    <p className="px-2 auth-title">Email OTP</p>
+                                    <OtpInput
+                                      containerStyle="true inputdata"
+                                      inputStyle="true inputdataone"
+                                      className="otpinputtype"
+                                      value={this.state.emailotp}
+                                      name="emailotp"
+                                      onChange={(otp) =>
+                                        this.setState({ emailotp: otp })
+                                      }
+                                      numInputs={6}
+                                      renderSeparator={<span>-</span>}
+                                      renderInput={(props) => (
+                                        <input className="inputs" {...props} />
+                                      )}
+                                    />
+                                  </>
+                                )}
+                                {JSON.parse(UserCredential?.whatsapp) && (
+                                  <>
+                                    <p className="px-2 auth-title">
+                                      Whatsapp OTP
+                                    </p>
+                                    <OtpInput
+                                      containerStyle="true inputdata"
+                                      inputStyle="true inputdataone"
+                                      className="otpinputtype"
+                                      value={this.state.whatsappotp}
+                                      name="whatsappotp"
+                                      onChange={(otp) =>
+                                        this.setState({ whatsappotp: otp })
+                                      }
+                                      numInputs={6}
+                                      renderSeparator={<span>-</span>}
+                                      renderInput={(props) => (
+                                        <input className="inputs" {...props} />
+                                      )}
+                                    />
+                                  </>
+                                )}
+                                {JSON.parse(UserCredential?.sms) && (
+                                  <>
+                                    <p className="px-2 auth-title">SMS OTP</p>
+                                    <OtpInput
+                                      containerStyle="true inputdata"
+                                      inputStyle="true inputdataone"
+                                      className="otpinputtype"
+                                      value={this.state.smsotp}
+                                      name="smsotp"
+                                      onChange={(otp) =>
+                                        this.setState({ smsotp: otp })
+                                      }
+                                      numInputs={6}
+                                      renderSeparator={<span>-</span>}
+                                      renderInput={(props) => (
+                                        <input className="inputs" {...props} />
+                                      )}
+                                    />
+                                  </>
+                                )}
 
                                 <div className="d-flex justify-content-center">
                                   {/* <Button.Ripple
