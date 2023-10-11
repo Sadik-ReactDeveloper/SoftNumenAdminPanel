@@ -29,6 +29,10 @@ import {
   Login_User,
   Login_OTP,
   Part_CatalogueView,
+  AddSupplierView,
+  createWikiView,
+  createQuoteView,
+  createWarehouseView,
   Spare_PartsView,
   Orders_View,
   CampaignList_View,
@@ -44,173 +48,171 @@ dotenv.config();
 // console.log(`API Key: ${apiKey}`);
 // console.log(`Secret Key: ${secretKey}`);
 
-export const UserLogin = async (data) => {
-  let response = await axiosConfig
-    .post(Login_User, data)
-    .then((res) => res.data);
+export const UserLogin = async data => {
+  let response = await axiosConfig.post(Login_User, data).then(res => res.data);
   return response;
 };
-export const UserOTPVerify = async (data) => {
-  let response = await axiosConfig
-    .post(Login_OTP, data)
-    .then((res) => res.data);
+export const UserOTPVerify = async data => {
+  let response = await axiosConfig.post(Login_OTP, data).then(res => res.data);
   return response;
 };
 export const CreateRole = async () => {
   let response = await axiosConfig
     .post(`/admin/getProduct`)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
 export const CreateAccountView = async () => {
   let response = await axiosConfig
     .get(`${Create_Account_xmlView}`)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const CreateAccountSave = async (data) => {
+export const CreateAccountSave = async data => {
   let response = await axiosConfig
     .post(`${Create_Account_save}`, data)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const DeleteAccount = async (id) => {
+// export const DeleteAccount = async id => {
+//   console.log(id);
+export const DeleteAccount = async id => {
   let response = await axiosConfig
     .get(`${Delete_Account_List}` + id)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const CreateAccountList = async (data) => {
+export const CreateAccountList = async data => {
   let response = await axiosConfig
     .get(`${Create_Account_List}`, data)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
 export const CreateAccountUpdate = async (id, formdata) => {
   console.log(id, formdata);
   let response = await axiosConfig
     .post(`${Create_Account_Update}` + id, formdata)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
 
 export const CreateParts = async () => {
-  let response = await axiosConfig
-    .get(`${Create_Parts}`)
-    .then((res) => res.data);
+  let response = await axiosConfig.get(`${Create_Parts}`).then(res => res.data);
   return response;
 };
 export const Customer_Registration = async () => {
   let response = await axiosConfig
     .get(`${customerRegistration}`)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
 
+// part
+// export const PartCatelougue = async formdata => {
 // part upload
-export const PartCatelougue = async (formdata) => {
+export const PartCatelougue = async formdata => {
   console.log(formdata);
   let response = await axiosConfig
     .post(`${Part_catelougue}`, formdata)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const SpareParts = async (formdata) => {
+export const SpareParts = async formdata => {
   console.log(formdata);
   let response = await axiosConfig
     .post(`${SpartPart_Upload}`, formdata)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const ProdctsUpload = async (formdata) => {
+export const ProdctsUpload = async formdata => {
   console.log(formdata);
   let response = await axiosConfig
     .post(`${Products_Upload}`, formdata)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const Orders = async (formdata) => {
+export const Orders = async formdata => {
   console.log(formdata);
   let response = await axiosConfig
     .post(`${orders_Upload}`, formdata)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const InspectionUpload = async (formdata) => {
+export const InspectionUpload = async formdata => {
   console.log(formdata);
   let response = await axiosConfig
     .post(`${Inspection_Upload}`, formdata)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const InvoiceUpload = async (formdata) => {
+export const InvoiceUpload = async formdata => {
   console.log(formdata);
   let response = await axiosConfig
     .post(`${Invoice_Upload}`, formdata)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const SupporttUpload = async (formdata) => {
+export const SupporttUpload = async formdata => {
   console.log(formdata);
   let response = await axiosConfig
     .post(`${Supports_Upload}`, formdata)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const ServicingUpload = async (formdata) => {
+export const ServicingUpload = async formdata => {
   console.log(formdata);
   let response = await axiosConfig
     .post(`${Service_Upload}`, formdata)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const WareHouseUpload = async (formdata) => {
+export const WareHouseUpload = async formdata => {
   console.log(formdata);
   let response = await axiosConfig
     .post(`${Warehouse_Upload}`, formdata)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const DistributorUpload = async (formdata) => {
+export const DistributorUpload = async formdata => {
   console.log(formdata);
   let response = await axiosConfig
     .post(`${Distributor_Upload}`, formdata)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const DealerUpload = async (formdata) => {
+export const DealerUpload = async formdata => {
   console.log(formdata);
   let response = await axiosConfig
     .post(`${Dealer_Upload}`, formdata)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const SupplierUpload = async (formdata) => {
+export const SupplierUpload = async formdata => {
   console.log(formdata);
   let response = await axiosConfig
     .post(`${Supplier_Upload}`, formdata)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const ServiceCenterUpload = async (formdata) => {
+export const ServiceCenterUpload = async formdata => {
   console.log(formdata);
   let response = await axiosConfig
     .post(`${ServiceCenter_Upload}`, formdata)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const CustomerDataUpload = async (formdata) => {
+export const CustomerDataUpload = async formdata => {
   console.log(formdata);
   let response = await axiosConfig
     .post(`${Customer_Upload}`, formdata)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
-export const CampaignUpload = async (formdata) => {
+export const CampaignUpload = async formdata => {
   console.log(formdata);
   let response = await axiosConfig
     .post(`${Campaign_Upload}`, formdata)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
 
@@ -219,44 +221,62 @@ export const CampaignUpload = async (formdata) => {
 export const PartCatalogueView = async () => {
   let response = await axiosConfig
     .get(`${Part_CatalogueView}`)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
 
 export const SparesPartsList = async () => {
-  let response = await axiosConfig
-    .get(`${Spare_Parts}`)
-    .then((res) => res.data);
+  let response = await axiosConfig.get(`${Spare_Parts}`).then(res => res.data);
   return response;
 };
 export const SparesPartsView = async () => {
   let response = await axiosConfig
     .get(`${Spare_PartsView}`)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
 export const OrdersViewList = async () => {
-  let response = await axiosConfig
-    .get(`${Orders_View}`)
-    .then((res) => res.data);
+  let response = await axiosConfig.get(`${Orders_View}`).then(res => res.data);
   return response;
 };
 export const CampaignListView = async () => {
   let response = await axiosConfig
     .get(`${CampaignList_View}`)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
 
 export const PartsCatalogueList = async () => {
   let response = await axiosConfig
     .get(`${Parts_Catalogue}`)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
 export const OrderPartsList = async () => {
+  let response = await axiosConfig.get(`${Order_Parts}`).then(res => res.data);
+  return response;
+};
+export const AddSupplierViewData = async () => {
   let response = await axiosConfig
-    .get(`${Order_Parts}`)
-    .then((res) => res.data);
+    .get(`${AddSupplierView}`)
+    .then(res => res.data);
+  return response;
+};
+export const createWikiViewData = async () => {
+  let response = await axiosConfig
+    .get(`${createWikiView}`)
+    .then(res => res.data);
+  return response;
+};
+export const createQuoteViewData = async () => {
+  let response = await axiosConfig
+    .get(`${createQuoteView}`)
+    .then(res => res.data);
+  return response;
+};
+export const createWarehouseViewData = async () => {
+  let response = await axiosConfig
+    .get(`${createWarehouseView}`)
+    .then(res => res.data);
   return response;
 };

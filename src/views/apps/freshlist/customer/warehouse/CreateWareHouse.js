@@ -23,6 +23,7 @@ import "../../../../../../src/layouts/assets/scss/pages/users.scss";
 
 import {
   CreateAccountSave,
+  createWarehouseViewData,
   CreateAccountView,
 } from "../../../../../ApiEndPoint/ApiCalling";
 import { BiEnvelope } from "react-icons/bi";
@@ -94,12 +95,12 @@ const CreateWareHouse = () => {
     console.log(formData);
   }, [formData]);
   useEffect(() => {
-    CreateAccountView()
-      .then((res) => {
+    createWarehouseViewData()
+      .then(res => {
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
         console.log(JSON.parse(jsonData));
         let origionalpermission =
-          JSON.parse(jsonData)?.CreateAccount?.input[14].permissions?.role;
+          JSON.parse(jsonData)?.CreateWareHouse?.input[14].permissions?.role;
         // const rolePermissions = origionalpermission?.find(
         //   (role) => role._attributes?.name === "SUPERADMIN"
         // );
@@ -113,25 +114,25 @@ const CreateWareHouse = () => {
         setCreatAccountView(JSON.parse(jsonData));
         setdropdownValue(JSON.parse(jsonData));
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }, []);
 
-  const submitHandler = (e) => {
+  const submitHandler = e => {
     e.preventDefault();
     if (error) {
       swal("Error occured while Entering Details");
     } else {
       CreateAccountSave(formData)
-        .then((res) => {
+        .then(res => {
           if (res.status) {
             setFormData({});
             window.location.reload();
             swal("Acccont Created Successfully");
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
     }
@@ -154,27 +155,27 @@ const CreateWareHouse = () => {
                   <FormGroup>
                     <Label>
                       {
-                        dropdownValue.CreateAccount?.MyDropdown?.dropdown?.label
-                          ?._text
+                        dropdownValue.CreateWareHouse?.MyDropdown?.dropdown
+                          ?.label?._text
                       }
                     </Label>
                     <CustomInput
                       required
                       type="select"
                       name={
-                        dropdownValue.CreateAccount?.MyDropdown?.dropdown?.name
-                          ?._text
+                        dropdownValue.CreateWareHouse?.MyDropdown?.dropdown
+                          ?.name?._text
                       }
                       value={
                         formData[
-                          dropdownValue.CreateAccount?.MyDropdown?.dropdown
+                          dropdownValue.CreateWareHouse?.MyDropdown?.dropdown
                             ?.name?._text
                         ]
                       }
                       onChange={handleInputChange}
                     >
                       <option value="">--Select Role--</option>
-                      {dropdownValue?.CreateAccount?.MyDropdown?.dropdown?.option.map(
+                      {dropdownValue?.CreateWareHouse?.MyDropdown?.dropdown?.option.map(
                         (option, index) => (
                           <option
                             key={index}
@@ -189,12 +190,12 @@ const CreateWareHouse = () => {
                 </Col>
 
                 {CreatAccountView &&
-                  CreatAccountView?.CreateAccount?.input?.map((ele, i) => {
+                  CreatAccountView?.CreateWareHouse?.input?.map((ele, i) => {
                     let View = "";
                     let Edit = "";
                     if (ele?.role) {
                       let roles = ele?.role?.find(
-                        (role) => role._attributes?.name === "WARRANTY APPROVER"
+                        role => role._attributes?.name === "WARRANTY APPROVER"
                       );
 
                       View = roles?.permissions?._text.includes("View");
@@ -214,7 +215,7 @@ const CreateWareHouse = () => {
                                 <PhoneInput
                                   inputClass="myphoneinput"
                                   country={"us"}
-                                  onKeyDown={(e) => {
+                                  onKeyDown={e => {
                                     if (
                                       ele?.type?._attributes?.type == "number"
                                     ) {
@@ -225,7 +226,7 @@ const CreateWareHouse = () => {
                                   countryCodeEditable={false}
                                   name={ele?.name?._text}
                                   value={formData[ele?.name?._text]}
-                                  onChange={(phone) => {
+                                  onChange={phone => {
                                     setFormData({
                                       ...formData,
                                       [ele?.name?._text]: phone,
@@ -308,14 +309,14 @@ const CreateWareHouse = () => {
                                 inputClass="countryclass"
                                 className="countryclassnw"
                                 options={Country.getAllCountries()}
-                                getOptionLabel={(options) => {
+                                getOptionLabel={options => {
                                   return options["name"];
                                 }}
-                                getOptionValue={(options) => {
+                                getOptionValue={options => {
                                   return options["name"];
                                 }}
                                 value={formData.country}
-                                onChange={(country) => {
+                                onChange={country => {
                                   setFormData({
                                     ...formData,
                                     ["country"]: country,
@@ -345,14 +346,14 @@ const CreateWareHouse = () => {
                                 options={State?.getStatesOfCountry(
                                   formData?.country?.isoCode
                                 )}
-                                getOptionLabel={(options) => {
+                                getOptionLabel={options => {
                                   return options["name"];
                                 }}
-                                getOptionValue={(options) => {
+                                getOptionValue={options => {
                                   return options["name"];
                                 }}
                                 value={formData.State}
-                                onChange={(State) => {
+                                onChange={State => {
                                   setFormData({
                                     ...formData,
                                     ["State"]: State,
@@ -383,14 +384,14 @@ const CreateWareHouse = () => {
                                   formData?.State?.countryCode,
                                   formData?.State?.isoCode
                                 )}
-                                getOptionLabel={(options) => {
+                                getOptionLabel={options => {
                                   return options["name"];
                                 }}
-                                getOptionValue={(options) => {
+                                getOptionValue={options => {
                                   return options["name"];
                                 }}
                                 value={formData.City}
-                                onChange={(City) => {
+                                onChange={City => {
                                   setFormData({
                                     ...formData,
                                     ["City"]: City,
@@ -421,7 +422,7 @@ const CreateWareHouse = () => {
                               <Label>{ele?.label?._text}</Label>
 
                               <Input
-                                onKeyDown={(e) => {
+                                onKeyDown={e => {
                                   if (
                                     ele?.type?._attributes?.type == "number"
                                   ) {
@@ -433,7 +434,7 @@ const CreateWareHouse = () => {
                                 placeholder={ele?.placeholder?._text}
                                 name={ele?.name?._text}
                                 value={formData[ele?.name?._text]}
-                                onChange={(e) =>
+                                onChange={e =>
                                   handleInputChange(
                                     e,
                                     ele?.type?._attributes?.type,
@@ -512,7 +513,7 @@ const CreateWareHouse = () => {
                   <Label className="py-1">Notification</Label>
                   <div>
                     {CreatAccountView &&
-                      CreatAccountView?.CreateAccount?.CheckBox?.input?.map(
+                      CreatAccountView?.CreateWareHouse?.CheckBox?.input?.map(
                         (ele, i) => {
                           return (
                             <>
@@ -521,7 +522,7 @@ const CreateWareHouse = () => {
                                   style={{ marginRight: "3px" }}
                                   type={ele?.type?._attributes?.type}
                                   name={ele?.name?._text}
-                                  onChange={(e) =>
+                                  onChange={e =>
                                     handleInputChange(e, "checkbox")
                                   }
                                 />{" "}
@@ -589,7 +590,7 @@ const CreateWareHouse = () => {
                   </Label>
                   <div className="form-label-group mx-1">
                     {CreatAccountView &&
-                      CreatAccountView?.CreateAccount?.Radiobutton?.input?.map(
+                      CreatAccountView?.CreateWareHouse?.Radiobutton?.input?.map(
                         (ele, i) => {
                           return (
                             <FormGroup key={i}>

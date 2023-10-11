@@ -32,6 +32,11 @@ export const CampaignList_View = "/campaign/view-campaign";
 export const Parts_Catalogue = "/part-catalogue/get-partscatalogue-parts";
 export const Order_Parts = "/part-catalogue/get-orders-parts";
 
+export const AddSupplierView = "/create-supplier/createSupplier";
+export const createWikiView = "/create-wiki/createWiki";
+export const createQuoteView = "/create-quote/create-quote";
+export const createWarehouseView = "/create-warehouse/create-warehouse";
+
 // login Api End  Points
 export const Login_User = "/create-account/signin";
 export const Login_OTP = "/create-account/verify-otp";

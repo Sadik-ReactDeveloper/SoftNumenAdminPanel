@@ -40,9 +40,6 @@ const CreateCampaign = () => {
   const [permissions, setpermissions] = useState({});
 
   const createUserXmlView = useContext(UserContext);
-  // const [selectedCountry, setSelectedCountry] = useState(null);
-  // const [selectedState, setSelectedState] = useState(null);
-  // const [selectedCity, setSelectedCity] = useState(null);
 
   const handleInputChange = (e, type, i) => {
     const { name, value, checked } = e.target;
@@ -95,7 +92,7 @@ const CreateCampaign = () => {
   }, [formData]);
   useEffect(() => {
     CreateAccountView()
-      .then((res) => {
+      .then(res => {
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
         console.log(JSON.parse(jsonData));
         let origionalpermission =
@@ -113,25 +110,25 @@ const CreateCampaign = () => {
         setCreatAccountView(JSON.parse(jsonData));
         setdropdownValue(JSON.parse(jsonData));
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }, []);
 
-  const submitHandler = (e) => {
+  const submitHandler = e => {
     e.preventDefault();
     if (error) {
       swal("Error occured while Entering Details");
     } else {
       CreateAccountSave(formData)
-        .then((res) => {
+        .then(res => {
           if (res.status) {
             setFormData({});
             window.location.reload();
             swal("Acccont Created Successfully");
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
     }
@@ -213,7 +210,7 @@ const CreateCampaign = () => {
                     let Edit = "";
                     if (ele?.role) {
                       let roles = ele?.role?.find(
-                        (role) => role._attributes?.name === "WARRANTY APPROVER"
+                        role => role._attributes?.name === "WARRANTY APPROVER"
                       );
 
                       View = roles?.permissions?._text.includes("View");
@@ -233,7 +230,7 @@ const CreateCampaign = () => {
                                 <PhoneInput
                                   inputClass="myphoneinput"
                                   country={"us"}
-                                  onKeyDown={(e) => {
+                                  onKeyDown={e => {
                                     if (
                                       ele?.type?._attributes?.type == "number"
                                     ) {
@@ -244,7 +241,7 @@ const CreateCampaign = () => {
                                   countryCodeEditable={false}
                                   name={ele?.name?._text}
                                   value={formData[ele?.name?._text]}
-                                  onChange={(phone) => {
+                                  onChange={phone => {
                                     setFormData({
                                       ...formData,
                                       [ele?.name?._text]: phone,
@@ -327,14 +324,14 @@ const CreateCampaign = () => {
                                 inputClass="countryclass"
                                 className="countryclassnw"
                                 options={Country.getAllCountries()}
-                                getOptionLabel={(options) => {
+                                getOptionLabel={options => {
                                   return options["name"];
                                 }}
-                                getOptionValue={(options) => {
+                                getOptionValue={options => {
                                   return options["name"];
                                 }}
                                 value={formData.country}
-                                onChange={(country) => {
+                                onChange={country => {
                                   setFormData({
                                     ...formData,
                                     ["country"]: country,
@@ -364,14 +361,14 @@ const CreateCampaign = () => {
                                 options={State?.getStatesOfCountry(
                                   formData?.country?.isoCode
                                 )}
-                                getOptionLabel={(options) => {
+                                getOptionLabel={options => {
                                   return options["name"];
                                 }}
-                                getOptionValue={(options) => {
+                                getOptionValue={options => {
                                   return options["name"];
                                 }}
                                 value={formData.State}
-                                onChange={(State) => {
+                                onChange={State => {
                                   setFormData({
                                     ...formData,
                                     ["State"]: State,
@@ -402,14 +399,14 @@ const CreateCampaign = () => {
                                   formData?.State?.countryCode,
                                   formData?.State?.isoCode
                                 )}
-                                getOptionLabel={(options) => {
+                                getOptionLabel={options => {
                                   return options["name"];
                                 }}
-                                getOptionValue={(options) => {
+                                getOptionValue={options => {
                                   return options["name"];
                                 }}
                                 value={formData.City}
-                                onChange={(City) => {
+                                onChange={City => {
                                   setFormData({
                                     ...formData,
                                     ["City"]: City,
@@ -440,7 +437,7 @@ const CreateCampaign = () => {
                               <Label>{ele?.label?._text}</Label>
 
                               <Input
-                                onKeyDown={(e) => {
+                                onKeyDown={e => {
                                   if (
                                     ele?.type?._attributes?.type == "number"
                                   ) {
@@ -452,7 +449,7 @@ const CreateCampaign = () => {
                                 placeholder={ele?.placeholder?._text}
                                 name={ele?.name?._text}
                                 value={formData[ele?.name?._text]}
-                                onChange={(e) =>
+                                onChange={e =>
                                   handleInputChange(
                                     e,
                                     ele?.type?._attributes?.type,
@@ -540,7 +537,7 @@ const CreateCampaign = () => {
                                   style={{ marginRight: "3px" }}
                                   type={ele?.type?._attributes?.type}
                                   name={ele?.name?._text}
-                                  onChange={(e) =>
+                                  onChange={e =>
                                     handleInputChange(e, "checkbox")
                                   }
                                 />{" "}

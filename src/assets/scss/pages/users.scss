@@ -81,7 +81,7 @@ div.ex1 {
   // width: 200px;
   overflow-y: scroll;
 }
-.mycustomtag:hover{
+.mycustomtag:hover {
   background-color: #1877f2;
   border-radius: "12px";
 }
@@ -100,13 +100,13 @@ input.mx-1 {
   width: 23px;
   height: 19px;
 }
-.arrowassign{
+.arrowassign {
   color: #055761;
 }
-.arrowassign:hover{
+.arrowassign:hover {
   color: green;
 }
-.dropdownmy{
+.dropdownmy {
   border: 1px dotted;
   border-radius: 5px;
   width: 117px;
@@ -114,7 +114,7 @@ input.mx-1 {
   top: 28px;
   // background-color: #f5f1f1;
 }
-.myactive:hover{
+.myactive:hover {
   color: rgb(255, 255, 255);
   background-color: blue;
 }
@@ -137,28 +137,27 @@ input.form-check-input {
 }
 
 [dir] .form-control {
-
-    outline: none;
-    box-sizing: border-box;
-    transition: .3s;
-    box-shadow: 2px 3px 8px #84CDBB;
-    border: 1px solid #d9d9d9
+  outline: none;
+  box-sizing: border-box;
+  transition: 0.3s;
+  box-shadow: 2px 3px 8px #84cdbb;
+  border: 1px solid #d9d9d9;
 }
 [dir] .form-control:hover {
-  box-shadow: 4px 3px 3px #84CDBB;
+  box-shadow: 4px 3px 3px #84cdbb;
   border: 1px solid #055761;
 }
 .css-yk16xz-control:hover {
   box-shadow: 4px 3px 3px #055761;
 }
 .css-yk16xz-control {
-  box-shadow: 4px 3px 3px #84CDBB;
+  box-shadow: 4px 3px 3px #84cdbb;
 }
 select.custom-select {
-  box-shadow: 4px 3px 3px #84CDBB;
+  box-shadow: 4px 3px 3px #84cdbb;
 }
 select.custom-select:hover {
-  box-shadow: 4px 3px 3px #84CDBB;
+  box-shadow: 4px 3px 3px #84cdbb;
 }
 
 .tabletr:hover {

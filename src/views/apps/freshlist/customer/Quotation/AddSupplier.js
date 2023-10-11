@@ -1,954 +1,630 @@
-import React, { useRef } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import xmlJs from "xml-js";
 import {
   Card,
   CardBody,
-  Input,
-  Row,
-  Modal,
   Col,
-  UncontrolledDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
+  Form,
+  Row,
+  Input,
+  Label,
   Button,
-  ModalHeader,
-  ModalBody,
+  FormGroup,
+  CustomInput,
 } from "reactstrap";
-// import ExcelReader from "../parts/ExcelReader";
-import { ContextLayout } from "../../../../../utility/context/Layout";
-import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/dist/styles/ag-grid.css";
-import EditAccount from "../../../freshlist/accounts/EditAccount";
-import ViewAccount from "../../../freshlist/accounts/ViewAccount";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
-import Logo from "../../../../../assets/img/profile/pages/logomain.png";
-import Papa from "papaparse";
-import { Eye, Trash2, ChevronDown, Edit, CloudLightning } from "react-feather";
-import { IoMdRemoveCircleOutline } from "react-icons/io";
-import { history } from "../../../../../history";
-import "../../../../../assets/scss/plugins/tables/_agGridStyleOverride.scss";
-import "../../../../../assets/scss/pages/users.scss";
-import Moment from "react-moment";
-import { Route } from "react-router-dom";
-import xmlJs from "xml-js";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import { Country, State, City } from "country-state-city";
+import Select from "react-select";
 
-import {
-  FaArrowAltCircleLeft,
-  FaArrowAltCircleRight,
-  FaFilter,
-} from "react-icons/fa";
-import "moment-timezone";
 import swal from "sweetalert";
+import "../../../../../assets/scss/pages/users.scss";
+import { BiEnvelope } from "react-icons/bi";
+import { FcPhoneAndroid } from "react-icons/fc";
+import { BsWhatsapp } from "react-icons/bs";
+import UserContext from "../../../../../context/Context";
 import {
-  CreateAccountList,
-  CreateAccountView,
-  DeleteAccount,
+  AddSupplierViewData,
+  CreateAccountSave,
 } from "../../../../../ApiEndPoint/ApiCalling";
-import {
-  BsCloudDownloadFill,
-  BsFillArrowDownSquareFill,
-  BsFillArrowUpSquareFill,
-} from "react-icons/bs";
-import * as XLSX from "xlsx";
 
-const SelectedCols = [];
+const AddSupplier = () => {
+  const [CreatAccountView, setCreatAccountView] = useState({});
+  const [formData, setFormData] = useState({});
+  const [dropdownValue, setdropdownValue] = useState({});
+  const [index, setindex] = useState("");
+  const [error, setError] = useState("");
+  const [permissions, setpermissions] = useState({});
+  const [Countries, setCountry] = useState({});
+  const [States, setState] = useState({});
+  const [Cities, setCities] = useState({});
 
-class ProductType extends React.Component {
-  constructor(props) {
-    super(props);
-    this.gridRef = React.createRef();
-    this.gridApi = null;
-    this.state = {
-      isOpen: false,
-      Arrindex: "",
-      rowData: [],
-      setMySelectedarr: [],
-      paginationPageSize: 20,
-      currenPageSize: "",
-      getPageSize: "",
-      columnDefs: [],
-      AllcolumnDefs: [],
-      SelectedcolumnDefs: [],
-      defaultColDef: {
-        sortable: true,
-        // editable: true,
-        resizable: true,
-        suppressMenu: true,
-      },
-    };
-  }
+  const createUserXmlView = useContext(UserContext);
+  // const [selectedCountry, setSelectedCountry] = useState(null);
+  // const [selectedState, setSelectedState] = useState(null);
+  // const [selectedCity, setSelectedCity] = useState(null);
 
-  toggleModal = () => {
-    this.setState((prevState) => ({
-      modal: !prevState.modal,
-    }));
-  };
-
-  handleChangeEdit = (data, types) => {
-    let type = types;
-    if (type == "readonly") {
-      this.setState({ ViewOneUserView: true });
-      this.setState({ ViewOneData: data });
-    } else {
-      this.setState({ EditOneUserView: true });
-      this.setState({ EditOneData: data });
-    }
-  };
-
-  async componentDidMount() {
-    await CreateAccountView()
-      .then((res) => {
-        var mydropdownArray = [];
-        var adddropdown = [];
-        const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        console.log(JSON.parse(jsonData));
-        const checkboxinput = JSON.parse(
-          jsonData
-        ).CreateAccount?.CheckBox?.input?.map((ele) => {
-          return {
-            headerName: ele?.label?._text,
-            field: ele?.name?._text,
-            filter: true,
-            sortable: true,
-            cellRendererFramework: (params) => {
-              console.log(params.data);
-              return params.data?.Status === "Active" ? (
-                <div className="badge badge-pill badge-success">
-                  {params.data.Status}
-                </div>
-              ) : params.data?.Status === "Deactive" ? (
-                <div className="badge badge-pill badge-warning">
-                  {params.data.Status}
-                </div>
-              ) : (
-                "NA"
-              );
-            },
-          };
+  const handleInputChange = (e, type, i) => {
+    const { name, value, checked } = e.target;
+    setindex(i);
+    if (type == "checkbox") {
+      if (checked) {
+        setFormData({
+          ...formData,
+          [name]: checked,
         });
-        const inputs = JSON.parse(jsonData).CreateAccount?.input?.map((ele) => {
-          return {
-            headerName: ele?.label._text,
-            field: ele?.name._text,
-            filter: true,
-            sortable: true,
-          };
+      } else {
+        setFormData({
+          ...formData,
+          [name]: checked,
         });
-        let Radioinput =
-          JSON.parse(jsonData).CreateAccount?.Radiobutton?.input[0]?.name
-            ?._text;
-        const addRadio = [
-          {
-            headerName: Radioinput,
-            field: Radioinput,
-            filter: true,
-            sortable: true,
-            cellRendererFramework: (params) => {
-              return params.data?.Status === "Active" ? (
-                <div className="badge badge-pill badge-success">
-                  {params.data.Status}
-                </div>
-              ) : params.data?.Status === "Deactive" ? (
-                <div className="badge badge-pill badge-warning">
-                  {params.data.Status}
-                </div>
-              ) : (
-                "NA"
-              );
-            },
-          },
-        ];
-
-        let dropdown = JSON.parse(jsonData).CreateAccount?.MyDropdown?.dropdown;
-        if (dropdown.length) {
-          var mydropdownArray = dropdown?.map((ele) => {
-            return {
-              headerName: ele?.label,
-              field: ele?.name,
-              filter: true,
-              sortable: true,
-            };
-          });
-        } else {
-          var adddropdown = [
-            {
-              headerName: dropdown?.label._text,
-              field: dropdown?.name._text,
-              filter: true,
-              sortable: true,
-            },
-          ];
-        }
-
-        let myHeadings = [
-          ...checkboxinput,
-          ...inputs,
-          ...adddropdown,
-          ...addRadio,
-          ...mydropdownArray,
-        ];
-        // console.log(myHeadings);
-        let Product = [
-          {
-            headerName: "Actions",
-            field: "sortorder",
-            field: "transactions",
-            width: 190,
-            cellRendererFramework: (params) => {
-              return (
-                <div className="actions cursor-pointer">
-                  <Route
-                    render={({ history }) => (
-                      <Eye
-                        className="mr-50"
-                        size="25px"
-                        color="green"
-                        onClick={() => {
-                          this.handleChangeEdit(params.data, "readonly");
-                        }}
-                      />
-                    )}
-                  />
-                  <Route
-                    render={({ history }) => (
-                      <Edit
-                        className="mr-50"
-                        size="25px"
-                        color="blue"
-                        onClick={() => {
-                          this.handleChangeEdit(params.data, "Editable");
-                        }}
-                      />
-                    )}
-                  />
-
-                  <Route
-                    render={() => (
-                      <Trash2
-                        className="mr-50"
-                        size="25px"
-                        color="red"
-                        onClick={() => {
-                          this.runthisfunction(params?.data?._id);
-                        }}
-                      />
-                    )}
-                  />
-                </div>
-              );
-            },
-          },
-          ...myHeadings,
-        ];
-        this.setState({ columnDefs: Product });
-        this.setState({ AllcolumnDefs: Product });
-      })
-      .catch((err) => {
-        console.log(err);
-        swal("Error", "something went wrong try again");
-      });
-    await CreateAccountList()
-      .then((res) => {
-        let value = res?.CreateAccount;
-        this.setState({ rowData: value });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-  toggleDropdown = () => {
-    this.setState((prevState) => ({ isOpen: !prevState.isOpen }));
-  };
-
-  runthisfunction(id) {
-    swal("Warning", "Sure You Want to Delete it", {
-      buttons: {
-        cancel: "cancel",
-        catch: { text: "Delete ", value: "delete" },
-      },
-    }).then((value) => {
-      switch (value) {
-        case "delete":
-          DeleteAccount(id)
-            .then((res) => {
-              let selectedData = this.gridApi.getSelectedRows();
-              this.gridApi.updateRowData({ remove: selectedData });
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-          break;
-        default:
       }
-    });
-  }
-
-  onGridReady = (params) => {
-    this.gridApi = params.api;
-    this.gridRef.current = params.api;
-    this.gridColumnApi = params.columnApi;
-
-    this.setState({
-      currenPageSize: this.gridApi.paginationGetCurrentPage() + 1,
-      getPageSize: this.gridApi.paginationGetPageSize(),
-      totalPages: this.gridApi.paginationGetTotalPages(),
-    });
-  };
-
-  updateSearchQuery = (val) => {
-    this.gridApi.setQuickFilter(val);
-  };
-
-  filterSize = (val) => {
-    if (this.gridApi) {
-      this.gridApi.paginationSetPageSize(Number(val));
-      this.setState({
-        currenPageSize: val,
-        getPageSize: val,
-      });
-    }
-  };
-  handleChangeHeader = (e, value, index) => {
-    let check = e.target.checked;
-    if (check) {
-      SelectedCols.push(value);
     } else {
-      const delindex = SelectedCols.findIndex(
-        (ele) => ele?.headerName === value?.headerName
-      );
-
-      SelectedCols?.splice(delindex, 1);
+      if (type == "number") {
+        if (/^\d{0,10}$/.test(value)) {
+          setFormData({
+            ...formData,
+            [name]: value,
+          });
+          setError("");
+        } else {
+          setError(
+            "Please enter a valid number with a maximum length of 10 digits"
+          );
+        }
+      } else {
+        if (value.length <= 10) {
+          setFormData({
+            ...formData,
+            [name]: value,
+          });
+          // console.log(value);
+          setError("");
+        } else {
+          setFormData({
+            ...formData,
+            [name]: value,
+          });
+          // setError("Input length exceeds the maximum of 10 characters");
+        }
+      }
     }
   };
-  parseCsv(csvData) {
-    return new Promise((resolve, reject) => {
-      Papa.parse(csvData, {
-        header: true,
-        skipEmptyLines: true,
-        complete: (result) => {
-          if (result.data && result.data.length > 0) {
-            resolve(result.data);
-          } else {
-            reject(new Error("No data found in the CSV"));
-          }
-        },
-        error: (error) => {
-          reject(error);
-        },
+  useEffect(() => {
+    // console.log(formData);
+  }, [formData]);
+  useEffect(() => {
+    AddSupplierViewData()
+      .then(res => {
+        const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
+        console.log(JSON.parse(jsonData).AddSupplier);
+        // let origionalpermission =
+        // JSON.parse(jsonData)?.AddSupplier?.input[14].permissions?.role;
+        // const rolePermissions = origionalpermission?.find(
+        //   (role) => role._attributes?.name === "SUPERADMIN"
+        // );
+        // console.log(rolePermissions);
+        // setpermissions(rolePermissions);
+        // console.log(permissions);
+        // console.log(rolePermissions?.canCreateUser._text.includes("true"));
+        // console.log(rolePermissions?.canEditProfile._text.includes("true"));
+        // console.log(rolePermissions?.canCreateUser._text.includes("true"));
+
+        setCreatAccountView(JSON.parse(jsonData));
+        setdropdownValue(JSON.parse(jsonData));
+      })
+      .catch(err => {
+        console.log(err);
       });
-    });
-  }
-  generatePDF(parsedData) {
-    let pdfsize = [Object.keys(parsedData[0])][0].length;
-    let size = pdfsize > 15 ? "a1" : pdfsize < 14 > 10 ? "a3" : "a4";
+  }, []);
 
-    const doc = new jsPDF("landscape", "mm", size, false);
-    doc.setTextColor(5, 87, 97);
-    const tableData = parsedData.map((row) => Object.values(row));
-    doc.addImage(Logo, "JPEG", 10, 10, 50, 30);
-    let date = new Date();
-    doc.setCreationDate(date);
-    doc.text("UserAccount", 14, 51);
-    doc.autoTable({
-      head: [Object.keys(parsedData[0])],
-      body: tableData,
-      startY: 60,
-    });
-    // doc.setDrawColor("UserList.pdf");
-    // doc.setFont("UserList.pdf");
-
-    // doc.addImage("UserList.pdf");
-    // doc.setLanguage("UserList.pdf");
-    doc.save("UserList.pdf");
-  }
-
-  exportToPDF = async () => {
-    const csvData = this.gridApi.getDataAsCsv({
-      processCellCallback: this.processCell,
-    });
-    try {
-      const parsedData = await this.parseCsv(csvData);
-      this.generatePDF(parsedData);
-    } catch (error) {
-      console.error("Error parsing CSV:", error);
-    }
-    // debugger;
-    // const doc = new jsPDF("landscape", "mm", "a4", false);
-    // const contentWidth = doc.internal.pageSize.getWidth();
-    // const contentHeight = doc.internal.pageSize.getHeight();
-    // // const tableHeight = this.gridApi.getRowHeight();
-    // // console.log(tableHeight);
-    // const tableWidth = contentWidth;
-    // const tableX = 10;
-    // const tableY = 10;
-    // const data1 = this.gridApi.getDataAsCsv({
-    //   processCellCallback: this.processCell,
-    // });
-
-    // const lines = data1.split("\n");
-    // const header = lines[0].split(",");
-    // const data = [];
-
-    // for (let i = 1; i < lines.length; i++) {
-    //   const line = lines[i].split(",");
-    //   data.push(line);
+  const submitHandler = e => {
+    // e.preventDefault();
+    // if (error) {
+    //   swal("Error occured while Entering Details");
+    // } else {
+    //   CreateAccountSave(formData)
+    //     .then(res => {
+    //       if (res.status) {
+    //         setFormData({});
+    //         window.location.reload();
+    //         swal("Acccont Created Successfully");
+    //       }
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
     // }
-
-    // doc.text("User_Account  ", 10, 10);
-
-    // const columns = header;
-    // const rows = data;
-
-    // doc.autoTable({
-    //   head: [columns],
-    //   body: rows,
-    //   startY: 20,
-    // });
-
-    // doc.save("userlist.pdf");
-  };
-  processCell = (params) => {
-    // console.log(params);
-    // Customize cell content as needed
-    return params.value;
   };
 
-  convertCsvToExcel(csvData) {
-    return new Promise((resolve) => {
-      Papa.parse(csvData, {
-        header: true,
-        dynamicTyping: true,
-        skipEmptyLines: true,
-        complete: function (result) {
-          const worksheet = XLSX.utils.json_to_sheet(result.data);
-          const workbook = XLSX.utils.book_new();
-          XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-          const excelBuffer = XLSX.write(workbook, {
-            bookType: "xlsx",
-            type: "array",
-          });
-          const blob = new Blob([excelBuffer], {
-            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          });
-          resolve(blob);
-        },
-      });
-    });
-  }
-  downloadExcelFile(blob) {
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "Userlist.xlsx";
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
-  }
+  return (
+    <div>
+      <div>
+        <Card>
+          <Row className="m-2">
+            <Col>
+              <h1 className="float-left">Add Supplier</h1>
+            </Col>
+          </Row>
 
-  exportToExcel = async (e) => {
-    const CsvData = this.gridApi.getDataAsCsv({
-      processCellCallback: this.processCell,
-    });
-    const blob = await this.convertCsvToExcel(CsvData);
-    this.downloadExcelFile(blob);
-  };
+          <CardBody>
+            <Form className="m-1" onSubmit={submitHandler}>
+              <Row className="mb-2">
+                <Col lg="6" md="6">
+                  <FormGroup>
+                    <Label>
+                      {
+                        dropdownValue.AddSupplier?.MyDropdown1?.dropdown?.label
+                          ?._text
+                      }
+                    </Label>
+                    <CustomInput
+                      required
+                      type="select"
+                      name={
+                        dropdownValue.AddSupplier?.MyDropdown1?.dropdown?.name
+                          ?._text
+                      }
+                      value={
+                        formData[
+                          dropdownValue.AddSupplier?.MyDropdown1?.dropdown?.name
+                            ?._text
+                        ]
+                      }
+                      onChange={handleInputChange}
+                    >
+                      <option value="">--Select Code--</option>
+                      {dropdownValue?.AddSupplier?.MyDropdown1?.dropdown?.option.map(
+                        (option, index) => (
+                          <option
+                            key={index}
+                            value={option?._attributes?.value}
+                          >
+                            {option?._attributes?.value}
+                          </option>
+                        )
+                      )}
+                    </CustomInput>
+                  </FormGroup>
+                </Col>
+                <Col lg="6" md="6">
+                  <FormGroup>
+                    <Label>
+                      {
+                        dropdownValue.AddSupplier?.MyDropdown?.dropdown?.label
+                          ?._text
+                      }
+                    </Label>
+                    <CustomInput
+                      required
+                      type="select"
+                      name={
+                        dropdownValue.AddSupplier?.MyDropdown?.dropdown?.name
+                          ?._text
+                      }
+                      value={
+                        formData[
+                          dropdownValue.AddSupplier?.MyDropdown?.dropdown?.name
+                            ?._text
+                        ]
+                      }
+                      onChange={handleInputChange}
+                    >
+                      <option value="">--Select Role--</option>
+                      {dropdownValue?.AddSupplier?.MyDropdown?.dropdown?.option.map(
+                        (option, index) => (
+                          <option
+                            key={index}
+                            value={option?._attributes?.value}
+                          >
+                            {option?._attributes?.value}
+                          </option>
+                        )
+                      )}
+                    </CustomInput>
+                  </FormGroup>
+                </Col>
 
-  convertCSVtoExcel = () => {
-    const CsvData = this.gridApi.getDataAsCsv({
-      processCellCallback: this.processCell,
-    });
-    Papa.parse(CsvData, {
-      complete: (result) => {
-        const ws = XLSX.utils.json_to_sheet(result.data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-        const excelType = "xls";
-        XLSX.writeFile(wb, `UserList.${excelType}`);
-      },
-    });
-  };
+                {CreatAccountView &&
+                  CreatAccountView?.AddSupplier?.input?.map((ele, i) => {
+                    let View = "";
+                    let Edit = "";
+                    if (ele?.role) {
+                      let roles = ele?.role?.find(
+                        role => role._attributes?.name === "WARRANTY APPROVER"
+                      );
 
-  shiftElementUp = () => {
-    let currentIndex = this.state.Arrindex;
-    if (currentIndex > 0) {
-      const myArrayCopy = [...this.state.SelectedcolumnDefs];
-      const elementToMove = myArrayCopy.splice(currentIndex, 1)[0];
-      this.setState({ Arrindex: currentIndex - 1 });
-      myArrayCopy.splice(currentIndex - 1, 0, elementToMove);
-      this.setState({ SelectedcolumnDefs: myArrayCopy });
-    }
-  };
-
-  shiftElementDown = () => {
-    let currentIndex = this.state.Arrindex;
-    if (currentIndex < this.state.SelectedcolumnDefs.length - 1) {
-      const myArrayCopy = [...this.state.SelectedcolumnDefs];
-      const elementToMove = myArrayCopy.splice(currentIndex, 1)[0];
-      this.setState({ Arrindex: currentIndex + 1 });
-      myArrayCopy.splice(currentIndex + 1, 0, elementToMove);
-      this.setState({ SelectedcolumnDefs: myArrayCopy });
-    }
-  };
-  convertCsvToXml = () => {
-    const CsvData = this.gridApi.getDataAsCsv({
-      processCellCallback: this.processCell,
-    });
-    Papa.parse(CsvData, {
-      complete: (result) => {
-        const rows = result.data;
-
-        // Create XML
-        let xmlString = "<root>\n";
-
-        rows.forEach((row) => {
-          xmlString += "  <row>\n";
-          row.forEach((cell, index) => {
-            xmlString += `    <field${index + 1}>${cell}</field${index + 1}>\n`;
-          });
-          xmlString += "  </row>\n";
-        });
-
-        xmlString += "</root>";
-
-        // setXmlData(xmlString);
-
-        // Create a download link
-        const blob = new Blob([xmlString], { type: "text/xml" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "output.xml";
-        link.click();
-      },
-    });
-  };
-  handleChangeView = (e) => {
-    e.preventDefault();
-    this.setState({ columnDefs: this.state.SelectedcolumnDefs });
-    this.toggleModal();
-  };
-
-  render() {
-    const {
-      rowData,
-      columnDefs,
-      defaultColDef,
-      SelectedcolumnDefs,
-      isOpen,
-      AllcolumnDefs,
-    } = this.state;
-    return (
-      <>
-        {/* <ExcelReader /> */}
-        <Row className="app-user-list">
-          {this.state.EditOneUserView && this.state.EditOneUserView ? (
-            <Row className="card">
-              <Col>
-                <div className="d-flex justify-content-end p-1">
-                  <Button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      this.setState({ EditOneUserView: false });
-                    }}
-                    color="danger"
-                  >
-                    Back
-                  </Button>
-                </div>
-              </Col>
-
-              <EditAccount EditOneData={this.state.EditOneData} />
-            </Row>
-          ) : (
-            <>
-              {this.state.ViewOneUserView && this.state.ViewOneUserView ? (
-                <>
-                  <Row className="card">
-                    <Col>
-                      <div className="d-flex justify-content-end p-1">
-                        <Button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            this.setState({ ViewOneUserView: false });
-                          }}
-                          color="danger"
-                        >
-                          Back
-                        </Button>
-                      </div>
-                    </Col>
-                    <ViewAccount ViewOneData={this.state.ViewOneData} />
-                  </Row>
-                </>
-              ) : (
-                <>
-                  <Col sm="12">
-                    <Card>
-                      <Row className="m-2">
-                        <Col>
-                          <h1 className="float-left">Add Supplier</h1>
-                        </Col>
-                        <Col>
-                          <span className="mx-1">
-                            <FaFilter
-                              style={{ cursor: "pointer" }}
-                              title="filter coloumn"
-                              size="30px"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                this.toggleModal();
-                              }}
-                              color="blue"
-                              className="float-right"
-                            />
-                          </span>
-                          <span className="mx-1">
-                            <div className="dropdown-container float-right">
-                              <BsCloudDownloadFill
-                                style={{ cursor: "pointer" }}
-                                title="download file"
-                                size="30px"
-                                className="dropdown-button "
-                                color="blue"
-                                onClick={this.toggleDropdown}
-                              />
-                              {isOpen && (
-                                <div
-                                  style={{
-                                    position: "absolute",
-                                    zIndex: "1",
+                      View = roles?.permissions?._text.includes("View");
+                      Edit = roles?.permissions?._text.includes("Edit");
+                      {
+                        /* console.log(View, Edit); */
+                      }
+                    }
+                    if (!!ele?.phoneinput) {
+                      return (
+                        <>
+                          <>
+                            <Col key={i} lg="6" md="6" sm="12">
+                              <FormGroup>
+                                <Label>{ele?.label?._text}</Label>
+                                <PhoneInput
+                                  inputClass="myphoneinput"
+                                  country={"us"}
+                                  onKeyDown={e => {
+                                    if (
+                                      ele?.type?._attributes?.type == "number"
+                                    ) {
+                                      ["e", "E", "+", "-"].includes(e.key) &&
+                                        e.preventDefault();
+                                    }
                                   }}
-                                  className="dropdown-content dropdownmy"
-                                >
-                                  <h5
-                                    onClick={() => this.exportToPDF()}
-                                    style={{ cursor: "pointer" }}
-                                    className=" mx-1 myactive mt-1"
-                                  >
-                                    .PDF
-                                  </h5>
-                                  <h5
-                                    onClick={() =>
-                                      this.gridApi.exportDataAsCsv()
-                                    }
-                                    style={{ cursor: "pointer" }}
-                                    className=" mx-1 myactive"
-                                  >
-                                    .CSV
-                                  </h5>
-                                  <h5
-                                    onClick={this.convertCSVtoExcel}
-                                    style={{ cursor: "pointer" }}
-                                    className=" mx-1 myactive"
-                                  >
-                                    .XLS
-                                  </h5>
-                                  <h5
-                                    onClick={this.exportToExcel}
-                                    style={{ cursor: "pointer" }}
-                                    className=" mx-1 myactive"
-                                  >
-                                    .XLSX
-                                  </h5>
-                                  <h5
-                                    onClick={() => this.convertCsvToXml()}
-                                    style={{ cursor: "pointer" }}
-                                    className=" mx-1 myactive"
-                                  >
-                                    .XML
-                                  </h5>
-                                </div>
+                                  countryCodeEditable={false}
+                                  name={ele?.name?._text}
+                                  value={formData[ele?.name?._text]}
+                                  onChange={phone => {
+                                    setFormData({
+                                      ...formData,
+                                      [ele?.name?._text]: phone,
+                                    });
+                                  }}
+                                />
+                                {index === i ? (
+                                  <>
+                                    {error && (
+                                      <span style={{ color: "red" }}>
+                                        {error}
+                                      </span>
+                                    )}
+                                  </>
+                                ) : (
+                                  <></>
+                                )}
+                              </FormGroup>
+                            </Col>
+                          </>
+                        </>
+                      );
+                    } else if (!!ele?.library) {
+                      console.log(ele);
+                      if (ele?.label._text?.includes("ountry")) {
+                        return (
+                          <Col key={i} lg="6" md="6" sm="12">
+                            <FormGroup>
+                              <Label>{ele?.label?._text}</Label>
+                              <Select
+                                inputClass="countryclass"
+                                className="countryclassnw"
+                                options={Country.getAllCountries()}
+                                getOptionLabel={options => {
+                                  return options["name"];
+                                }}
+                                getOptionValue={options => {
+                                  return options["name"];
+                                }}
+                                value={Countries}
+                                // value={formData.country}
+                                onChange={country => {
+                                  setCountry(country);
+                                  setFormData({
+                                    ...formData,
+                                    ["country"]: country?.name,
+                                  });
+                                }}
+                              />
+                              {index === i ? (
+                                <>
+                                  {error && (
+                                    <span style={{ color: "red" }}>
+                                      {error}
+                                    </span>
+                                  )}
+                                </>
+                              ) : (
+                                <></>
                               )}
-                            </div>
-                          </span>
-                        </Col>
-                      </Row>
-                      <CardBody>
-                        {this.state.rowData === null ? null : (
-                          <div className="ag-theme-material w-100 my-2 ag-grid-table">
-                            <div className="d-flex flex-wrap justify-content-between align-items-center">
-                              <div className="mb-1">
-                                <UncontrolledDropdown className="p-1 ag-dropdown">
-                                  <DropdownToggle tag="div">
-                                    {this.gridApi
-                                      ? this.state.currenPageSize
-                                      : "" * this.state.getPageSize -
-                                        (this.state.getPageSize - 1)}{" "}
-                                    -{" "}
-                                    {this.state.rowData.length -
-                                      this.state.currenPageSize *
-                                        this.state.getPageSize >
-                                    0
-                                      ? this.state.currenPageSize *
-                                        this.state.getPageSize
-                                      : this.state.rowData.length}{" "}
-                                    of {this.state.rowData.length}
-                                    <ChevronDown className="ml-50" size={15} />
-                                  </DropdownToggle>
-                                  <DropdownMenu right>
-                                    <DropdownItem
-                                      tag="div"
-                                      onClick={() => this.filterSize(20)}
-                                    >
-                                      20
-                                    </DropdownItem>
-                                    <DropdownItem
-                                      tag="div"
-                                      onClick={() => this.filterSize(50)}
-                                    >
-                                      50
-                                    </DropdownItem>
-                                    <DropdownItem
-                                      tag="div"
-                                      onClick={() => this.filterSize(100)}
-                                    >
-                                      100
-                                    </DropdownItem>
-                                    <DropdownItem
-                                      tag="div"
-                                      onClick={() => this.filterSize(134)}
-                                    >
-                                      134
-                                    </DropdownItem>
-                                  </DropdownMenu>
-                                </UncontrolledDropdown>
-                              </div>
-                              <div className="d-flex flex-wrap justify-content-between mb-1">
-                                <div className="table-input mr-1">
-                                  <Input
-                                    placeholder="search..."
-                                    onChange={(e) =>
-                                      this.updateSearchQuery(e.target.value)
-                                    }
-                                    value={this.state.value}
-                                  />
-                                </div>
-                                <div className="export-btn">
-                                  <Route
-                                    render={({ history }) => (
-                                      <Button
-                                        className="btn float-right"
-                                        color="primary"
-                                        onClick={() =>
-                                          history.push(
-                                            "/app/softNumen/system/AddSupplier"
+                            </FormGroup>
+                          </Col>
+                        );
+                      } else if (ele?.label._text?.includes("tate")) {
+                        return (
+                          <Col key={i} lg="6" md="6" sm="12">
+                            <FormGroup>
+                              <Label>{ele?.label?._text}</Label>
+                              <Select
+                                options={State?.getStatesOfCountry(
+                                  Countries?.isoCode
+                                )}
+                                getOptionLabel={options => {
+                                  return options["name"];
+                                }}
+                                getOptionValue={options => {
+                                  return options["name"];
+                                }}
+                                value={States}
+                                onChange={State => {
+                                  setState(State);
+                                  setFormData({
+                                    ...formData,
+                                    ["State"]: State?.name,
+                                  });
+                                }}
+                              />
+                              {index === i ? (
+                                <>
+                                  {error && (
+                                    <span style={{ color: "red" }}>
+                                      {error}
+                                    </span>
+                                  )}
+                                </>
+                              ) : (
+                                <></>
+                              )}
+                            </FormGroup>
+                          </Col>
+                        );
+                      } else if (ele?.label._text?.includes("ity")) {
+                        return (
+                          <Col key={i} lg="6" md="6" sm="12">
+                            <FormGroup>
+                              <Label>{ele?.label?._text}</Label>
+                              <Select
+                                options={City?.getCitiesOfState(
+                                  States?.countryCode,
+                                  States?.isoCode
+                                )}
+                                getOptionLabel={options => {
+                                  return options["name"];
+                                }}
+                                getOptionValue={options => {
+                                  return options["name"];
+                                }}
+                                value={Cities}
+                                onChange={City => {
+                                  setCities(City);
+                                  setFormData({
+                                    ...formData,
+                                    ["City"]: City?.name,
+                                  });
+                                }}
+                              />
+                              {index === i ? (
+                                <>
+                                  {error && (
+                                    <span style={{ color: "red" }}>
+                                      {error}
+                                    </span>
+                                  )}
+                                </>
+                              ) : (
+                                <></>
+                              )}
+                            </FormGroup>
+                          </Col>
+                        );
+                      }
+                    } else {
+                      return (
+                        <>
+                          {/* {Edit && Edit ? ( */}
+                          <Col key={i} lg="6" md="6" sm="12">
+                            <FormGroup>
+                              <Label>{ele?.label?._text}</Label>
+
+                              <Input
+                                onKeyDown={e => {
+                                  if (
+                                    ele?.type?._attributes?.type == "number"
+                                  ) {
+                                    ["e", "E", "+", "-"].includes(e.key) &&
+                                      e.preventDefault();
+                                  }
+                                }}
+                                type={ele?.type?._attributes?.type}
+                                placeholder={ele?.placeholder?._text}
+                                name={ele?.name?._text}
+                                value={formData[ele?.name?._text]}
+                                onChange={e =>
+                                  handleInputChange(
+                                    e,
+                                    ele?.type?._attributes?.type,
+                                    i
+                                  )
+                                }
+                              />
+                              {index === i ? (
+                                <>
+                                  {error && (
+                                    <span style={{ color: "red" }}>
+                                      {error}
+                                    </span>
+                                  )}
+                                </>
+                              ) : (
+                                <></>
+                              )}
+                            </FormGroup>
+                          </Col>
+                          {/* ) : (
+                            <>
+                              {View && View ? (
+                                <>
+                                  <Col key={i} lg="6" md="6" sm="12">
+                                    <FormGroup>
+                                      <Label>{ele?.label?._text}</Label>
+
+                                      <Input
+                                        disabled
+                                        onKeyDown={(e) => {
+                                          if (
+                                            ele?.type?._attributes?.type ==
+                                            "number"
+                                          ) {
+                                            ["e", "E", "+", "-"].includes(
+                                              e.key
+                                            ) && e.preventDefault();
+                                          }
+                                        }}
+                                        type={ele?.type?._attributes?.type}
+                                        placeholder={ele?.placeholder?._text}
+                                        name={ele?.name?._text}
+                                        value={formData[ele?.name?._text]}
+                                        onChange={(e) =>
+                                          handleInputChange(
+                                            e,
+                                            ele?.type?._attributes?.type,
+                                            i
                                           )
                                         }
-                                      >
-                                        Create Supplier
-                                      </Button>
-                                    )}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            <ContextLayout.Consumer className="ag-theme-alpine">
-                              {(context) => (
-                                <AgGridReact
-                                  id="myAgGrid"
-                                  gridOptions={{
-                                    domLayout: "autoHeight", // or other layout options
-                                  }}
-                                  // gridOptions={this.gridOptions}
-                                  rowSelection="multiple"
-                                  defaultColDef={defaultColDef}
-                                  columnDefs={columnDefs}
-                                  rowData={rowData}
-                                  onGridReady={(params) => {
-                                    this.gridApi = params.api;
-                                    this.gridColumnApi = params.columnApi;
-                                    this.gridRef.current = params.api;
-                                  }}
-                                  // onGridReady={this.onGridReady}
-                                  colResizeDefault={"shift"}
-                                  animateRows={true}
-                                  floatingFilter={false}
-                                  pagination={true}
-                                  paginationPageSize={
-                                    this.state.paginationPageSize
-                                  }
-                                  pivotPanelShow="always"
-                                  enableRtl={context.state.direction === "rtl"}
-                                  ref={this.gridRef} // Attach the ref to the grid
-                                  domLayout="autoHeight" // Adjust layout as needed
-                                />
-                              )}
-                            </ContextLayout.Consumer>
-                          </div>
-                        )}
-                      </CardBody>
-                    </Card>
-                  </Col>
-                </>
-              )}
-            </>
-          )}
-        </Row>
-
-        <Modal
-          isOpen={this.state.modal}
-          toggle={this.toggleModal}
-          className={this.props.className}
-          style={{ maxWidth: "1050px" }}
-        >
-          <ModalHeader toggle={this.toggleModal}>Change Fileds</ModalHeader>
-          <ModalBody className="modalbodyhead">
-            <Row>
-              <Col lg="4" md="4" sm="12" xl="4" xs="12">
-                <h4>Columns</h4>
-                <div className="mainshffling">
-                  <div class="ex1">
-                    {AllcolumnDefs &&
-                      AllcolumnDefs?.map((ele, i) => {
-                        return (
-                          <>
-                            <div
-                              onClick={(e) =>
-                                this.handleChangeHeader(e, ele, i)
-                              }
-                              key={i}
-                              className="mycustomtag mt-1"
-                            >
-                              <span className="mt-1">
-                                <h5
-                                  style={{ cursor: "pointer" }}
-                                  className="allfields"
-                                >
-                                  <input
-                                    type="checkbox"
-                                    // checked={check && check}
-                                    className="mx-1"
-                                  />
-
-                                  {ele?.headerName}
-                                </h5>
-                              </span>
-                            </div>
-                          </>
-                        );
-                      })}
-                  </div>
-                </div>
-              </Col>
-              <Col lg="2" md="2" sm="12" xl="2" xs="12" className="colarrowbtn">
-                <div className="mainarrowbtn">
-                  <div style={{ cursor: "pointer" }}>
-                    <FaArrowAltCircleRight
-                      onClick={() =>
-                        this.setState({
-                          SelectedcolumnDefs: SelectedCols,
-                        })
-                      }
-                      className="arrowassign"
-                      size="30px"
-                    />
-                  </div>
-                  <div style={{ cursor: "pointer" }} className="my-2">
-                    <FaArrowAltCircleLeft
-                      onClick={() =>
-                        this.setState({
-                          SelectedcolumnDefs: SelectedCols,
-                        })
-                      }
-                      className="arrowassign"
-                      size="30px"
-                    />
-                  </div>
-                </div>
-              </Col>
-              <Col lg="6" md="6" sm="12" xl="6" xs="12">
-                <Row>
-                  <Col lg="8" md="8" sm="12" xs="12">
-                    <h4>Selected Columns</h4>
-                    <div className="mainshffling">
-                      <div class="ex1">
-                        {SelectedcolumnDefs &&
-                          SelectedcolumnDefs?.map((ele, i) => {
-                            return (
-                              <>
-                                <div key={i} className="mycustomtag mt-1">
-                                  <span className="mt-1">
-                                    <h5
-                                      onClick={() =>
-                                        this.setState({ Arrindex: i })
-                                      }
-                                      style={{
-                                        cursor: "pointer",
-                                        backgroundColor: `${
-                                          this.state.Arrindex === i
-                                            ? "#1877f2"
-                                            : ""
-                                        }`,
-                                      }}
-                                      className="allfields"
-                                    >
-                                      <IoMdRemoveCircleOutline
-                                        onClick={() => {
-                                          const delindex =
-                                            SelectedCols.findIndex(
-                                              (element) =>
-                                                element?.headerName ===
-                                                ele?.headerName
-                                            );
-
-                                          SelectedCols?.splice(delindex, 1);
-                                          this.setState({
-                                            SelectedcolumnDefs: SelectedCols,
-                                          });
-                                        }}
-                                        style={{ cursor: "pointer" }}
-                                        size="25px"
-                                        color="red"
-                                        className="mr-1"
                                       />
+                                      {index === i ? (
+                                        <>
+                                          {error && (
+                                            <span style={{ color: "red" }}>
+                                              {error}
+                                            </span>
+                                          )}
+                                        </>
+                                      ) : (
+                                        <></>
+                                      )}
+                                    </FormGroup>
+                                  </Col>
+                                </>
+                              ) : null}
+                            </>
+                          )} */}
+                        </>
+                      );
+                    }
+                  })}
 
-                                      {ele?.headerName}
-                                    </h5>
-                                  </span>
-                                </div>
-                              </>
-                            );
-                          })}
-                      </div>
-                    </div>
-                  </Col>
-                  <Col lg="4" md="4" sm="12" xs="12">
-                    <div className="updownbtn justify-content-center">
-                      <div>
-                        <BsFillArrowUpSquareFill
-                          className="arrowassign mb-1"
-                          size="30px"
-                          onClick={() => this.shiftElementUp()}
-                        />
-                      </div>
-                      <div>
-                        <BsFillArrowDownSquareFill
-                          onClick={() => this.shiftElementDown()}
-                          className="arrowassign"
-                          size="30px"
-                        />
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <div className="d-flex justify-content-center">
-                  <Button
-                    onClick={(e) => this.handleChangeView(e)}
-                    color="primary"
-                  >
-                    Submit
-                  </Button>
+                <div className="container">
+                  <Label className="py-1">Notification</Label>
+                  <div>
+                    {CreatAccountView &&
+                      CreatAccountView?.AddSupplier?.CheckBox?.input?.map(
+                        (ele, i) => {
+                          return (
+                            <>
+                              <span key={i} className="mx-2">
+                                <Input
+                                  style={{ marginRight: "3px" }}
+                                  type={ele?.type?._attributes?.type}
+                                  name={ele?.name?._text}
+                                  onChange={e =>
+                                    handleInputChange(e, "checkbox")
+                                  }
+                                />{" "}
+                                <span
+                                  className="mt-1 mx-1"
+                                  style={{ marginRight: "40px" }}
+                                >
+                                  {ele?.label?._text == "Whatsapp" ? (
+                                    <BsWhatsapp
+                                      className="mx-1"
+                                      color="#59CE72"
+                                      size={25}
+                                    />
+                                  ) : (
+                                    <>
+                                      {ele.label?._text == "SMS" ? (
+                                        <>
+                                          <FcPhoneAndroid size={30} />
+                                        </>
+                                      ) : (
+                                        <>
+                                          <BiEnvelope className="" size={30} />
+                                        </>
+                                      )}
+                                    </>
+                                  )}
+                                  {/* <BsWhatsapp
+                              className="mx-1"
+                              color="#59CE72"
+                              size={25}
+                            /> */}
+                                </span>
+                              </span>
+                              {/* <Col key={i} lg="6" md="6" sm="12">
+                            <FormGroup>
+                              <Label>{ele?.label?._text}</Label>
+                              <Input
+                                type={ele?.type?._attributes?.type}
+                                placeholder={ele?.placeholder?._text}
+                                name={ele?.name?._text}
+                                value={formData[ele?.name?._text]}
+                                onChange={(e) =>
+                                  handleInputChange(
+                                    e,
+                                    ele?.type?._attributes?.type,
+                                    i
+                                  )
+                                }
+                              />
+                            </FormGroup>
+                          </Col> */}
+                            </>
+                          );
+                        }
+                      )}
+                  </div>
                 </div>
-              </Col>
-            </Row>
-          </ModalBody>
-        </Modal>
-      </>
-    );
-  }
-}
-export default ProductType;
+              </Row>
+
+              <hr />
+              <Row className="mt-2 ">
+                <Col lg="6" md="6" sm="6" className="mb-2">
+                  <Label className="">
+                    <h4>Status</h4>
+                  </Label>
+                  <div className="form-label-group mx-1">
+                    {CreatAccountView &&
+                      CreatAccountView?.AddSupplier?.Radiobutton?.input?.map(
+                        (ele, i) => {
+                          return (
+                            <FormGroup key={i}>
+                              <Input
+                                key={i}
+                                style={{ marginRight: "3px" }}
+                                required
+                                type={ele?.type?._attributes?.type}
+                                name={ele?.name?._text}
+                                value={`${
+                                  ele?.label?._text == "Active"
+                                    ? "Active"
+                                    : "Deactive"
+                                }`}
+                                onChange={handleInputChange}
+                              />{" "}
+                              <span
+                                className="mx-1 mt-1"
+                                style={{ marginRight: "20px" }}
+                              >
+                                {ele?.label?._text}
+                              </span>
+                            </FormGroup>
+                          );
+                        }
+                      )}
+                  </div>
+                </Col>
+              </Row>
+
+              <Row>
+                <Button.Ripple
+                  color="primary"
+                  type="submit"
+                  className="mr-1 mt-2 mx-2"
+                >
+                  Submit
+                </Button.Ripple>
+              </Row>
+            </Form>
+          </CardBody>
+        </Card>
+      </div>
+    </div>
+  );
+};
+export default AddSupplier;

@@ -496,8 +496,8 @@ const CreateQuote = lazy(() =>
 const DebitNotes = lazy(() =>
   import("./views/apps/freshlist/customer/Quotation/DebitNotes")
 );
-const EditNotes = lazy(() =>
-  import("./views/apps/freshlist/customer/Quotation/EditNotes")
+const CreateNotes = lazy(() =>
+  import("./views/apps/freshlist/customer/Quotation/CreateNotes")
 );
 const WareHouseListSoft = lazy(() =>
   import("./views/apps/freshlist/customer/warehouse/WareHouseList")
@@ -989,10 +989,10 @@ const accessControl = lazy(() =>
 const RouteConfig = ({ component: Component, fullLayout, ...rest }) => (
   <Route
     {...rest}
-    render={(props) => {
+    render={props => {
       return (
         <ContextLayout.Consumer>
-          {(context) => {
+          {context => {
             let LayoutTag =
               fullLayout === true
                 ? context.fullLayout
@@ -1012,7 +1012,7 @@ const RouteConfig = ({ component: Component, fullLayout, ...rest }) => (
     }}
   />
 );
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     user: state.auth.login.userRole,
   };
@@ -1628,11 +1628,11 @@ class AppRouter extends React.Component {
             component={CreateCampaign}
           />
           <AppRoute
-            path="/app/softNumen/system/SupplierList"
+            path="/app/softNumen/system/AddSupplier"
             component={AddSupplier}
           />
           <AppRoute
-            path="/app/softNumen/system/AddSupplier"
+            path="/app/softNumen/system/SupplierLis"
             component={AddNewSupplier}
           />
           <AppRoute
@@ -1644,8 +1644,8 @@ class AppRouter extends React.Component {
             component={DebitNotes}
           />
           <AppRoute
-            path="/app/softNumen/system/EditNotes"
-            component={EditNotes}
+            path="/app/softNumen/system/CreateNotes"
+            component={CreateNotes}
           />
           <AppRoute
             path="/app/softNumen/system/WareHouseListSoft"
