@@ -29,7 +29,23 @@ import "../../../../../src/layouts/assets/scss/pages/users.scss";
 import { Route } from "react-router-dom";
 import { CloudLightning } from "react-feather";
 import { timers } from "jquery";
-import { PartCatelougue } from "../../../../ApiEndPoint/ApiCalling";
+import {
+  CampaignUpload,
+  CustomerDataUpload,
+  DealerUpload,
+  DistributorUpload,
+  InspectionUpload,
+  InvoiceUpload,
+  Orders,
+  PartCatelougue,
+  ProdctsUpload,
+  ServiceCenterUpload,
+  ServicingUpload,
+  SpareParts,
+  SupplierUpload,
+  SupporttUpload,
+  WareHouseUpload,
+} from "../../../../ApiEndPoint/ApiCalling";
 // import { dummytest } from "./test";
 import HtmlParser from "react-html-parser";
 import Pickers from "../../../forms/form-elements/datepicker/Pickers";
@@ -112,6 +128,7 @@ const Scheduler = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     let formdata = new FormData();
+    debugger;
     // console.log(Adhocfile[0].name.split(".")[0]);
     console.log(Role.split(" ").join(""));
     let adhodfile = Adhocfile[0].name.split(".")[0];
@@ -119,15 +136,158 @@ const Scheduler = () => {
     // console.log(adhodfile.includes(selectType));
     if (adhodfile.includes(selectType)) {
       formdata.append("file", Adhocfile[0]);
-      formdata.append("partType", selectType);
-      PartCatelougue(formdata)
-        .then((res) => {
-          console.log(res);
-          swal(`${Role} File Uploaded Successfully`);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      formdata.append("partType", Role);
+
+      if (Role == "SpareParts") {
+        SpareParts(formdata)
+          .then((res) => {
+            console.log(res);
+            swal(`${Role} File Uploaded Successfully`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (Role == "Orders") {
+        Orders(formdata)
+          .then((res) => {
+            console.log(res);
+            swal(`${Role} File Uploaded Successfully`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (Role == "PartsCatalogue") {
+        PartCatelougue(formdata)
+          .then((res) => {
+            console.log(res);
+            swal(`${Role} File Uploaded Successfully`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (Role == "Product Registration") {
+        ProdctsUpload(formdata)
+          .then((res) => {
+            console.log(res);
+            swal(`${Role} File Uploaded Successfully`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (Role == "Scrutiny / Inspections") {
+        InspectionUpload(formdata)
+          .then((res) => {
+            console.log(res);
+            swal(`${Role} File Uploaded Successfully`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (Role == "Invoices / Billing") {
+        InvoiceUpload(formdata)
+          .then((res) => {
+            console.log(res);
+            swal(`${Role} File Uploaded Successfully`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (Role == "Support") {
+        SupporttUpload(formdata)
+          .then((res) => {
+            console.log(res);
+            swal(`${Role} File Uploaded Successfully`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (Role == "Servicing") {
+        ServicingUpload(formdata)
+          .then((res) => {
+            console.log(res);
+            swal(`${Role} File Uploaded Successfully`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (Role == "Warehouse") {
+        WareHouseUpload(formdata)
+          .then((res) => {
+            console.log(res);
+            swal(`${Role} File Uploaded Successfully`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (Role == "Distributors") {
+        DistributorUpload(formdata)
+          .then((res) => {
+            console.log(res);
+            swal(`${Role} File Uploaded Successfully`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (Role == "Dealers") {
+        DealerUpload(formdata)
+          .then((res) => {
+            console.log(res);
+            swal(`${Role} File Uploaded Successfully`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (Role == "Suppliers") {
+        SupplierUpload(formdata)
+          .then((res) => {
+            console.log(res);
+            swal(`${Role} File Uploaded Successfully`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (Role == "Service Centers") {
+        ServiceCenterUpload(formdata)
+          .then((res) => {
+            console.log(res);
+            swal(`${Role} File Uploaded Successfully`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (Role == "Customer Data") {
+        CustomerDataUpload(formdata)
+          .then((res) => {
+            console.log(res);
+            swal(`${Role} File Uploaded Successfully`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (Role == "Campaigns") {
+        CampaignUpload(formdata)
+          .then((res) => {
+            console.log(res);
+            swal(`${Role} File Uploaded Successfully`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     } else {
       swal(
         "Error!",
@@ -140,9 +300,7 @@ const Scheduler = () => {
     <div>
       <div>
         <Row>
-          <Col>
-            <Pickers />
-          </Col>
+          <Col>{/* <Pickers /> */}</Col>
         </Row>
         <Card>
           {/* <Row className="p-3">

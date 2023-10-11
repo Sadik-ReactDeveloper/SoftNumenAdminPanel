@@ -18,6 +18,8 @@ import { AiFillDownCircle, AiFillUpCircle } from "react-icons/ai";
 import { PartCatalogueView } from "../../../../ApiEndPoint/ApiCalling";
 import { BsCartCheckFill, BsFillArrowRightSquareFill } from "react-icons/bs";
 import * as Icon from "react-feather";
+import ZoomimageTest from "./ZoomimageTest";
+// import { ReactPanZoom } from "./Ra";
 
 function PartCatalougue() {
   const [CollapseIndex, setCollapseIndex] = useState("");
@@ -206,6 +208,13 @@ function PartCatalougue() {
             </Table>
           </div>
         </Col>
+      </Row>
+      <Row>
+        {/* <ZoomimageTest /> */}
+        {/* <ReactPanZoom
+          alt="cool image"
+          image="https://drscdn.500px.org/photo/105738331/q%3D80_m%3D2000/v2?webp=true&sig=538a4f76f4966c84acb01426bb4a4a5e4a85b72a2c3bd64973d3a369f9653007"
+        /> */}
       </Row>
     </>
   );

@@ -33,6 +33,9 @@ import UserContext from "../../../../context/Context";
 
 const CreateAccount = () => {
   const [CreatAccountView, setCreatAccountView] = useState({});
+  const [Countries, setCountry] = useState({});
+  const [States, setState] = useState({});
+  const [Cities, setCities] = useState({});
   const [formData, setFormData] = useState({});
   const [dropdownValue, setdropdownValue] = useState({});
   const [index, setindex] = useState("");
@@ -125,8 +128,10 @@ const CreateAccount = () => {
     } else {
       CreateAccountSave(formData)
         .then((res) => {
+          console.log(res);
+          debugger;
           if (res.status) {
-            setFormData({});
+            setFormData(null);
             window.location.reload();
             swal("Acccont Created Successfully");
           }
@@ -314,11 +319,13 @@ const CreateAccount = () => {
                                 getOptionValue={(options) => {
                                   return options["name"];
                                 }}
-                                value={formData.country}
+                                value={Countries}
+                                // value={formData.country}
                                 onChange={(country) => {
+                                  setCountry(country);
                                   setFormData({
                                     ...formData,
-                                    ["country"]: country,
+                                    ["country"]: country?.name,
                                   });
                                 }}
                               />
@@ -343,7 +350,7 @@ const CreateAccount = () => {
                               <Label>{ele?.label?._text}</Label>
                               <Select
                                 options={State?.getStatesOfCountry(
-                                  formData?.country?.isoCode
+                                  Countries?.isoCode
                                 )}
                                 getOptionLabel={(options) => {
                                   return options["name"];
@@ -351,11 +358,12 @@ const CreateAccount = () => {
                                 getOptionValue={(options) => {
                                   return options["name"];
                                 }}
-                                value={formData.State}
+                                value={States}
                                 onChange={(State) => {
+                                  setState(State);
                                   setFormData({
                                     ...formData,
-                                    ["State"]: State,
+                                    ["State"]: State?.name,
                                   });
                                 }}
                               />
@@ -380,8 +388,8 @@ const CreateAccount = () => {
                               <Label>{ele?.label?._text}</Label>
                               <Select
                                 options={City?.getCitiesOfState(
-                                  formData?.State?.countryCode,
-                                  formData?.State?.isoCode
+                                  States?.countryCode,
+                                  States?.isoCode
                                 )}
                                 getOptionLabel={(options) => {
                                   return options["name"];
@@ -389,11 +397,12 @@ const CreateAccount = () => {
                                 getOptionValue={(options) => {
                                   return options["name"];
                                 }}
-                                value={formData.City}
+                                value={Cities}
                                 onChange={(City) => {
+                                  setCities(City);
                                   setFormData({
                                     ...formData,
-                                    ["City"]: City,
+                                    ["City"]: City?.name,
                                   });
                                 }}
                               />
