@@ -219,8 +219,5 @@
 			<option value=" WARRANTY REVIWER">WARRANTY REVIWER</option>
 			<option value="SUPERVISER">SUPERVISER</option>
 		</dropdown>
-
-	</MyDropdown>
-
-
+</MyDropdown>
 </CreateAccount>

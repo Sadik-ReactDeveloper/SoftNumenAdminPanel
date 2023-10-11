@@ -222,8 +222,8 @@ const navigationConfig = [
     icon: <FaProductHunt size={15} />,
     children: [
       {
-        id: "Create Warehouse",
-        title: "Create Warehouse",
+        id: "WarehouseList",
+        title: " Warehouse List",
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
@@ -249,7 +249,8 @@ const navigationConfig = [
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/softNumen/system/SupplierList",
+        navLink: "/app/softNumen/system/AddSupplier",
+        // navLink: "/app/softNumen/system/SupplierList",
       },
       {
         id: "Create Quote",
@@ -260,12 +261,12 @@ const navigationConfig = [
         navLink: "/app/softNumen/system/CreateQuote",
       },
       {
-        id: "Edit Notes",
-        title: "Edit Notes",
+        id: "Create Notes",
+        title: "Create Notes",
         type: "item",
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
-        navLink: "/app/softNumen/system/EditNotes",
+        navLink: "/app/softNumen/system/CreateNotes",
       },
       {
         id: "Debit Notes",
@@ -1012,6 +1013,35 @@ const navigationConfig = [
         icon: <FaCode size={15} />,
         permissions: ["admin", "editor"],
         navLink: "/app/softNumen/media/ChatStatus",
+      },
+    ],
+  },
+  {
+    type: "groupHeader",
+    groupTitle: "Scrutiny/Inspections",
+    title: "Inspections",
+  },
+  {
+    id: "Inspections",
+    title: "Scrutiny/Inspections",
+    type: "collapse",
+    icon: <FaShoppingCart size={15} />,
+    children: [
+      {
+        id: "Publish Wiki",
+        title: "Publish Wiki",
+        type: "item",
+        icon: <FaCode size={15} />,
+        permissions: ["admin", "editor"],
+        navLink: "/app/softNumen/warranty/CreateWiki",
+      },
+      {
+        id: "WIKI Search",
+        title: "WIKI Search",
+        type: "item",
+        icon: <FaCode size={15} />,
+        permissions: ["admin", "editor"],
+        navLink: "/app/softNumen/warranty/WikiList",
       },
     ],
   },

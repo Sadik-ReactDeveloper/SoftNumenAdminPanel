@@ -12,35 +12,32 @@ import {
   FormGroup,
   CustomInput,
 } from "reactstrap";
-import { history } from "../../../../history";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { Country, State, City } from "country-state-city";
 import Select from "react-select";
 
 import swal from "sweetalert";
-import "../../../../../src/layouts/assets/scss/pages/users.scss";
-
-import {
-  CreateAccountSave,
-  CreateAccountView,
-} from "../../../../ApiEndPoint/ApiCalling";
+import "../../../../../assets/scss/pages/users.scss";
 import { BiEnvelope } from "react-icons/bi";
 import { FcPhoneAndroid } from "react-icons/fc";
 import { BsWhatsapp } from "react-icons/bs";
-import "../../../../assets/scss/pages/users.scss";
-import UserContext from "../../../../context/Context";
+import UserContext from "../../../../../context/Context";
+import {
+  AddSupplierViewData,
+  CreateAccountSave,
+} from "../../../../../ApiEndPoint/ApiCalling";
 
-const AddTax = () => {
+const CreateNotes = () => {
   const [CreatAccountView, setCreatAccountView] = useState({});
-  const [Countries, setCountry] = useState({});
-  const [States, setState] = useState({});
-  const [Cities, setCities] = useState({});
   const [formData, setFormData] = useState({});
   const [dropdownValue, setdropdownValue] = useState({});
   const [index, setindex] = useState("");
   const [error, setError] = useState("");
   const [permissions, setpermissions] = useState({});
+  const [Countries, setCountry] = useState({});
+  const [States, setState] = useState({});
+  const [Cities, setCities] = useState({});
 
   const createUserXmlView = useContext(UserContext);
   // const [selectedCountry, setSelectedCountry] = useState(null);
@@ -94,15 +91,15 @@ const AddTax = () => {
     }
   };
   useEffect(() => {
-    console.log(formData);
+    // console.log(formData);
   }, [formData]);
   useEffect(() => {
-    CreateAccountView()
+    AddSupplierViewData()
       .then(res => {
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        console.log(JSON.parse(jsonData));
-        let origionalpermission =
-          JSON.parse(jsonData)?.CreateAccount?.input[14].permissions?.role;
+        console.log(JSON.parse(jsonData).AddSupplier);
+        // let origionalpermission =
+        // JSON.parse(jsonData)?.AddSupplier?.input[14].permissions?.role;
         // const rolePermissions = origionalpermission?.find(
         //   (role) => role._attributes?.name === "SUPERADMIN"
         // );
@@ -122,24 +119,22 @@ const AddTax = () => {
   }, []);
 
   const submitHandler = e => {
-    e.preventDefault();
-    if (error) {
-      swal("Error occured while Entering Details");
-    } else {
-      CreateAccountSave(formData)
-        .then(res => {
-          console.log(res);
-          debugger;
-          if (res.status) {
-            setFormData(null);
-            window.location.reload();
-            swal("Acccont Created Successfully");
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
+    // e.preventDefault();
+    // if (error) {
+    //   swal("Error occured while Entering Details");
+    // } else {
+    //   CreateAccountSave(formData)
+    //     .then(res => {
+    //       if (res.status) {
+    //         setFormData({});
+    //         window.location.reload();
+    //         swal("Acccont Created Successfully");
+    //       }
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // }
   };
 
   return (
@@ -148,7 +143,7 @@ const AddTax = () => {
         <Card>
           <Row className="m-2">
             <Col>
-              <h1 className="float-left">Add Tax</h1>
+              <h1 className="float-left">Add Supplier</h1>
             </Col>
           </Row>
 
@@ -159,7 +154,7 @@ const AddTax = () => {
                   <FormGroup>
                     <Label>
                       {
-                        dropdownValue.CreateAccount?.MyDropdown?.dropdown?.label
+                        dropdownValue.AddSupplier?.MyDropdown1?.dropdown?.label
                           ?._text
                       }
                     </Label>
@@ -167,19 +162,56 @@ const AddTax = () => {
                       required
                       type="select"
                       name={
-                        dropdownValue.CreateAccount?.MyDropdown?.dropdown?.name
+                        dropdownValue.AddSupplier?.MyDropdown1?.dropdown?.name
                           ?._text
                       }
                       value={
                         formData[
-                          dropdownValue.CreateAccount?.MyDropdown?.dropdown
-                            ?.name?._text
+                          dropdownValue.AddSupplier?.MyDropdown1?.dropdown?.name
+                            ?._text
+                        ]
+                      }
+                      onChange={handleInputChange}
+                    >
+                      <option value="">--Select Code--</option>
+                      {dropdownValue?.AddSupplier?.MyDropdown1?.dropdown?.option.map(
+                        (option, index) => (
+                          <option
+                            key={index}
+                            value={option?._attributes?.value}
+                          >
+                            {option?._attributes?.value}
+                          </option>
+                        )
+                      )}
+                    </CustomInput>
+                  </FormGroup>
+                </Col>
+                <Col lg="6" md="6">
+                  <FormGroup>
+                    <Label>
+                      {
+                        dropdownValue.AddSupplier?.MyDropdown?.dropdown?.label
+                          ?._text
+                      }
+                    </Label>
+                    <CustomInput
+                      required
+                      type="select"
+                      name={
+                        dropdownValue.AddSupplier?.MyDropdown?.dropdown?.name
+                          ?._text
+                      }
+                      value={
+                        formData[
+                          dropdownValue.AddSupplier?.MyDropdown?.dropdown?.name
+                            ?._text
                         ]
                       }
                       onChange={handleInputChange}
                     >
                       <option value="">--Select Role--</option>
-                      {dropdownValue?.CreateAccount?.MyDropdown?.dropdown?.option.map(
+                      {dropdownValue?.AddSupplier?.MyDropdown?.dropdown?.option.map(
                         (option, index) => (
                           <option
                             key={index}
@@ -194,7 +226,7 @@ const AddTax = () => {
                 </Col>
 
                 {CreatAccountView &&
-                  CreatAccountView?.CreateAccount?.input?.map((ele, i) => {
+                  CreatAccountView?.AddSupplier?.input?.map((ele, i) => {
                     let View = "";
                     let Edit = "";
                     if (ele?.role) {
@@ -211,7 +243,6 @@ const AddTax = () => {
                     if (!!ele?.phoneinput) {
                       return (
                         <>
-                          {/* {Edit && Edit ? ( */}
                           <>
                             <Col key={i} lg="6" md="6" sm="12">
                               <FormGroup>
@@ -236,7 +267,6 @@ const AddTax = () => {
                                       [ele?.name?._text]: phone,
                                     });
                                   }}
-                                  // onChange={handleInputChange}
                                 />
                                 {index === i ? (
                                   <>
@@ -252,58 +282,10 @@ const AddTax = () => {
                               </FormGroup>
                             </Col>
                           </>
-                          {/* ) : (
-                            <>
-                              {View && View ? (
-                                <>
-                                  <Col key={i} lg="6" md="6" sm="12">
-                                    <FormGroup>
-                                      <Label>{ele?.label?._text}</Label>
-                                      <PhoneInput
-                                        disabled
-                                        inputClass="myphoneinput"
-                                        country={"us"}
-                                        onKeyDown={(e) => {
-                                          if (
-                                            ele?.type?._attributes?.type ==
-                                            "number"
-                                          ) {
-                                            ["e", "E", "+", "-"].includes(
-                                              e.key
-                                            ) && e.preventDefault();
-                                          }
-                                        }}
-                                        countryCodeEditable={false}
-                                        name={ele?.name?._text}
-                                        value={formData[ele?.name?._text]}
-                                        onChange={(phone) => {
-                                          setFormData({
-                                            ...formData,
-                                            [ele?.name?._text]: phone,
-                                          });
-                                        }}
-                                        // onChange={handleInputChange}
-                                      />
-                                      {index === i ? (
-                                        <>
-                                          {error && (
-                                            <span style={{ color: "red" }}>
-                                              {error}
-                                            </span>
-                                          )}
-                                        </>
-                                      ) : (
-                                        <></>
-                                      )}
-                                    </FormGroup>
-                                  </Col>
-                                </>
-                              ) : null}
-                            </>
-                          )} */}
                         </>
                       );
                     } else if (!!ele?.library) {
+                      console.log(ele);
                       if (ele?.label._text?.includes("ountry")) {
                         return (
                           <Col key={i} lg="6" md="6" sm="12">
@@ -521,7 +503,7 @@ const AddTax = () => {
                   <Label className="py-1">Notification</Label>
                   <div>
                     {CreatAccountView &&
-                      CreatAccountView?.CreateAccount?.CheckBox?.input?.map(
+                      CreatAccountView?.AddSupplier?.CheckBox?.input?.map(
                         (ele, i) => {
                           return (
                             <>
@@ -598,7 +580,7 @@ const AddTax = () => {
                   </Label>
                   <div className="form-label-group mx-1">
                     {CreatAccountView &&
-                      CreatAccountView?.CreateAccount?.Radiobutton?.input?.map(
+                      CreatAccountView?.AddSupplier?.Radiobutton?.input?.map(
                         (ele, i) => {
                           return (
                             <FormGroup key={i}>
@@ -645,4 +627,4 @@ const AddTax = () => {
     </div>
   );
 };
-export default AddTax;
+export default CreateNotes;
