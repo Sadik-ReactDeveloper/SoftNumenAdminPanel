@@ -161,7 +161,7 @@ const navigationConfig = [
       },
 
       {
-        id: "Parts Catelog",
+        id: "PartsCatelog",
         title: "Parts Catelogue",
         type: "item",
         icon: <FaCircle size={8} />,

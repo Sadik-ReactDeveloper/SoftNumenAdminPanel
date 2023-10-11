@@ -8,7 +8,21 @@ import {
   Create_Account_List,
   Delete_Account_List,
   Create_Account_Update,
+  SpartPart_Upload,
+  orders_Upload,
+  Inspection_Upload,
+  Invoice_Upload,
+  ServiceCenter_Upload,
+  Supplier_Upload,
+  Supports_Upload,
+  Customer_Upload,
+  Campaign_Upload,
+  Dealer_Upload,
+  Distributor_Upload,
+  Warehouse_Upload,
+  Service_Upload,
   Part_catelougue,
+  Products_Upload,
   Spare_Parts,
   Parts_Catalogue,
   Order_Parts,
@@ -19,6 +33,9 @@ import {
   createWikiView,
   createQuoteView,
   createWarehouseView,
+  Spare_PartsView,
+  Orders_View,
+  CampaignList_View,
 } from "./Api";
 import axiosConfig from "../axiosConfig";
 
@@ -57,8 +74,9 @@ export const CreateAccountSave = async data => {
     .then(res => res.data);
   return response;
 };
+// export const DeleteAccount = async id => {
+//   console.log(id);
 export const DeleteAccount = async id => {
-  console.log(id);
   let response = await axiosConfig
     .get(`${Delete_Account_List}` + id)
     .then(res => res.data);
@@ -90,6 +108,8 @@ export const Customer_Registration = async () => {
 };
 
 // part
+// export const PartCatelougue = async formdata => {
+// part upload
 export const PartCatelougue = async formdata => {
   console.log(formdata);
   let response = await axiosConfig
@@ -97,6 +117,107 @@ export const PartCatelougue = async formdata => {
     .then(res => res.data);
   return response;
 };
+export const SpareParts = async formdata => {
+  console.log(formdata);
+  let response = await axiosConfig
+    .post(`${SpartPart_Upload}`, formdata)
+    .then(res => res.data);
+  return response;
+};
+export const ProdctsUpload = async formdata => {
+  console.log(formdata);
+  let response = await axiosConfig
+    .post(`${Products_Upload}`, formdata)
+    .then(res => res.data);
+  return response;
+};
+export const Orders = async formdata => {
+  console.log(formdata);
+  let response = await axiosConfig
+    .post(`${orders_Upload}`, formdata)
+    .then(res => res.data);
+  return response;
+};
+export const InspectionUpload = async formdata => {
+  console.log(formdata);
+  let response = await axiosConfig
+    .post(`${Inspection_Upload}`, formdata)
+    .then(res => res.data);
+  return response;
+};
+export const InvoiceUpload = async formdata => {
+  console.log(formdata);
+  let response = await axiosConfig
+    .post(`${Invoice_Upload}`, formdata)
+    .then(res => res.data);
+  return response;
+};
+export const SupporttUpload = async formdata => {
+  console.log(formdata);
+  let response = await axiosConfig
+    .post(`${Supports_Upload}`, formdata)
+    .then(res => res.data);
+  return response;
+};
+export const ServicingUpload = async formdata => {
+  console.log(formdata);
+  let response = await axiosConfig
+    .post(`${Service_Upload}`, formdata)
+    .then(res => res.data);
+  return response;
+};
+export const WareHouseUpload = async formdata => {
+  console.log(formdata);
+  let response = await axiosConfig
+    .post(`${Warehouse_Upload}`, formdata)
+    .then(res => res.data);
+  return response;
+};
+export const DistributorUpload = async formdata => {
+  console.log(formdata);
+  let response = await axiosConfig
+    .post(`${Distributor_Upload}`, formdata)
+    .then(res => res.data);
+  return response;
+};
+export const DealerUpload = async formdata => {
+  console.log(formdata);
+  let response = await axiosConfig
+    .post(`${Dealer_Upload}`, formdata)
+    .then(res => res.data);
+  return response;
+};
+export const SupplierUpload = async formdata => {
+  console.log(formdata);
+  let response = await axiosConfig
+    .post(`${Supplier_Upload}`, formdata)
+    .then(res => res.data);
+  return response;
+};
+export const ServiceCenterUpload = async formdata => {
+  console.log(formdata);
+  let response = await axiosConfig
+    .post(`${ServiceCenter_Upload}`, formdata)
+    .then(res => res.data);
+  return response;
+};
+export const CustomerDataUpload = async formdata => {
+  console.log(formdata);
+  let response = await axiosConfig
+    .post(`${Customer_Upload}`, formdata)
+    .then(res => res.data);
+  return response;
+};
+export const CampaignUpload = async formdata => {
+  console.log(formdata);
+  let response = await axiosConfig
+    .post(`${Campaign_Upload}`, formdata)
+    .then(res => res.data);
+  return response;
+};
+
+// End import
+
 export const PartCatalogueView = async () => {
   let response = await axiosConfig
     .get(`${Part_CatalogueView}`)
@@ -106,6 +227,22 @@ export const PartCatalogueView = async () => {
 
 export const SparesPartsList = async () => {
   let response = await axiosConfig.get(`${Spare_Parts}`).then(res => res.data);
+  return response;
+};
+export const SparesPartsView = async () => {
+  let response = await axiosConfig
+    .get(`${Spare_PartsView}`)
+    .then(res => res.data);
+  return response;
+};
+export const OrdersViewList = async () => {
+  let response = await axiosConfig.get(`${Orders_View}`).then(res => res.data);
+  return response;
+};
+export const CampaignListView = async () => {
+  let response = await axiosConfig
+    .get(`${CampaignList_View}`)
+    .then(res => res.data);
   return response;
 };
 

@@ -29,6 +29,7 @@ import OtpInput from "react-otp-input";
 import swal from "sweetalert";
 import axiosConfig from "../../../../axiosConfig";
 import { UserLogin, UserOTPVerify } from "../../../../ApiEndPoint/ApiCalling";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 class Login extends React.Component {
   // static contextType = UserContext;
@@ -38,7 +39,12 @@ class Login extends React.Component {
     this.state = {
       email: "",
       Otp: "",
+      emailotp: "",
+      type: "password",
+      whatsappotp: "",
+      smsotp: "",
       OtpScreen: false,
+      UserCredential: {},
       password: "",
       resetpassword: false,
     };
@@ -49,22 +55,18 @@ class Login extends React.Component {
   };
   loginOTPHandler = async (e) => {
     e.preventDefault();
-    if (this.state.Otp?.length == 6) {
-      // console.log(this.state.Otp);
-      let Opt = { otp: this.state.Otp, email: this.state.email };
+    if (this.state.emailotp?.length == 6) {
+      let Opt = { otp: this.state.emailotp, username: this.state.email };
       await UserOTPVerify(Opt)
         .then((response) => {
-          // debugger;
-          // console.log(response);
           if (response?.status) {
             localStorage.setItem("userData", JSON.stringify(response?.user));
             setTimeout(() => {
               this.props.history.push("/dashboard");
-            }, 2000);
+            }, 1500);
             swal(
               "Sucessfully login",
               "You are LoggedIn!",
-              "Success",
 
               {
                 buttons: {
@@ -87,17 +89,17 @@ class Login extends React.Component {
           swal(`Error`, `${err.response?.data.message}`);
         });
     } else {
-      // swal("Please Enter Correct OTP");
-      swal({
-        title: "Are you sure?",
-        text: "Are you sure that you want to leave this page?",
-        icon: "warning",
-        dangerMode: true,
-      }).then((willDelete) => {
-        if (willDelete) {
-          swal("Deleted!", "Your imaginary file has been deleted!", "success");
-        }
-      });
+      swal("Please Enter OTP");
+      // swal({
+      //   title: "Are you sure?",
+      //   text: "Are you sure that you want to leave this page?",
+      //   icon: "warning",
+      //   dangerMode: true,
+      // }).then((willDelete) => {
+      //   if (willDelete) {
+      //     swal("Deleted!", "Your imaginary file has been deleted!", "success");
+      //   }
+      // });
     }
   };
 
@@ -107,11 +109,26 @@ class Login extends React.Component {
     // console.log(data);
     await UserLogin(data)
       .then((res) => {
-        // console.log(res);
-        if (res?.status) {
-          swal("Success", "OTP sent to Your Register mail id");
-          this.setState({ OtpScreen: true });
+        debugger;
+        if (
+          JSON.parse(res?.user?.gmail) ||
+          JSON.parse(res?.user?.whatsapp) ||
+          JSON.parse(res?.user?.sms)
+        ) {
+          this.setState({ UserCredential: res?.user });
+          if (res?.status) {
+            swal("Success", "OTP sent");
+            this.setState({ OtpScreen: true });
+          } else {
+            swal("Something Went Wrong");
+          }
+        } else {
+          debugger;
+
+          localStorage.setItem("userData", JSON.stringify(res?.user));
+          this.props.history.push("/dashboard");
         }
+        debugger;
       })
       .catch((err) => {
         console.log(err.response);
@@ -191,12 +208,13 @@ class Login extends React.Component {
         console.log(err);
       });
   };
-  handleChangeOTP = (otp) => {
-    // console.log(otp);
-    this.setState({ Otp: otp });
-  };
+  // handleChangeOTP = (otp) => {
+  //   // console.log(otp);
+  //   this.setState({ emailotp: otp });
+  // };
 
   render() {
+    const { UserCredential } = this.state;
     return (
       <Container>
         <Row className="m-0 justify-content-center">
@@ -256,32 +274,93 @@ class Login extends React.Component {
                         <>
                           {this.state.OtpScreen && this.state.OtpScreen ? (
                             <>
-                              <CardHeader className="pb-1">
+                              <CardHeader className="">
                                 <CardTitle>
                                   <h4 className="mb-0">
                                     <strong>Login</strong>
                                   </h4>
                                 </CardTitle>
                               </CardHeader>
-                              <p className="px-2 auth-title mb-2">
-                                Welcome , Enter Email OTP to Login your Account.
+                              <p className="px-2 auth-title">
+                                Welcome , Enter OTP to Login your Account.
                               </p>
                               <Form onSubmit={this.loginOTPHandler}>
-                                <FormGroup className="otpscreeen d-flex justify-content-center">
-                                  <OtpInput
-                                    containerStyle="true inputdata"
-                                    inputStyle="true inputdataone"
-                                    className="otpinputtype mb-2"
-                                    value={this.state.Otp}
-                                    name="emailotp"
-                                    onChange={this.handleChangeOTP}
-                                    numInputs={6}
-                                    renderSeparator={<span>-</span>}
-                                    renderInput={(props) => (
-                                      <input className="inputs" {...props} />
-                                    )}
-                                  />
-                                </FormGroup>
+                                <FormGroup className="otpscreeen d-flex justify-content-center"></FormGroup>
+                                <div className="py-1 d-flex justify-content-center">
+                                  {JSON.parse(UserCredential?.gmail) && (
+                                    <>
+                                      <p className="px-2 auth-title">
+                                        Email OTP
+                                      </p>
+                                      <OtpInput
+                                        containerStyle="true inputdata"
+                                        inputStyle="true inputdataone"
+                                        className="otpinputtype"
+                                        value={this.state.emailotp}
+                                        name="emailotp"
+                                        onChange={(otp) =>
+                                          this.setState({ emailotp: otp })
+                                        }
+                                        numInputs={6}
+                                        renderSeparator={<span>-</span>}
+                                        renderInput={(props) => (
+                                          <input
+                                            className="inputs"
+                                            {...props}
+                                          />
+                                        )}
+                                      />
+                                    </>
+                                  )}
+                                  {JSON.parse(UserCredential?.whatsapp) && (
+                                    <>
+                                      <p className="px-2 auth-title">
+                                        Whatsapp OTP
+                                      </p>
+                                      <OtpInput
+                                        containerStyle="true inputdata"
+                                        inputStyle="true inputdataone"
+                                        className="otpinputtype"
+                                        value={this.state.whatsappotp}
+                                        name="whatsappotp"
+                                        onChange={(otp) =>
+                                          this.setState({ whatsappotp: otp })
+                                        }
+                                        numInputs={6}
+                                        renderSeparator={<span>-</span>}
+                                        renderInput={(props) => (
+                                          <input
+                                            className="inputs"
+                                            {...props}
+                                          />
+                                        )}
+                                      />
+                                    </>
+                                  )}
+                                  {JSON.parse(UserCredential?.sms) && (
+                                    <>
+                                      <p className="px-2 auth-title">SMS OTP</p>
+                                      <OtpInput
+                                        containerStyle="true inputdata"
+                                        inputStyle="true inputdataone"
+                                        className="otpinputtype"
+                                        value={this.state.smsotp}
+                                        name="smsotp"
+                                        onChange={(otp) =>
+                                          this.setState({ smsotp: otp })
+                                        }
+                                        numInputs={6}
+                                        renderSeparator={<span>-</span>}
+                                        renderInput={(props) => (
+                                          <input
+                                            className="inputs"
+                                            {...props}
+                                          />
+                                        )}
+                                      />
+                                    </>
+                                  )}
+                                </div>
 
                                 <div className="d-flex justify-content-center">
                                   {/* <Button.Ripple
@@ -352,13 +431,45 @@ class Login extends React.Component {
                                       Password
                                     </InputGroupAddon>
                                     <Input
-                                      type="password"
+                                      type={this.state.type}
                                       name="password"
                                       placeholder="Password"
                                       value={this.state.password}
                                       onChange={this.handlechange}
                                       required
                                     />
+                                    <span
+                                      className="eyeviewpassword"
+                                      style={{
+                                        position: "absolute",
+                                        cursor: "pointer",
+                                      }}
+                                    >
+                                      {this.state.type == "text" ? (
+                                        <>
+                                          {" "}
+                                          <AiFillEyeInvisible
+                                            onClick={() =>
+                                              this.setState({
+                                                type: "password",
+                                              })
+                                            }
+                                            size="25px"
+                                            color="blue"
+                                          />
+                                        </>
+                                      ) : (
+                                        <>
+                                          <AiFillEye
+                                            onClick={() =>
+                                              this.setState({ type: "text" })
+                                            }
+                                            size="25px"
+                                            color="blue"
+                                          />
+                                        </>
+                                      )}
+                                    </span>
                                   </InputGroup>
                                 </FormGroup>
 

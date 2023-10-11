@@ -14,7 +14,7 @@ import {
   ModalHeader,
   ModalBody,
 } from "reactstrap";
-// import ExcelReader from "../parts/ExcelReader";
+// import ExcelReader from "../../parts/ExcelReader";
 import { ContextLayout } from "../../../../../utility/context/Layout";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
@@ -41,9 +41,13 @@ import {
 import "moment-timezone";
 import swal from "sweetalert";
 import {
+  CampaignListView,
   CreateAccountList,
   CreateAccountView,
   DeleteAccount,
+  OrderPartsList,
+  OrdersViewList,
+  SparesPartsView,
 } from "../../../../../ApiEndPoint/ApiCalling";
 import {
   BsCloudDownloadFill,
@@ -51,6 +55,7 @@ import {
   BsFillArrowUpSquareFill,
 } from "react-icons/bs";
 import * as XLSX from "xlsx";
+import { SparesPartsList } from "../../../../../ApiEndPoint/ApiCalling";
 
 const SelectedCols = [];
 
@@ -64,7 +69,7 @@ class Campaignlist extends React.Component {
       Arrindex: "",
       rowData: [],
       setMySelectedarr: [],
-      paginationPageSize: 20,
+      paginationPageSize: 5,
       currenPageSize: "",
       getPageSize: "",
       columnDefs: [],
@@ -97,98 +102,38 @@ class Campaignlist extends React.Component {
   };
 
   async componentDidMount() {
-    await CreateAccountView()
+    let headings;
+    let maxKeys = 0;
+    let elementWithMaxKeys = null;
+    await CampaignListView()
       .then((res) => {
-        var mydropdownArray = [];
-        var adddropdown = [];
-        const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        console.log(JSON.parse(jsonData));
-        const checkboxinput = JSON.parse(
-          jsonData
-        ).CreateAccount?.CheckBox?.input?.map((ele) => {
-          return {
-            headerName: ele?.label?._text,
-            field: ele?.name?._text,
-            filter: true,
-            sortable: true,
-            cellRendererFramework: (params) => {
-              console.log(params.data);
-              return params.data?.Status === "Active" ? (
-                <div className="badge badge-pill badge-success">
-                  {params.data.Status}
-                </div>
-              ) : params.data?.Status === "Deactive" ? (
-                <div className="badge badge-pill badge-warning">
-                  {params.data.Status}
-                </div>
-              ) : (
-                "NA"
-              );
-            },
-          };
-        });
-        const inputs = JSON.parse(jsonData).CreateAccount?.input?.map((ele) => {
-          return {
-            headerName: ele?.label._text,
-            field: ele?.name._text,
-            filter: true,
-            sortable: true,
-          };
-        });
-        let Radioinput =
-          JSON.parse(jsonData).CreateAccount?.Radiobutton?.input[0]?.name
-            ?._text;
-        const addRadio = [
-          {
-            headerName: Radioinput,
-            field: Radioinput,
-            filter: true,
-            sortable: true,
-            cellRendererFramework: (params) => {
-              return params.data?.Status === "Active" ? (
-                <div className="badge badge-pill badge-success">
-                  {params.data.Status}
-                </div>
-              ) : params.data?.Status === "Deactive" ? (
-                <div className="badge badge-pill badge-warning">
-                  {params.data.Status}
-                </div>
-              ) : (
-                "NA"
-              );
-            },
-          },
-        ];
+        console.log(res);
 
-        let dropdown = JSON.parse(jsonData).CreateAccount?.MyDropdown?.dropdown;
-        if (dropdown.length) {
-          var mydropdownArray = dropdown?.map((ele) => {
-            return {
-              headerName: ele?.label,
-              field: ele?.name,
-              filter: true,
-              sortable: true,
-            };
-          });
-        } else {
-          var adddropdown = [
-            {
-              headerName: dropdown?.label._text,
-              field: dropdown?.name._text,
-              filter: true,
-              sortable: true,
-            },
-          ];
+        for (const element of res?.Campaign) {
+          const numKeys = Object.keys(element).length; // Get the number of keys in the current element
+          if (numKeys > maxKeys) {
+            maxKeys = numKeys; // Update the maximum number of keys
+            elementWithMaxKeys = element; // Update the element with maximum keys
+          }
         }
-
-        let myHeadings = [
-          ...checkboxinput,
-          ...inputs,
-          ...adddropdown,
-          ...addRadio,
-          ...mydropdownArray,
-        ];
-        // console.log(myHeadings);
+        let findheading = Object.keys(elementWithMaxKeys);
+        let index = findheading.indexOf("_id");
+        if (index > -1) {
+          findheading.splice(index, 1);
+        }
+        let index1 = findheading.indexOf("__v");
+        if (index1 > -1) {
+          findheading.splice(index1, 1);
+        }
+        headings = findheading?.map((ele) => {
+          return {
+            headerName: ele,
+            field: ele,
+            filter: true,
+            sortable: true,
+          };
+        });
+        // console.log(headings);
         let Product = [
           {
             headerName: "Actions",
@@ -239,19 +184,11 @@ class Campaignlist extends React.Component {
               );
             },
           },
-          ...myHeadings,
+          ...headings,
         ];
         this.setState({ columnDefs: Product });
         this.setState({ AllcolumnDefs: Product });
-      })
-      .catch((err) => {
-        console.log(err);
-        swal("Error", "something went wrong try again");
-      });
-    await CreateAccountList()
-      .then((res) => {
-        let value = res?.CreateAccount;
-        this.setState({ rowData: value });
+        this.setState({ rowData: res?.Campaign });
       })
       .catch((err) => {
         console.log(err);
@@ -681,11 +618,23 @@ class Campaignlist extends React.Component {
                                     0
                                       ? this.state.currenPageSize *
                                         this.state.getPageSize
-                                      : this.state.rowData.length}{" "}
+                                      : this.state.rowData.length}
                                     of {this.state.rowData.length}
                                     <ChevronDown className="ml-50" size={15} />
                                   </DropdownToggle>
                                   <DropdownMenu right>
+                                    <DropdownItem
+                                      tag="div"
+                                      onClick={() => this.filterSize(5)}
+                                    >
+                                      05
+                                    </DropdownItem>
+                                    <DropdownItem
+                                      tag="div"
+                                      onClick={() => this.filterSize(10)}
+                                    >
+                                      10
+                                    </DropdownItem>
                                     <DropdownItem
                                       tag="div"
                                       onClick={() => this.filterSize(20)}
@@ -713,31 +662,14 @@ class Campaignlist extends React.Component {
                                   </DropdownMenu>
                                 </UncontrolledDropdown>
                               </div>
-                              <div className="d-flex flex-wrap justify-content-between mb-1">
+                              <div className="d-flex flex-wrap justify-content-end mb-1">
                                 <div className="table-input mr-1">
                                   <Input
-                                    placeholder="search..."
+                                    placeholder="search Item here..."
                                     onChange={(e) =>
                                       this.updateSearchQuery(e.target.value)
                                     }
                                     value={this.state.value}
-                                  />
-                                </div>
-                                <div className="export-btn">
-                                  <Route
-                                    render={({ history }) => (
-                                      <Button
-                                        className="btn float-right"
-                                        color="primary"
-                                        onClick={() =>
-                                          history.push(
-                                            "/app/softNumen/warranty/createCampaign"
-                                          )
-                                        }
-                                      >
-                                        Create Campaign
-                                      </Button>
-                                    )}
                                   />
                                 </div>
                               </div>
