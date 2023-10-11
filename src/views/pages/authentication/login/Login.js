@@ -55,7 +55,7 @@ class Login extends React.Component {
     e.preventDefault();
     if (this.state.Otp?.length == 6) {
       // console.log(this.state.Otp);
-      let Opt = { otp: this.state.Otp, email: this.state.email };
+      let Opt = { otp: this.state.Otp, username: this.state.email };
       await UserOTPVerify(Opt)
         .then((response) => {
           // debugger;
@@ -64,11 +64,10 @@ class Login extends React.Component {
             localStorage.setItem("userData", JSON.stringify(response?.user));
             setTimeout(() => {
               this.props.history.push("/dashboard");
-            }, 2000);
+            }, 1500);
             swal(
               "Sucessfully login",
               "You are LoggedIn!",
-              "Success",
 
               {
                 buttons: {
@@ -91,17 +90,17 @@ class Login extends React.Component {
           swal(`Error`, `${err.response?.data.message}`);
         });
     } else {
-      // swal("Please Enter Correct OTP");
-      swal({
-        title: "Are you sure?",
-        text: "Are you sure that you want to leave this page?",
-        icon: "warning",
-        dangerMode: true,
-      }).then((willDelete) => {
-        if (willDelete) {
-          swal("Deleted!", "Your imaginary file has been deleted!", "success");
-        }
-      });
+      swal("Please Enter OTP");
+      // swal({
+      //   title: "Are you sure?",
+      //   text: "Are you sure that you want to leave this page?",
+      //   icon: "warning",
+      //   dangerMode: true,
+      // }).then((willDelete) => {
+      //   if (willDelete) {
+      //     swal("Deleted!", "Your imaginary file has been deleted!", "success");
+      //   }
+      // });
     }
   };
 
