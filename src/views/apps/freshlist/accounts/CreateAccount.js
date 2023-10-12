@@ -203,10 +203,12 @@ const CreateAccount = () => {
                       View = roles?.permissions?._text.includes("View");
                       Edit = roles?.permissions?._text.includes("Edit");
                     } */
+
                     }
                     if (!!ele?.phoneinput) {
                       return (
                         <>
+
                           <Col key={i} lg="6" md="6" sm="12">
                             <FormGroup>
                               <Label>{ele?.label?._text}</Label>
@@ -232,6 +234,51 @@ const CreateAccount = () => {
                                 }}
                               />
                               {index === i ? (
+
+                          <>
+                            <Col key={i} lg="6" md="6" sm="12">
+                              <FormGroup>
+                                <Label>{ele?.label?._text}</Label>
+                                <PhoneInput
+                                  inputClass="myphoneinput"
+                                  country={"us"}
+                                  onKeyDown={e => {
+                                    if (
+                                      ele?.type?._attributes?.type == "number"
+                                    ) {
+                                      ["e", "E", "+", "-"].includes(e.key) &&
+                                        e.preventDefault();
+                                    }
+                                  }}
+                                  countryCodeEditable={false}
+                                  name={ele?.name?._text}
+                                  value={formData[ele?.name?._text]}
+                                  onChange={phone => {
+                                    setFormData({
+                                      ...formData,
+                                      [ele?.name?._text]: phone,
+                                    });
+                                  }}
+                                  // onChange={handleInputChange}
+                                />
+                                {index === i ? (
+                                  <>
+                                    {error && (
+                                      <span style={{ color: "red" }}>
+                                        {error}
+                                      </span>
+                                    )}
+                                  </>
+                                ) : (
+                                  <></>
+                                )}
+                              </FormGroup>
+                            </Col>
+                          </>
+                          {/* ) : (
+                            <>
+                              {View && View ? (
+
                                 <>
                                   {error && (
                                     <span style={{ color: "red" }}>
@@ -370,6 +417,7 @@ const CreateAccount = () => {
 
                               <Input
                                 onKeyDown={(e) => {
+                                onKeyDown={(e) => {
                                   if (
                                     ele?.type?._attributes?.type == "number"
                                   ) {
@@ -381,6 +429,7 @@ const CreateAccount = () => {
                                 placeholder={ele?.placeholder?._text}
                                 name={ele?.name?._text}
                                 value={formData[ele?.name?._text]}
+                                onChange={(e) =>
                                 onChange={(e) =>
                                   handleInputChange(
                                     e,
@@ -412,7 +461,7 @@ const CreateAccount = () => {
                               <Label>{ele?.label?._text}</Label>
 
                               <Input
-                                onKeyDown={(e) => {
+                                onKeyDown={e => {
                                   if (
                                     ele?.type?._attributes?.type == "number"
                                   ) {
@@ -424,7 +473,7 @@ const CreateAccount = () => {
                                 placeholder={ele?.placeholder?._text}
                                 name={ele?.name?._text}
                                 value={formData[ele?.name?._text]}
-                                onChange={(e) =>
+                                onChange={e =>
                                   handleInputChange(
                                     e,
                                     ele?.type?._attributes?.type,
