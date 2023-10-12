@@ -64,7 +64,7 @@ class ProductType extends React.Component {
       Arrindex: "",
       rowData: [],
       setMySelectedarr: [],
-      paginationPageSize: 20,
+      paginationPageSize: 5,
       currenPageSize: "",
       getPageSize: "",
       columnDefs: [],
@@ -112,7 +112,6 @@ class ProductType extends React.Component {
             filter: true,
             sortable: true,
             cellRendererFramework: (params) => {
-              console.log(params.data);
               return params.data?.Status === "Active" ? (
                 <div className="badge badge-pill badge-success">
                   {params.data.Status}
@@ -145,6 +144,7 @@ class ProductType extends React.Component {
             filter: true,
             sortable: true,
             cellRendererFramework: (params) => {
+              console.log(params?.data);
               return params.data?.Status === "Active" ? (
                 <div className="badge badge-pill badge-success">
                   {params.data.Status}
@@ -686,6 +686,12 @@ class ProductType extends React.Component {
                                     <ChevronDown className="ml-50" size={15} />
                                   </DropdownToggle>
                                   <DropdownMenu right>
+                                    <DropdownItem
+                                      tag="div"
+                                      onClick={() => this.filterSize(5)}
+                                    >
+                                      5
+                                    </DropdownItem>
                                     <DropdownItem
                                       tag="div"
                                       onClick={() => this.filterSize(20)}
