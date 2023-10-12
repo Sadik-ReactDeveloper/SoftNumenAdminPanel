@@ -451,6 +451,9 @@ const CreateWiki = lazy(() =>
 const CreateSupport = lazy(() =>
   import("./views/apps/freshlist/customer/Support/CreateSupport")
 );
+const ServicingList = lazy(() =>
+  import("./views/apps/freshlist/customer/Support/ServicingList")
+);
 const SupportSearch = lazy(() =>
   import("./views/apps/freshlist/customer/Support/SupportSearch")
 );
@@ -486,6 +489,9 @@ const AddCourierCharges = lazy(() =>
 );
 const AddSupplier = lazy(() =>
   import("./views/apps/freshlist/customer/Quotation/AddSupplier")
+);
+const SupplierLists = lazy(() =>
+  import("./views/apps/freshlist/customer/Quotation/SupplierList")
 );
 const AddNewSupplier = lazy(() =>
   import("./views/apps/freshlist/customer/Quotation/AddNewSupplier")
@@ -989,10 +995,10 @@ const accessControl = lazy(() =>
 const RouteConfig = ({ component: Component, fullLayout, ...rest }) => (
   <Route
     {...rest}
-    render={props => {
+    render={(props) => {
       return (
         <ContextLayout.Consumer>
-          {context => {
+          {(context) => {
             let LayoutTag =
               fullLayout === true
                 ? context.fullLayout
@@ -1012,7 +1018,7 @@ const RouteConfig = ({ component: Component, fullLayout, ...rest }) => (
     }}
   />
 );
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     user: state.auth.login.userRole,
   };
@@ -1616,6 +1622,10 @@ class AppRouter extends React.Component {
             component={CreateSupport}
           />
           <AppRoute
+            path="/app/softNumen/warranty/ServicingList"
+            component={ServicingList}
+          />
+          <AppRoute
             path="/app/softNumen/warranty/SupportSearch"
             component={SupportSearch}
           />
@@ -1630,6 +1640,10 @@ class AppRouter extends React.Component {
           <AppRoute
             path="/app/softNumen/system/AddSupplier"
             component={AddSupplier}
+          />
+          <AppRoute
+            path="/app/softNumen/system/SupplierLists"
+            component={SupplierLists}
           />
           <AppRoute
             path="/app/softNumen/system/SupplierLis"

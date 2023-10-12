@@ -208,6 +208,14 @@ const navigationConfig = [
         permissions: ["admin", "editor"],
         navLink: "/app/softNumen/system/ServiceSystem",
       },
+      {
+        id: "Servicing",
+        title: "Service List",
+        type: "item",
+        icon: <FaCog size={15} />,
+        permissions: ["admin", "editor"],
+        navLink: "/app/softNumen/warranty/ServicingList",
+      },
       // {
       //   id: "service",
       //   title: "Service",
@@ -258,6 +266,15 @@ const navigationConfig = [
         icon: <FaCircle size={8} />,
         permissions: ["admin", "editor"],
         navLink: "/app/softNumen/system/AddSupplier",
+        // navLink: "/app/softNumen/system/SupplierList",
+      },
+      {
+        id: "Supplierlist",
+        title: "Supplier List",
+        type: "item",
+        icon: <FaCircle size={8} />,
+        permissions: ["admin", "editor"],
+        navLink: "/app/softNumen/system/SupplierLists",
         // navLink: "/app/softNumen/system/SupplierList",
       },
       {
@@ -1639,6 +1656,7 @@ const navigationConfig = [
     permissions: ["admin", "editor"],
     navLink: "/app/softNumen/warranty/CreateSupport",
   },
+
   {
     id: "Supportsearch",
     title: "Support search",

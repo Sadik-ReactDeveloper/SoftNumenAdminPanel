@@ -12,6 +12,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Badge,
+  Button,
 } from "reactstrap";
 import "./Magnify.css";
 import { AiFillDownCircle, AiFillUpCircle } from "react-icons/ai";
@@ -174,7 +175,8 @@ function PartCatalougue() {
                   <th>#</th>
                   <th>Part Name</th>
                   <th>Part Number</th>
-                  <th>Add to cart</th>
+                  <th>Qty</th>
+                  <th>Cart</th>
                   <th>Part Quantity</th>
                 </tr>
               </thead>
@@ -190,6 +192,19 @@ function PartCatalougue() {
                           </td> */}
                         <td>{val.Part_Name}</td>
                         <td>{val.Part_Number}</td>
+                        <td>
+                          <span className="d-flex">
+                            <Button color="success" size="sm">
+                              -
+                            </Button>
+                            <div className="inputheading">
+                              <input className="addtocartinput" type="number" />
+                            </div>{" "}
+                            <Button color="success" size="sm">
+                              +
+                            </Button>
+                          </span>
+                        </td>
                         <td>
                           <BsCartCheckFill size="25px" fill="#055761" />{" "}
                           <Badge

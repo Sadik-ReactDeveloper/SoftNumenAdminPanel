@@ -46,7 +46,10 @@ import {
   DeleteAccount,
   InspectionView,
   OrderPartsList,
+  ServicingView,
   SparesPartsView,
+  SupplierView,
+  invoice_billingView,
 } from "../../../../../ApiEndPoint/ApiCalling";
 import {
   BsCloudDownloadFill,
@@ -58,7 +61,7 @@ import { SparesPartsList } from "../../../../../ApiEndPoint/ApiCalling";
 
 const SelectedCols = [];
 
-class Scrutiny extends React.Component {
+class ServicingList extends React.Component {
   constructor(props) {
     super(props);
     this.gridRef = React.createRef();
@@ -105,10 +108,10 @@ class Scrutiny extends React.Component {
     let maxKeys = 0;
     let elementWithMaxKeys = null;
 
-    await InspectionView()
+    await ServicingView()
       .then((res) => {
-        console.log(res?.Inspections);
-        for (const element of res?.Inspections) {
+        console.log(res);
+        for (const element of res?.Servicing) {
           const numKeys = Object.keys(element).length; // Get the number of keys in the current element
           if (numKeys > maxKeys) {
             maxKeys = numKeys; // Update the maximum number of keys
@@ -187,7 +190,7 @@ class Scrutiny extends React.Component {
         ];
         this.setState({ columnDefs: Product });
         this.setState({ AllcolumnDefs: Product });
-        this.setState({ rowData: res?.Inspections });
+        this.setState({ rowData: res?.Servicing });
       })
       .catch((err) => {
         console.log(err);
@@ -522,9 +525,7 @@ class Scrutiny extends React.Component {
                     <Card>
                       <Row className="m-2">
                         <Col>
-                          <h1 className="float-left">
-                            Scrutiny/Inspection List
-                          </h1>
+                          <h1 className="float-left">Servicing List</h1>
                         </Col>
                         <Col>
                           <span className="mx-1">
@@ -884,4 +885,4 @@ class Scrutiny extends React.Component {
     );
   }
 }
-export default Scrutiny;
+export default ServicingList;
