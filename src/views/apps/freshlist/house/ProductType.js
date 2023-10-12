@@ -112,8 +112,6 @@ class ProductType extends React.Component {
             filter: true,
             sortable: true,
             cellRendererFramework: (params) => {
-              debugger;
-              console.log(params.data);
               return params.data?.Status === "Active" ? (
                 <div className="badge badge-pill badge-success">
                   {params.data.Status}

@@ -123,7 +123,6 @@ const CreateAccount = () => {
     } else {
       CreateAccountSave(formData)
         .then((res) => {
-          // console.log(res);
           setFormData({});
           if (res.status) {
             window.location.reload();
