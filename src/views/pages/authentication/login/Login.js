@@ -109,7 +109,6 @@ class Login extends React.Component {
     // console.log(data);
     await UserLogin(data)
       .then((res) => {
-        debugger;
         if (
           JSON.parse(res?.user?.gmail) ||
           JSON.parse(res?.user?.whatsapp) ||
@@ -123,12 +122,9 @@ class Login extends React.Component {
             swal("Something Went Wrong");
           }
         } else {
-          debugger;
-
           localStorage.setItem("userData", JSON.stringify(res?.user));
           this.props.history.push("/dashboard");
         }
-        debugger;
       })
       .catch((err) => {
         console.log(err.response);
@@ -425,7 +421,7 @@ class Login extends React.Component {
                                 </FormGroup>
 
                                 {/* <Label>Password</Label> */}
-                                <FormGroup className="form-label-group position-relative has-icon-left">
+                                <FormGroup className="passwordlogin form-label-group position-relative has-icon-left">
                                   <InputGroup>
                                     <InputGroupAddon addonType="prepend">
                                       Password

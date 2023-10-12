@@ -135,8 +135,16 @@ const navigationConfig = [
       //   navLink: "/app/SoftNumen/house/ProductRegistration",
       // },
       {
-        id: "Scheduler",
+        id: "import",
         title: "Import",
+        type: "item",
+        icon: <MdOutlineFolderSpecial size={15} />,
+        permissions: ["admin", "editor"],
+        navLink: "/app/SoftNumen/parts/SchedulerTime",
+      },
+      {
+        id: "import List",
+        title: "Import List",
         type: "item",
         icon: <MdOutlineFolderSpecial size={15} />,
         permissions: ["admin", "editor"],
