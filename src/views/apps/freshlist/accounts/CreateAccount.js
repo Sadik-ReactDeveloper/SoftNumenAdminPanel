@@ -99,7 +99,7 @@ const CreateAccount = () => {
   }, [formData]);
   useEffect(() => {
     CreateAccountView()
-      .then((res) => {
+      .then(res => {
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
         console.log(JSON.parse(jsonData));
 
@@ -111,12 +111,12 @@ const CreateAccount = () => {
 
         setdropdownValue(JSON.parse(jsonData));
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }, []);
 
-  const submitHandler = (e) => {
+  const submitHandler = e => {
     e.preventDefault();
     if (error) {
       swal("Error occured while Entering Details");
@@ -130,7 +130,7 @@ const CreateAccount = () => {
             swal("Acccont Created Successfully");
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
     }
@@ -198,16 +198,17 @@ const CreateAccount = () => {
                     let Edit = "";
                     if (ele?.role) {
                       let roles = ele?.role?.find(
-                        (role) => role._attributes?.name === "WARRANTY APPROVER"
+                        role => role._attributes?.name === "WARRANTY APPROVER"
                       );
 
                       View = roles?.permissions?._text.includes("View");
                       Edit = roles?.permissions?._text.includes("Edit");
-                    } */
+
                     }
                     if (!!ele?.phoneinput) {
                       return (
                         <>
+
                           <Col key={i} lg="6" md="6" sm="12">
                             <FormGroup>
                               <Label>{ele?.label?._text}</Label>
@@ -233,6 +234,51 @@ const CreateAccount = () => {
                                 }}
                               />
                               {index === i ? (
+
+                          <>
+                            <Col key={i} lg="6" md="6" sm="12">
+                              <FormGroup>
+                                <Label>{ele?.label?._text}</Label>
+                                <PhoneInput
+                                  inputClass="myphoneinput"
+                                  country={"us"}
+                                  onKeyDown={e => {
+                                    if (
+                                      ele?.type?._attributes?.type == "number"
+                                    ) {
+                                      ["e", "E", "+", "-"].includes(e.key) &&
+                                        e.preventDefault();
+                                    }
+                                  }}
+                                  countryCodeEditable={false}
+                                  name={ele?.name?._text}
+                                  value={formData[ele?.name?._text]}
+                                  onChange={phone => {
+                                    setFormData({
+                                      ...formData,
+                                      [ele?.name?._text]: phone,
+                                    });
+                                  }}
+                                  // onChange={handleInputChange}
+                                />
+                                {index === i ? (
+                                  <>
+                                    {error && (
+                                      <span style={{ color: "red" }}>
+                                        {error}
+                                      </span>
+                                    )}
+                                  </>
+                                ) : (
+                                  <></>
+                                )}
+                              </FormGroup>
+                            </Col>
+                          </>
+                          {/* ) : (
+                            <>
+                              {View && View ? (
+
                                 <>
                                   {error && (
                                     <span style={{ color: "red" }}>
@@ -257,15 +303,17 @@ const CreateAccount = () => {
                                 inputClass="countryclass"
                                 className="countryclassnw"
                                 options={Country.getAllCountries()}
-                                getOptionLabel={(options) => {
+                                getOptionLabel={options => {
                                   return options["name"];
                                 }}
-                                getOptionValue={(options) => {
+                                getOptionValue={options => {
                                   return options["name"];
                                 }}
                                 value={Countries}
-                                onChange={(country) => {
-                                  setCountry(country);
+
+                               // value={formData.country}
+                                onChange={country => {
+                               setCountry(country);
                                   setFormData({
                                     ...formData,
                                     ["country"]: country?.name,
@@ -295,14 +343,14 @@ const CreateAccount = () => {
                                 options={State?.getStatesOfCountry(
                                   Countries?.isoCode
                                 )}
-                                getOptionLabel={(options) => {
+                                getOptionLabel={options => {
                                   return options["name"];
                                 }}
-                                getOptionValue={(options) => {
+                                getOptionValue={options => {
                                   return options["name"];
                                 }}
                                 value={States}
-                                onChange={(State) => {
+                                onChange={State => {
                                   setState(State);
                                   setFormData({
                                     ...formData,
@@ -334,14 +382,14 @@ const CreateAccount = () => {
                                   States?.countryCode,
                                   States?.isoCode
                                 )}
-                                getOptionLabel={(options) => {
+                                getOptionLabel={options => {
                                   return options["name"];
                                 }}
-                                getOptionValue={(options) => {
+                                getOptionValue={options => {
                                   return options["name"];
                                 }}
                                 value={Cities}
-                                onChange={(City) => {
+                                onChange={City => {
                                   setCities(City);
                                   setFormData({
                                     ...formData,
@@ -413,7 +461,7 @@ const CreateAccount = () => {
                               <Label>{ele?.label?._text}</Label>
 
                               <Input
-                                onKeyDown={(e) => {
+                                onKeyDown={e => {
                                   if (
                                     ele?.type?._attributes?.type == "number"
                                   ) {
@@ -425,7 +473,7 @@ const CreateAccount = () => {
                                 placeholder={ele?.placeholder?._text}
                                 name={ele?.name?._text}
                                 value={formData[ele?.name?._text]}
-                                onChange={(e) =>
+                                onChange={e =>
                                   handleInputChange(
                                     e,
                                     ele?.type?._attributes?.type,
@@ -464,7 +512,7 @@ const CreateAccount = () => {
                                   style={{ marginRight: "3px" }}
                                   type={ele?.type?._attributes?.type}
                                   name={ele?.name?._text}
-                                  onChange={(e) =>
+                                  onChange={e =>
                                     handleInputChange(e, "checkbox")
                                   }
                                 />{" "}
@@ -543,7 +591,7 @@ const CreateAccount = () => {
                                     : "Deactive"
                                 }`}
                                 onChange={handleInputChange}
-                              />{" "}
+                              />
                               <span
                                 className="mx-1 mt-1"
                                 style={{ marginRight: "20px" }}
