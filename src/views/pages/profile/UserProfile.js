@@ -16,6 +16,7 @@ import { Check } from "react-feather";
 import Breadcrumbs from "../../../components/@vuexy/breadCrumbs/BreadCrumb";
 import swal from "sweetalert";
 import axiosConfig from "../../../axiosConfig";
+import { EditUserProfile } from "../../../ApiEndPoint/ApiCalling";
 
 class UserProfile extends React.Component {
   constructor(props) {
@@ -78,15 +79,25 @@ class UserProfile extends React.Component {
 
   submitHandler = (e) => {
     e.preventDefault();
-    console.log(this.state.data);
+    console.log(this.state);
+    let userData = JSON.parse(localStorage.getItem("userData"));
+    debugger;
     const data = new FormData();
     data.append("name", this.state.name);
     data.append("email", this.state.email);
-    // data.append("mobile", this.state.mobile);
-    data.append("password", this.state.password);
-    data.append("cnfmPassword", this.state.cnfmPassword);
+    // data.append("id", userData?._id);
+    data.append("Password", this.state.password);
+    // data.append("cnfmPassword", this.state.cnfmPassword);
+    data.append("dateFormat", this.state.Date_format);
+    data.append("dateTimeFormat", this.state.Date_Time_format);
+    data.append("locale", this.state.Locale);
+    data.append("timeZone", this.state.T_Zone);
     if (this.state.selectedFile !== null) {
-      data.append("adminimg", this.state.selectedFile, this.state.selectedName);
+      data.append(
+        "profileImage",
+        this.state.selectedFile,
+        this.state.selectedName
+      );
     }
 
     for (var value of data.values()) {
@@ -97,18 +108,20 @@ class UserProfile extends React.Component {
       console.log(key);
     }
     //  let { id } = this.props.match.params;
-    axiosConfig
-      .post(`/admin/adminprofile/63875207a1d65ee4d84b3ab2`, data, {})
-      .then((response) => {
-        console.log(response.data.message);
-        swal("Success!", "Submitted SuccessFull!", "success");
-        window.location.reload("/#/pages/profile");
-      })
-
-      .catch((error) => {
-        swal("Error!", "You clicked the button!", "error");
-        console.log(error.response);
-      });
+    if (this.state.password == this.state.cnfmPassword) {
+      EditUserProfile(userData?._id, data)
+        .then((response) => {
+          console.log(response.data.message);
+          swal("Success!", "Submitted SuccessFully", "success");
+          window.location.reload("/#/pages/profile");
+        })
+        .catch((error) => {
+          swal("Error!", "Something went Wrong", "error");
+          console.log(error.response);
+        });
+    } else {
+      swal("Password Does Not Match");
+    }
   };
   render() {
     return (
@@ -208,7 +221,7 @@ class UserProfile extends React.Component {
                         <Input
                           className="form-control"
                           type="file"
-                          name="adminimg"
+                          name="profileImage"
                           onChange={this.onChangeHandler}
                         />
                       </Col>
@@ -270,12 +283,17 @@ class UserProfile extends React.Component {
                         </CustomInput>
                       </Col>
                     </Row>
-                    <CheckBoxesVuexy
-                      color="primary"
-                      icon={<Check className="vx-icon" size={16} />}
-                      label=" I accept the terms & conditions."
-                      defaultChecked={true}
-                    />
+                    <Row>
+                      <Col>
+                        <CheckBoxesVuexy
+                          color="primary"
+                          className="mb-1 mx-1"
+                          icon={<Check className="vx-icon" size={16} />}
+                          label=" I accept the terms & conditions."
+                          defaultChecked={true}
+                        />
+                      </Col>
+                    </Row>
                     <div className="d-flex justify-content-between">
                       <Button.Ripple color="primary" type="submit">
                         Submit

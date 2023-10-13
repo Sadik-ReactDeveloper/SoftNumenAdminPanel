@@ -36,6 +36,7 @@ import {
   Spare_PartsView,
   Orders_View,
   CampaignList_View,
+  Edit_Profile,
   SupportsUpload_View,
   Inspection_View,
   Servicing_View,
@@ -69,6 +70,12 @@ export const UserLogin = async (data) => {
 export const UserOTPVerify = async (data) => {
   let response = await axiosConfig
     .post(Login_OTP, data)
+    .then((res) => res.data);
+  return response;
+};
+export const EditUserProfile = async (id, data) => {
+  let response = await axiosConfig
+    .post(Edit_Profile + id, data)
     .then((res) => res.data);
   return response;
 };

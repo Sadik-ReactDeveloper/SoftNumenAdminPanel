@@ -58,5 +58,6 @@ export const createWarehouseView = "/create-warehouse/create-warehouse";
 // login Api End  Points
 export const Login_User = "/create-account/signin";
 export const Login_OTP = "/create-account/verify-otp";
+export const Edit_Profile = "/create-account/edit-profile/";
 
 // part catalougue
