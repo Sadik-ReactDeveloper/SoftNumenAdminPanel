@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   NavItem,
   NavLink,
@@ -24,6 +24,7 @@ import { IntlContext } from "../../../utility/context/Internationalization";
 import { Route, useHistory } from "react-router-dom";
 import ToggleMode from "./ToggleMode";
 import { BsCartCheckFill } from "react-icons/bs";
+import UserContext from "../../../context/Context";
 const handleNavigation = (e) => {
   e.preventDefault();
   history.push("/#/pages/profile/userProfile");
@@ -138,6 +139,7 @@ const UserDropdown = (props) => {
 };
 
 class NavbarUser extends React.PureComponent {
+  static contextType = UserContext;
   state = {
     // navbarSearch: false,
     langDropdown: false,
@@ -199,6 +201,8 @@ class NavbarUser extends React.PureComponent {
   };
 
   componentDidMount() {
+    const user = this.context;
+    console.log(user?.PartsCatalougueCart?.length);
     // let accessToken = localStorage.getItem("auth-admintoken");
     // if (accessToken === null || accessToken === undefined) {
     //   history.push("/pages/login");
@@ -231,7 +235,7 @@ class NavbarUser extends React.PureComponent {
   render() {
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
     // console.log(pageparmission);
-
+    const user = this.context;
     // console.log(pageparmission?.Userinfo.full_name);
     //  console.log('console.log(this.state.userData) ',this.state.userData.image)
     const { userData } = this.state;
@@ -317,7 +321,7 @@ class NavbarUser extends React.PureComponent {
           <DropdownToggle tag="a" className="nav-link nav-link-label">
             <BsCartCheckFill color="#055761" size={21} />
             <Badge pill color="primary" className="badge-up">
-              1
+              {user?.PartsCatalougueCart && user?.PartsCatalougueCart?.length}
             </Badge>
           </DropdownToggle>
           <DropdownMenu tag="ul" right className="dropdown-menu-media">
@@ -333,39 +337,54 @@ class NavbarUser extends React.PureComponent {
                 wheelPropagation: false,
               }}
             >
-              <div className="d-flex justify-content-between">
-                <Media
-                  className="d-flex align-items-start"
-                  onClick={() => {
-                    history.push("/#/app/softNumen/order/OrderOne");
-                    window.location.reload();
-                  }}
-                >
-                  <Media left href="#">
-                    <Icon.PlusSquare
-                      className="font-medium-5 primary"
-                      size={21}
-                    />
-                  </Media>
-                  <Media body>
-                    <Media heading className="primary media-heading" tag="h6">
-                      You have new order!
-                    </Media>
-                    <p className="notification-text">
-                      Are your going to meet me tonight?
-                    </p>
-                  </Media>
-                  <small>
-                    <time
-                      className="media-meta"
-                      dateTime="2015-06-11T18:29:20+08:00"
-                    >
-                      9 hours ago
-                    </time>
-                  </small>
-                </Media>
-              </div>
-              <div className="d-flex justify-content-between">
+              {user?.PartsCatalougueCart?.map((ele, i) => {
+                console.log(ele);
+                return (
+                  <>
+                    <div className="d-flex justify-content-between">
+                      <Media
+                        key={i}
+                        className="d-flex align-items-start"
+                        onClick={() => {
+                          history.push("/#/app/softNumen/order/OrderOne");
+                          window.location.reload();
+                        }}
+                      >
+                        <Media left href="#">
+                          <Icon.PlusSquare
+                            className="font-medium-5 primary"
+                            size={21}
+                          />
+                        </Media>
+                        <Media body>
+                          <Media
+                            heading
+                            className="primary media-heading"
+                            tag="h6"
+                          >
+                            <p>
+                              {ele?.product?.Part_Name} &nbsp;( Qty:{" "}
+                              {ele?.quantity})
+                            </p>
+                          </Media>
+                          <p className="notification-text">
+                            Are your going to meet me tonight?
+                          </p>
+                        </Media>
+                        <small>
+                          <time
+                            className="media-meta"
+                            dateTime="2015-06-11T18:29:20+08:00"
+                          >
+                            9 hours ago
+                          </time>
+                        </small>
+                      </Media>
+                    </div>
+                  </>
+                );
+              })}
+              {/* <div className="d-flex justify-content-between">
                 <Media className="d-flex align-items-start">
                   <Media left href="#">
                     <Icon.DownloadCloud
@@ -465,7 +484,7 @@ class NavbarUser extends React.PureComponent {
                     </time>
                   </small>
                 </Media>
-              </div>
+              </div> */}
             </PerfectScrollbar>
             <li className="dropdown-menu-footer">
               <DropdownItem tag="a" className="p-1 text-center">

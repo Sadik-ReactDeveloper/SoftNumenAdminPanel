@@ -8,6 +8,7 @@ import {
   Input,
   Card,
   CardTitle,
+  CustomInput,
 } from "reactstrap";
 import "../../../assets/scss/pages/users-profile.scss";
 import CheckBoxesVuexy from "../../../components/@vuexy/checkbox/CheckboxesVuexy";
@@ -33,7 +34,7 @@ class UserProfile extends React.Component {
   }
 
   //Image Submit Handler
-  onChangeHandler = event => {
+  onChangeHandler = (event) => {
     this.setState({ selectedFile: event.target.files[0] });
     this.setState({ selectedName: event.target.files[0].name });
     console.log(event.target.files[0]);
@@ -71,11 +72,11 @@ class UserProfile extends React.Component {
     //   });
   }
 
-  changeHandler = e => {
+  changeHandler = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  submitHandler = e => {
+  submitHandler = (e) => {
     e.preventDefault();
     console.log(this.state.data);
     const data = new FormData();
@@ -98,13 +99,13 @@ class UserProfile extends React.Component {
     //  let { id } = this.props.match.params;
     axiosConfig
       .post(`/admin/adminprofile/63875207a1d65ee4d84b3ab2`, data, {})
-      .then(response => {
+      .then((response) => {
         console.log(response.data.message);
         swal("Success!", "Submitted SuccessFull!", "success");
         window.location.reload("/#/pages/profile");
       })
 
-      .catch(error => {
+      .catch((error) => {
         swal("Error!", "You clicked the button!", "error");
         console.log(error.response);
       });
@@ -159,62 +160,127 @@ class UserProfile extends React.Component {
                       <h4 className="mb-3">Edit Profile</h4>
                       <Col></Col>
                     </CardTitle>
+
                     <Row className="m-0">
-                      <Col sm="12" className="p-0">
-                        <Form action="/">
-                          <Label>Name</Label>
-                          <Input
-                            type="text"
-                            name="name"
-                            placeholder="Name"
-                            value={this.state.name}
-                            onChange={this.changeHandler}
-                          />
-                          <Label>Email</Label>
-                          <Input
-                            type="email"
-                            name="email"
-                            placeholder="email"
-                            value={this.state.email}
-                            onChange={this.changeHandler}
-                          />
-                          <Label>Password</Label>
-                          <Input
-                            type="password"
-                            name="password"
-                            placeholder="Password"
-                            value={this.state.password}
-                            onChange={this.changeHandler}
-                          />
-                          <Label>Confirm Password</Label>
-                          <Input
-                            type="password"
-                            name="cnfmPassword"
-                            placeholder="Reset password"
-                            value={this.state.cnfmPassword}
-                            onChange={this.changeHandler}
-                          />
-                          <Label>User Image</Label>
-                          <Input
-                            className="form-control"
-                            type="file"
-                            name="adminimg"
-                            onChange={this.onChangeHandler}
-                          />
-                          <CheckBoxesVuexy
-                            color="primary"
-                            icon={<Check className="vx-icon" size={16} />}
-                            label=" I accept the terms & conditions."
-                            defaultChecked={true}
-                          />
-                          <div className="d-flex justify-content-between">
-                            <Button.Ripple color="primary" type="submit">
-                              Submit
-                            </Button.Ripple>
-                          </div>
-                        </Form>
+                      <Col sm="12" lg="6" md="6" className="p-1">
+                        <Label>Name</Label>
+                        <Input
+                          type="text"
+                          name="name"
+                          placeholder="Name"
+                          value={this.state.name}
+                          onChange={this.changeHandler}
+                        />
+                      </Col>
+                      <Col sm="12" lg="6" md="6" className="p-1">
+                        <Label>Email</Label>
+                        <Input
+                          type="email"
+                          name="email"
+                          placeholder="email"
+                          value={this.state.email}
+                          onChange={this.changeHandler}
+                        />
+                      </Col>
+                      <Col sm="12" lg="6" md="6" className="p-1">
+                        <Label>Password</Label>
+                        <Input
+                          type="password"
+                          name="password"
+                          placeholder="Password"
+                          value={this.state.password}
+                          onChange={this.changeHandler}
+                        />
+                      </Col>
+
+                      <Col sm="12" lg="6" md="6" className="p-1">
+                        <Label>Confirm Password</Label>
+                        <Input
+                          type="password"
+                          name="cnfmPassword"
+                          placeholder="Reset password"
+                          value={this.state.cnfmPassword}
+                          onChange={this.changeHandler}
+                        />
+                      </Col>
+                      <Col sm="12" lg="6" md="6" className="p-1">
+                        <Label>User Image</Label>
+                        <Input
+                          className="form-control"
+                          type="file"
+                          name="adminimg"
+                          onChange={this.onChangeHandler}
+                        />
+                      </Col>
+                      <Col sm="12" lg="6" md="6" className="p-1">
+                        <Label>Locale</Label>
+                        <CustomInput
+                          name="Locale"
+                          value={this.state.Locale}
+                          onChange={this.changeHandler}
+                          required
+                          type="select"
+                        >
+                          <option value="us">English(US)-USA</option>
+                          <option value=""></option>
+                        </CustomInput>
+                      </Col>
+                      <Col sm="12" lg="6" md="6" className="p-1">
+                        <Label>Time Zone</Label>
+                        <CustomInput
+                          name="T_Zone"
+                          value={this.state.T_Zone}
+                          onChange={this.changeHandler}
+                          required
+                          type="select"
+                        >
+                          <option value="IST">IST</option>
+                          <option value="PST">PST</option>
+                          <option value="EST">EST</option>
+                        </CustomInput>
+                      </Col>
+                      <Col sm="12" lg="6" md="6" className="p-1">
+                        <Label>Date-Format</Label>
+                        <CustomInput
+                          name="Date_format"
+                          value={this.state.Date_format}
+                          onChange={this.changeHandler}
+                          required
+                          type="select"
+                        >
+                          <option value="mm-dd-yy">mm-dd-yy</option>
+                          <option value="dd-mm-yy">dd-mm-yy</option>
+                        </CustomInput>
+                      </Col>
+                      <Col sm="12" lg="6" md="6" className="p-1">
+                        <Label>Date-Time-Format</Label>
+                        <CustomInput
+                          name="Date_Time_format"
+                          value={this.state.Date_Time_format}
+                          onChange={this.changeHandler}
+                          required
+                          type="select"
+                        >
+                          <option value="mm-dd-yy HH:mm:ss">
+                            mm-dd-yy HH:mm:ss
+                          </option>
+                          <option value="dd-mm-yy HH:mm:ss">
+                            dd-mm-yy HH:mm:ss
+                          </option>
+                        </CustomInput>
                       </Col>
                     </Row>
+                    <CheckBoxesVuexy
+                      color="primary"
+                      icon={<Check className="vx-icon" size={16} />}
+                      label=" I accept the terms & conditions."
+                      defaultChecked={true}
+                    />
+                    <div className="d-flex justify-content-between">
+                      <Button.Ripple color="primary" type="submit">
+                        Submit
+                      </Button.Ripple>
+                    </div>
                   </div>
                 </Form>
               </Card>

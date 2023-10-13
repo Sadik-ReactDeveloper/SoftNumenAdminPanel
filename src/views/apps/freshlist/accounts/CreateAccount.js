@@ -30,6 +30,7 @@ import { FcPhoneAndroid } from "react-icons/fc";
 import { BsWhatsapp } from "react-icons/bs";
 import "../../../../assets/scss/pages/users.scss";
 import UserContext from "../../../../context/Context";
+import { CloudLightning } from "react-feather";
 
 const CreateAccount = () => {
   const [CreatAccountView, setCreatAccountView] = useState({});
@@ -248,6 +249,7 @@ const CreateAccount = () => {
                       );
                     } else if (!!ele?.library) {
                       if (ele?.label._text?.includes("ountry")) {
+                        console.log(ele);
                         return (
                           <Col key={i} lg="6" md="6" sm="12">
                             <FormGroup>
@@ -267,7 +269,7 @@ const CreateAccount = () => {
                                   setCountry(country);
                                   setFormData({
                                     ...formData,
-                                    ["country"]: country?.name,
+                                    ["Country"]: country?.name,
                                   });
                                 }}
                               />
