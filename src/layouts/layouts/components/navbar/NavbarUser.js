@@ -68,7 +68,7 @@ const UserDropdown = (props) => {
       <DropdownItem divider />
       <DropdownItem
         tag="a"
-        // href="/pages/login"
+        href="/pages/login"
         onClick={(e) => {
           e.preventDefault();
           // if (isAuthenticated) {

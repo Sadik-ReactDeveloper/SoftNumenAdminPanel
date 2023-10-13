@@ -105,8 +105,7 @@ class SpareParts extends React.Component {
     let elementWithMaxKeys = null;
     await SparesPartsView()
       .then((res) => {
-        // console.log(res?.SparePart);
-
+        console.log(res?.SparePart);
         for (const element of res?.SparePart) {
           const numKeys = Object.keys(element).length; // Get the number of keys in the current element
           if (numKeys > maxKeys) {
@@ -131,7 +130,7 @@ class SpareParts extends React.Component {
             sortable: true,
           };
         });
-        // console.log(headings);
+        console.log(headings);
         let Product = [
           {
             headerName: "Actions",

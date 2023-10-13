@@ -19,7 +19,7 @@ import {
   ModalFooter,
   Table,
 } from "reactstrap";
-
+import Terrance from "./Terrance";
 import { history } from "../../../../history";
 import axiosConfig from "../../../../axiosConfig";
 import Multiselect from "multiselect-react-dropdown";
@@ -73,12 +73,7 @@ const importData = [
 const Scheduler = () => {
   const [scheduler, setScheduler] = useState({});
   const [Adhocfile, setAdhocfile] = useState({});
-  const [Viewpermisson, setViewpermisson] = useState(null);
-  const [Editpermisson, setEditpermisson] = useState(null);
-  const [Createpermisson, setCreatepermisson] = useState(null);
-  const [Deletepermisson, setDeletepermisson] = useState(null);
-
-  const [selectedOptions, setselectedOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [modal, setModal] = useState(false);
 
@@ -126,17 +121,24 @@ const Scheduler = () => {
   };
 
   const handleSubmit = (e) => {
+    setLoading(true);
     e.preventDefault();
     let formdata = new FormData();
+    var selectType;
+    var selectTypes;
     debugger;
-    // console.log(Adhocfile[0].name.split(".")[0]);
     console.log(Role.split(" ").join(""));
+    if (Role.split(" ").join("").includes("/")) {
+      selectType = Role.split("/").join("").split(" ")[0];
+      selectTypes = Role.split("/").join("").split(" ")[1];
+    } else {
+      selectType = Role.split(" ").join("");
+    }
     let adhodfile = Adhocfile[0].name.split(".")[0];
-    let selectType = Role.split(" ").join("");
     // console.log(adhodfile.includes(selectType));
-    if (adhodfile.includes(selectType)) {
+    if (adhodfile.includes(selectType) || adhodfile.includes(selectTypes)) {
       formdata.append("file", Adhocfile[0]);
-      formdata.append("partType", Role);
+      formdata.append("partType", selectType);
 
       if (Role == "SpareParts") {
         SpareParts(formdata)
@@ -151,6 +153,8 @@ const Scheduler = () => {
       if (Role == "Orders") {
         Orders(formdata)
           .then((res) => {
+            setLoading(false);
+
             console.log(res);
             swal(`${Role} File Uploaded Successfully`);
           })
@@ -161,6 +165,8 @@ const Scheduler = () => {
       if (Role == "PartsCatalogue") {
         PartCatelougue(formdata)
           .then((res) => {
+            setLoading(false);
+
             console.log(res);
             swal(`${Role} File Uploaded Successfully`);
           })
@@ -171,6 +177,8 @@ const Scheduler = () => {
       if (Role == "Product Registration") {
         ProdctsUpload(formdata)
           .then((res) => {
+            setLoading(false);
+
             console.log(res);
             swal(`${Role} File Uploaded Successfully`);
           })
@@ -182,6 +190,8 @@ const Scheduler = () => {
         InspectionUpload(formdata)
           .then((res) => {
             console.log(res);
+            setLoading(false);
+
             swal(`${Role} File Uploaded Successfully`);
           })
           .catch((err) => {
@@ -192,6 +202,8 @@ const Scheduler = () => {
         InvoiceUpload(formdata)
           .then((res) => {
             console.log(res);
+            setLoading(false);
+
             swal(`${Role} File Uploaded Successfully`);
           })
           .catch((err) => {
@@ -201,6 +213,8 @@ const Scheduler = () => {
       if (Role == "Support") {
         SupporttUpload(formdata)
           .then((res) => {
+            setLoading(false);
+
             console.log(res);
             swal(`${Role} File Uploaded Successfully`);
           })
@@ -211,6 +225,8 @@ const Scheduler = () => {
       if (Role == "Servicing") {
         ServicingUpload(formdata)
           .then((res) => {
+            setLoading(false);
+
             console.log(res);
             swal(`${Role} File Uploaded Successfully`);
           })
@@ -221,6 +237,8 @@ const Scheduler = () => {
       if (Role == "Warehouse") {
         WareHouseUpload(formdata)
           .then((res) => {
+            setLoading(false);
+
             console.log(res);
             swal(`${Role} File Uploaded Successfully`);
           })
@@ -231,6 +249,8 @@ const Scheduler = () => {
       if (Role == "Distributors") {
         DistributorUpload(formdata)
           .then((res) => {
+            setLoading(false);
+
             console.log(res);
             swal(`${Role} File Uploaded Successfully`);
           })
@@ -241,6 +261,8 @@ const Scheduler = () => {
       if (Role == "Dealers") {
         DealerUpload(formdata)
           .then((res) => {
+            setLoading(false);
+
             console.log(res);
             swal(`${Role} File Uploaded Successfully`);
           })
@@ -251,6 +273,8 @@ const Scheduler = () => {
       if (Role == "Suppliers") {
         SupplierUpload(formdata)
           .then((res) => {
+            setLoading(false);
+
             console.log(res);
             swal(`${Role} File Uploaded Successfully`);
           })
@@ -261,6 +285,8 @@ const Scheduler = () => {
       if (Role == "Service Centers") {
         ServiceCenterUpload(formdata)
           .then((res) => {
+            setLoading(false);
+
             console.log(res);
             swal(`${Role} File Uploaded Successfully`);
           })
@@ -271,6 +297,8 @@ const Scheduler = () => {
       if (Role == "Customer Data") {
         CustomerDataUpload(formdata)
           .then((res) => {
+            setLoading(false);
+
             console.log(res);
             swal(`${Role} File Uploaded Successfully`);
           })
@@ -281,6 +309,8 @@ const Scheduler = () => {
       if (Role == "Campaigns") {
         CampaignUpload(formdata)
           .then((res) => {
+            setLoading(false);
+
             console.log(res);
             swal(`${Role} File Uploaded Successfully`);
           })
@@ -291,7 +321,7 @@ const Scheduler = () => {
     } else {
       swal(
         "Error!",
-        `Note: ${Role} Name and ${adhodfile} Name Prefix Should be Match`,
+        `Note: ${selectType} Name and ${adhodfile} Name Prefix Should be Match`,
         "error"
       );
     }
@@ -549,7 +579,7 @@ const Scheduler = () => {
             </Form>
 
             <hr />
-
+            <Row>{/* <Terrance /> */}</Row>
             <Form>
               <Row className="mt-2">
                 <Col>
@@ -596,13 +626,30 @@ const Scheduler = () => {
                   sm="6"
                   className="mb-2 d-flex justify-content-center"
                 >
-                  <Button.Ripple
-                    color="primary"
-                    onClick={(e) => handleSubmit(e)}
-                    className="mr-1 mt-2 mx-2"
-                  >
-                    Upload
-                  </Button.Ripple>
+                  {loading ? (
+                    <>
+                      {" "}
+                      <>
+                        <Button.Ripple
+                          color="primary"
+                          // onClick={(e) => handleSubmit(e)}
+                          className="mr-1 mt-2 mx-2"
+                        >
+                          Loading..
+                        </Button.Ripple>
+                      </>
+                    </>
+                  ) : (
+                    <>
+                      <Button.Ripple
+                        color="primary"
+                        onClick={(e) => handleSubmit(e)}
+                        className="mr-1 mt-2 mx-2"
+                      >
+                        Upload
+                      </Button.Ripple>
+                    </>
+                  )}
                 </Col>
               </Row>
             </Form>

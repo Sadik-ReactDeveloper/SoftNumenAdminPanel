@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Imagemagnify from "./Imagemagnify";
 import {
   Collapse,
@@ -12,6 +12,11 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Badge,
+  Button,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  Media,
 } from "reactstrap";
 import "./Magnify.css";
 import { AiFillDownCircle, AiFillUpCircle } from "react-icons/ai";
@@ -20,6 +25,7 @@ import { BsCartCheckFill, BsFillArrowRightSquareFill } from "react-icons/bs";
 import * as Icon from "react-feather";
 import ZoomimageTest from "./ZoomimageTest";
 // import { ReactPanZoom } from "./Ra";
+import UserContext from "../../../../context/Context";
 
 function PartCatalougue() {
   const [CollapseIndex, setCollapseIndex] = useState("");
@@ -27,14 +33,24 @@ function PartCatalougue() {
   const [AllData, setAllData] = useState({});
   const [ListData, setListData] = useState([]);
   const [Fullimage, setFullimage] = useState(false);
+  const [Cartvalue, setCartvalue] = useState(0);
+  const [cart, setCart] = useState([]);
+  const [quantities, setQuantities] = useState(
+    ListData.map((product) => ({
+      quantity: 0,
+      elementData: product, // You can set this to the product data
+    }))
+  );
+  const context = useContext(UserContext);
 
   useEffect(() => {
     PartCatalogueView()
       .then((res) => {
-        console.log(res?.Parts_Catalogue);
+        // console.log(res?.Parts_Catalogue);
         setAllData(res?.Parts_Catalogue);
         let keys = Object.keys(res?.Parts_Catalogue);
         setCollapseIndex(0);
+
         setListData(res?.Parts_Catalogue?.backAxleSubassembly);
         setfrontSide(keys);
         // console.log(keys);
@@ -43,6 +59,72 @@ function PartCatalougue() {
         console.log(err);
       });
   }, []);
+  useEffect(() => {
+    const initialQuantities = new Array(ListData.length).fill(0);
+    setQuantities(initialQuantities);
+  }, [ListData]);
+
+  useEffect(() => {
+    console.log(context);
+  }, [context]);
+
+  useEffect(() => {
+    // console.log(cart);
+    context?.setPartsCatalougueCart(cart);
+  }, [cart]);
+
+  const handleIncreaseCount = (index) => {
+    setQuantities((prevQuantities) => {
+      const newQuantities = [...prevQuantities];
+      newQuantities[index] += 1;
+      return newQuantities;
+    });
+  };
+
+  const handleDecreaseCount = (index) => {
+    setQuantities((prevQuantities) => {
+      const newQuantities = [...prevQuantities];
+      if (newQuantities[index] > 0) {
+        newQuantities[index] -= 1;
+      }
+      return newQuantities;
+    });
+  };
+
+  const addToCart = (index) => {
+    if (quantities[index] > 0) {
+      setCart((prevCart) => {
+        const newCart = [...prevCart];
+        newCart.push({
+          product: ListData[index],
+          quantity: quantities[index],
+        });
+        return newCart;
+      });
+      setQuantities((prevQuantities) => {
+        const newQuantities = [...prevQuantities];
+        newQuantities[index] = 0;
+        return newQuantities;
+      });
+    }
+  };
+
+  // const addToCart = (index) => {
+  //   debugger;
+  //   if (quantities[index] > 0) {
+  //     setCart((prevCart) => {
+  //       const newCart = [...prevCart];
+  //       newCart[index] += quantities[index];
+  //       console.log(newCart);
+  //       return newCart;
+  //     });
+  //     setQuantities((prevQuantities) => {
+  //       const newQuantities = [...prevQuantities];
+  //       newQuantities[index] = 0;
+  //       return newQuantities;
+  //     });
+  //   }
+  // };
   const toggleCollapse = (ele, i) => {
     if (ele) {
       setFullimage(true);
@@ -71,8 +153,8 @@ function PartCatalougue() {
       <Row>
         {!Fullimage && (
           <>
-            <Col lg="3" md="3" sm="3" xs="12">
-              <div className="collapse-bordered collapse-border">
+            <Col className="mb-2" lg="3" md="3" sm="3" xs="12">
+              <div className="collapse-bordered collapse-border mb-3">
                 {frontSide?.map((ele, i) => {
                   return (
                     <>
@@ -174,7 +256,8 @@ function PartCatalougue() {
                   <th>#</th>
                   <th>Part Name</th>
                   <th>Part Number</th>
-                  <th>Add to cart</th>
+                  <th>Qty</th>
+                  <th>Add to Cart </th>
                   <th>Part Quantity</th>
                 </tr>
               </thead>
@@ -186,19 +269,110 @@ function PartCatalougue() {
                         <th scope="row">{i + 1}</th>
 
                         {/* <td>
-                            <img src={val.Part_Image?.text} alt="img" />
-                          </td> */}
+                              <img src={val.Part_Image?.text} alt="img" />
+                            </td> */}
                         <td>{val.Part_Name}</td>
                         <td>{val.Part_Number}</td>
                         <td>
-                          <BsCartCheckFill size="25px" fill="#055761" />{" "}
-                          <Badge
-                            pill
-                            color="primary"
-                            className="badge-up addcartcatelougue"
-                          >
-                            1
-                          </Badge>
+                          <span className="d-flex">
+                            <Button
+                              style={{ padding: "7px 8px" }}
+                              className="minusbutton"
+                              color="primary"
+                              size="sm"
+                              onClick={() => handleDecreaseCount(i)}
+                              // onClick={() => {
+                              //   // handleDecreaseCount();
+                              //   const selectedProduct = val[i];
+                              //   const quantity = quantities[i];
+                              //   console.log(quantity);
+                              //   console.log(selectedProduct);
+                              // }}
+                            >
+                              -
+                            </Button>
+                            <div className="inputheading">
+                              <input
+                                style={{ width: "40px" }}
+                                type="number"
+                                name="cart"
+                                min="0"
+                                value={quantities[i]}
+                                onChange={(e) => {
+                                  handleQuantityChange(i, e.target.value);
+                                }}
+                                // onChange={(e) => {
+
+                                //   const newQuantities = [...quantities];
+                                //   newQuantities[i] = e.target.value;
+                                //   setQuantities(newQuantities);
+                                // }}
+                                onKeyDown={(e) => {
+                                  ["e", "E", "+", "-"].includes(e.key) &&
+                                    e.preventDefault();
+                                }}
+                                maxlength="4"
+                                size="2"
+                              />
+                            </div>{" "}
+                            <Button
+                              onClick={() => handleIncreaseCount(i)}
+                              // onClick={() => {
+                              //   const newQuantities = [...quantities];
+                              //   newQuantities[i] = e.target.value;
+                              //   setQuantities(newQuantities);
+                              // }}
+                              style={{ padding: "7px 8px" }}
+                              color="primary"
+                              size="sm"
+                            >
+                              +
+                            </Button>
+                          </span>
+                        </td>
+                        <td>
+                          <>
+                            <div
+                              style={{ width: "71px" }}
+                              className="addtocart d-flex"
+                            >
+                              {quantities[i] > 0 ? (
+                                <>
+                                  <Button
+                                    onClick={() => addToCart(i)}
+                                    style={{ padding: "7px 8px" }}
+                                    color="success"
+                                    size="sm"
+                                  >
+                                    +
+                                  </Button>
+                                </>
+                              ) : null}
+                              <UncontrolledDropdown
+                                // tag="li"
+                                className="dropdown-notification nav-item"
+                              >
+                                <DropdownToggle
+                                  tag="a"
+                                  className="nav-link nav-link-label"
+                                >
+                                  <BsCartCheckFill color="#055761" size={25} />
+                                  <Badge
+                                    style={{
+                                      position: "absolute",
+                                      top: "-1px",
+                                      right: "-2px",
+                                    }}
+                                    pill
+                                    color="primary"
+                                    className="badge-up cartbadgecatalougue"
+                                  >
+                                    {quantities[i]}
+                                  </Badge>
+                                </DropdownToggle>
+                              </UncontrolledDropdown>
+                            </div>
+                          </>
                         </td>
                         <td>{val.Part_Qty}</td>
                       </tr>
@@ -212,9 +386,9 @@ function PartCatalougue() {
       <Row>
         {/* <ZoomimageTest /> */}
         {/* <ReactPanZoom
-          alt="cool image"
-          image="https://drscdn.500px.org/photo/105738331/q%3D80_m%3D2000/v2?webp=true&sig=538a4f76f4966c84acb01426bb4a4a5e4a85b72a2c3bd64973d3a369f9653007"
-        /> */}
+            alt="cool image"
+            image="https://drscdn.500px.org/photo/105738331/q%3D80_m%3D2000/v2?webp=true&sig=538a4f76f4966c84acb01426bb4a4a5e4a85b72a2c3bd64973d3a369f9653007"
+          /> */}
       </Row>
     </>
   );
