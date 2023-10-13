@@ -13,6 +13,10 @@ import {
   BreadcrumbItem,
   Badge,
   Button,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  Media,
 } from "reactstrap";
 import "./Magnify.css";
 import { AiFillDownCircle, AiFillUpCircle } from "react-icons/ai";
@@ -72,8 +76,8 @@ function PartCatalougue() {
       <Row>
         {!Fullimage && (
           <>
-            <Col lg="3" md="3" sm="3" xs="12">
-              <div className="collapse-bordered collapse-border">
+            <Col className="mb-2" lg="3" md="3" sm="3" xs="12">
+              <div className="collapse-bordered collapse-border mb-3">
                 {frontSide?.map((ele, i) => {
                   return (
                     <>
@@ -194,26 +198,58 @@ function PartCatalougue() {
                         <td>{val.Part_Number}</td>
                         <td>
                           <span className="d-flex">
-                            <Button color="success" size="sm">
+                            <Button
+                              style={{ padding: "7px 8px" }}
+                              className="minusbutton"
+                              color="primary"
+                              size="sm"
+                            >
                               -
                             </Button>
                             <div className="inputheading">
-                              <input className="addtocartinput" type="number" />
+                              <input
+                                style={{ width: "40px" }}
+                                type="text"
+                                id="pin"
+                                name="pin"
+                                onKeyDown={(e) => {
+                                  ["e", "E", "+", "-"].includes(e.key) &&
+                                    e.preventDefault();
+                                }}
+                                maxlength="4"
+                                size="2"
+                              />
                             </div>{" "}
-                            <Button color="success" size="sm">
+                            <Button
+                              style={{ padding: "7px 8px" }}
+                              color="primary"
+                              size="sm"
+                            >
                               +
                             </Button>
                           </span>
                         </td>
                         <td>
-                          <BsCartCheckFill size="25px" fill="#055761" />{" "}
-                          <Badge
-                            pill
-                            color="primary"
-                            className="badge-up addcartcatelougue"
-                          >
-                            1
-                          </Badge>
+                          <>
+                            <UncontrolledDropdown
+                              // tag="li"
+                              className="dropdown-notification nav-item"
+                            >
+                              <DropdownToggle
+                                tag="a"
+                                className="nav-link nav-link-label"
+                              >
+                                <BsCartCheckFill color="#055761" size={25} />
+                                <Badge
+                                  pill
+                                  color="primary"
+                                  className="badge-up"
+                                >
+                                  1
+                                </Badge>
+                              </DropdownToggle>
+                            </UncontrolledDropdown>
+                          </>
                         </td>
                         <td>{val.Part_Qty}</td>
                       </tr>

@@ -49,10 +49,26 @@ class Login extends React.Component {
       resetpassword: false,
     };
   }
+  componentDidMount() {
+    this.preventBackButton();
+  }
+  preventBackButton() {
+    window.history.pushState(null, null, window.location.href);
+    this.popstateHandler = function () {
+      window.history.go(1);
+    };
+    window.addEventListener("popstate", this.popstateHandler);
+  }
   handlechange = (e) => {
     e.preventDefault();
     this.setState({ [e.target.name]: e.target.value });
   };
+  componentWillUnmount() {
+    this.allowBackButton();
+  }
+  allowBackButton() {
+    window.removeEventListener("popstate", this.popstateHandler);
+  }
   loginOTPHandler = async (e) => {
     e.preventDefault();
     if (this.state.emailotp?.length == 6) {

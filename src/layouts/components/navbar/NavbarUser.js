@@ -89,7 +89,9 @@ const UserDropdown = (props) => {
             tag="a"
             href="#"
             onClick={(e) => {
-              // e.preventDefault();
+              localStorage.clear();
+              localStorage.removeItem("userData");
+              history.push("/#/pages/login");
               const data = new FormData();
               let pageparmission = JSON.parse(localStorage.getItem("userData"));
               data.append("user_id", pageparmission?.Userinfo?.id);
@@ -99,6 +101,7 @@ const UserDropdown = (props) => {
                 .then((resp) => {
                   console.log(resp);
                   localStorage.clear();
+                  localStorage.removeItem("userData");
                   history.push("/#/pages/login");
                 })
                 .catch((err) => {
@@ -119,9 +122,9 @@ const UserDropdown = (props) => {
                   return props.logoutWithFirebase();
                 }
               } else {
-                // localStorage.removeItem("auth-admintoken");
-                // localStorage.clear();
-                // history.push("/#/pages/login");
+                localStorage.removeItem("userData");
+                localStorage.clear();
+                history.push("/#/pages/login");
               }
             }}
           >
@@ -317,6 +320,159 @@ class NavbarUser extends React.PureComponent {
               1
             </Badge>
           </DropdownToggle>
+          <DropdownMenu tag="ul" right className="dropdown-menu-media">
+            <li className="dropdown-menu-header">
+              <div className="dropdown-header mt-0">
+                <h3 className="text-white">1 New Product </h3>
+                <span className="notification-title">Notifications</span>
+              </div>
+            </li>
+            <PerfectScrollbar
+              className="media-list overflow-hidden position-relative"
+              options={{
+                wheelPropagation: false,
+              }}
+            >
+              <div className="d-flex justify-content-between">
+                <Media
+                  className="d-flex align-items-start"
+                  onClick={() => {
+                    history.push("/#/app/softNumen/order/OrderOne");
+                    window.location.reload();
+                  }}
+                >
+                  <Media left href="#">
+                    <Icon.PlusSquare
+                      className="font-medium-5 primary"
+                      size={21}
+                    />
+                  </Media>
+                  <Media body>
+                    <Media heading className="primary media-heading" tag="h6">
+                      You have new order!
+                    </Media>
+                    <p className="notification-text">
+                      Are your going to meet me tonight?
+                    </p>
+                  </Media>
+                  <small>
+                    <time
+                      className="media-meta"
+                      dateTime="2015-06-11T18:29:20+08:00"
+                    >
+                      9 hours ago
+                    </time>
+                  </small>
+                </Media>
+              </div>
+              <div className="d-flex justify-content-between">
+                <Media className="d-flex align-items-start">
+                  <Media left href="#">
+                    <Icon.DownloadCloud
+                      className="font-medium-5 success"
+                      size={21}
+                    />
+                  </Media>
+                  <Media body>
+                    <Media heading className="success media-heading" tag="h6">
+                      99% Server load
+                    </Media>
+                    <p className="notification-text">
+                      You got new order of goods?
+                    </p>
+                  </Media>
+                  <small>
+                    <time
+                      className="media-meta"
+                      dateTime="2015-06-11T18:29:20+08:00"
+                    >
+                      5 hours ago
+                    </time>
+                  </small>
+                </Media>
+              </div>
+              <div className="d-flex justify-content-between">
+                <Media className="d-flex align-items-start">
+                  <Media left href="#">
+                    <Icon.AlertTriangle
+                      className="font-medium-5 danger"
+                      size={21}
+                    />
+                  </Media>
+                  <Media body>
+                    <Media heading className="danger media-heading" tag="h6">
+                      Warning Notification
+                    </Media>
+                    <p className="notification-text">
+                      Server has used 99% of CPU
+                    </p>
+                  </Media>
+                  <small>
+                    <time
+                      className="media-meta"
+                      dateTime="2015-06-11T18:29:20+08:00"
+                    >
+                      Today
+                    </time>
+                  </small>
+                </Media>
+              </div>
+              <div className="d-flex justify-content-between">
+                <Media className="d-flex align-items-start">
+                  <Media left href="#">
+                    <Icon.CheckCircle
+                      className="font-medium-5 info"
+                      size={21}
+                    />
+                  </Media>
+                  <Media body>
+                    <Media heading className="info media-heading" tag="h6">
+                      Complete the task
+                    </Media>
+                    <p className="notification-text">
+                      One of your task is pending.
+                    </p>
+                  </Media>
+                  <small>
+                    <time
+                      className="media-meta"
+                      dateTime="2015-06-11T18:29:20+08:00"
+                    >
+                      Last week
+                    </time>
+                  </small>
+                </Media>
+              </div>
+              <div className="d-flex justify-content-between">
+                <Media className="d-flex align-items-start">
+                  <Media left href="#">
+                    <Icon.File className="font-medium-5 warning" size={21} />
+                  </Media>
+                  <Media body>
+                    <Media heading className="warning media-heading" tag="h6">
+                      Generate monthly report
+                    </Media>
+                    <p className="notification-text">
+                      Reminder to generate monthly report
+                    </p>
+                  </Media>
+                  <small>
+                    <time
+                      className="media-meta"
+                      dateTime="2015-06-11T18:29:20+08:00"
+                    >
+                      Last month
+                    </time>
+                  </small>
+                </Media>
+              </div>
+            </PerfectScrollbar>
+            <li className="dropdown-menu-footer">
+              <DropdownItem tag="a" className="p-1 text-center">
+                <span className="align-middle">Read all notifications</span>
+              </DropdownItem>
+            </li>
+          </DropdownMenu>
         </UncontrolledDropdown>
         <UncontrolledDropdown
           tag="li"
