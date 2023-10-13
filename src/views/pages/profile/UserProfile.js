@@ -27,8 +27,13 @@ class UserProfile extends React.Component {
       email: "",
       cnfmPassword: "",
       password: "",
+      Role: "",
       adminimg: "",
+      Date_format: "",
+      Date_Time_format: "",
       selectedName: "",
+      Locale: "",
+      T_Zone: "",
       selectedFile: null,
       data: {},
     };
@@ -44,13 +49,14 @@ class UserProfile extends React.Component {
   componentDidMount() {
     // let { id } = this.props.match.params;
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
-    console.log(pageparmission?.Userinfo);
-    this.setState({ LoginData: pageparmission?.Userinfo });
+    console.log(pageparmission);
+    this.setState({ LoginData: pageparmission });
     this.setState({
       // data: response.data.data,
-      name: pageparmission?.Userinfo?.full_name,
-      email: pageparmission?.Userinfo?.email,
-      mobile: pageparmission?.Userinfo?.mobile,
+      name: pageparmission?.name,
+      email: pageparmission?.email,
+      mobile: pageparmission?.mobile,
+      Role: pageparmission?.Role,
       // password: pageparmission?.Userinfo?.password,
       // cnfmPassword: pageparmission?.Userinfo?.password,
     });
@@ -93,11 +99,7 @@ class UserProfile extends React.Component {
     data.append("locale", this.state.Locale);
     data.append("timeZone", this.state.T_Zone);
     if (this.state.selectedFile !== null) {
-      data.append(
-        "profileImage",
-        this.state.selectedFile,
-        this.state.selectedName
-      );
+      data.append("file", this.state.selectedFile);
     }
 
     for (var value of data.values()) {
@@ -107,13 +109,13 @@ class UserProfile extends React.Component {
     for (var key of data.keys()) {
       console.log(key);
     }
-    //  let { id } = this.props.match.params;
     if (this.state.password == this.state.cnfmPassword) {
       EditUserProfile(userData?._id, data)
         .then((response) => {
-          console.log(response.data.message);
-          swal("Success!", "Submitted SuccessFully", "success");
-          window.location.reload("/#/pages/profile");
+          console.log(response);
+          swal("Success!", "Submitted Successfully", "success");
+          localStorage.setItem("Update_User_details", response?.updateUser);
+          // window.location.reload("/#/pages/profile");
         })
         .catch((error) => {
           swal("Error!", "Something went Wrong", "error");
@@ -146,13 +148,19 @@ class UserProfile extends React.Component {
                     <li className="lst-2">
                       Name:{" "}
                       <span className="lst-3">
-                        {this.state.LoginData?.username}
+                        {this.state.LoginData?.name}
                       </span>
                     </li>
                     <li className="lst-2">
                       Email:{" "}
                       <span className="lst-3">
                         {this.state.LoginData?.email}
+                      </span>
+                    </li>
+                    <li className="lst-2">
+                      Role:
+                      <span className="lst-3">
+                        <strong>{this.state.LoginData?.Role}</strong>
                       </span>
                     </li>
                   </ul>
@@ -176,7 +184,7 @@ class UserProfile extends React.Component {
 
                     <Row className="m-0">
                       <Col sm="12" lg="6" md="6" className="p-1">
-                        <Label>Name</Label>
+                        <Label>UserName</Label>
                         <Input
                           type="text"
                           name="name"
@@ -234,8 +242,11 @@ class UserProfile extends React.Component {
                           required
                           type="select"
                         >
+                          <option value="us">--Select--</option>
                           <option value="us">English(US)-USA</option>
-                          <option value=""></option>
+                          <option value="English(US)-USA">
+                            English(US)-USA
+                          </option>
                         </CustomInput>
                       </Col>
                       <Col sm="12" lg="6" md="6" className="p-1">
@@ -247,6 +258,7 @@ class UserProfile extends React.Component {
                           required
                           type="select"
                         >
+                          <option value="us">--Select--</option>
                           <option value="IST">IST</option>
                           <option value="PST">PST</option>
                           <option value="EST">EST</option>
@@ -261,6 +273,8 @@ class UserProfile extends React.Component {
                           required
                           type="select"
                         >
+                          <option value="us">--Select--</option>
+
                           <option value="mm-dd-yy">mm-dd-yy</option>
                           <option value="dd-mm-yy">dd-mm-yy</option>
                         </CustomInput>
@@ -274,6 +288,8 @@ class UserProfile extends React.Component {
                           required
                           type="select"
                         >
+                          <option value="us">--Select--</option>
+
                           <option value="mm-dd-yy HH:mm:ss">
                             mm-dd-yy HH:mm:ss
                           </option>
