@@ -61,3 +61,7 @@ export const Login_OTP = "/create-account/verify-otp";
 export const Edit_Profile = "/create-account/edit-profile/";
 
 // part catalougue
+
+// Add to Cart PartsCatelougue
+export const Add_To_Cart_PartsCatelougue = "/cart/add-to-cart";
+export const Add_To_Cart_Get = "/cart/get-cart-items/";
