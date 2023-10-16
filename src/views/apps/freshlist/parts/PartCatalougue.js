@@ -20,7 +20,10 @@ import {
 } from "reactstrap";
 import "./Magnify.css";
 import { AiFillDownCircle, AiFillUpCircle } from "react-icons/ai";
-import { PartCatalogueView } from "../../../../ApiEndPoint/ApiCalling";
+import {
+  AddCartsPartsCatalgue,
+  PartCatalogueView,
+} from "../../../../ApiEndPoint/ApiCalling";
 import { BsCartCheckFill, BsFillArrowRightSquareFill } from "react-icons/bs";
 import * as Icon from "react-feather";
 import ZoomimageTest from "./ZoomimageTest";
@@ -132,7 +135,9 @@ function PartCatalougue() {
     setCart(newCart);
     setTotalItemCount((count) => count + parseInt(event.target.value, 10));
   };
-  const addToCart = (index) => {
+  const addToCart = (index, ele) => {
+    let userData = JSON.parse(localStorage.getItem("userData"));
+
     if (quantities[index] > 0) {
       setCart((prevCart) => {
         const newCart = [...prevCart];
@@ -140,6 +145,18 @@ function PartCatalougue() {
         const existingIndex = newCart.findIndex(
           (item) => item?.product?._id === ListData[index]._id
         );
+
+        let value = {
+          userId: userData?._id,
+          productId: ele?._id,
+          quantity: quantities[index],
+        };
+        console.log(value);
+        AddCartsPartsCatalgue(value)
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => console.log(err));
 
         if (existingIndex !== -1) {
           // If the product already exists in the cart, update its quantity
@@ -384,7 +401,7 @@ function PartCatalougue() {
                                   </Button> */}
                                   <MdOutlineDownloadDone
                                     title="Click to add to Cart"
-                                    onClick={() => addToCart(i)}
+                                    onClick={() => addToCart(i, val)}
                                     style={{
                                       // padding: "7px 8px",
                                       cursor: "pointer",

@@ -7,6 +7,7 @@ import {
   Create_Account_save,
   Create_Account_List,
   Delete_Account_List,
+  Add_To_Cart_PartsCatelougue,
   Create_Account_Update,
   SpartPart_Upload,
   orders_Upload,
@@ -35,6 +36,7 @@ import {
   createWarehouseView,
   Spare_PartsView,
   Orders_View,
+  Add_To_Cart_Get,
   CampaignList_View,
   Edit_Profile,
   SupportsUpload_View,
@@ -382,6 +384,22 @@ export const createQuoteViewData = async () => {
 export const createWarehouseViewData = async () => {
   let response = await axiosConfig
     .get(`${createWarehouseView}`)
+    .then((res) => res.data);
+  return response;
+};
+
+// ADD TO CART PART CATALOUGUE
+
+export const AddCartsPartsCatalgue = async (data) => {
+  let response = await axiosConfig
+    .post(`${Add_To_Cart_PartsCatelougue}`, data)
+    .then((res) => res.data);
+  return response;
+};
+
+export const AddToCartGet = async (id) => {
+  let response = await axiosConfig
+    .get(`${Add_To_Cart_Get}` + id)
     .then((res) => res.data);
   return response;
 };
