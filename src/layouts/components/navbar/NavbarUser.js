@@ -152,6 +152,7 @@ class NavbarUser extends React.PureComponent {
     langDropdown: false,
     userData: "",
     modal: false,
+    myCart: [],
     Update_User_details: {},
 
     LoginData: {},
@@ -240,7 +241,7 @@ class NavbarUser extends React.PureComponent {
     this.toggleModal();
     AddToCartGet(userData?._id)
       .then((res) => {
-        debugger;
+        this.setState({ myCart: res?.cart });
         console.log(res?.cart);
       })
       .catch((err) => {
@@ -368,22 +369,38 @@ class NavbarUser extends React.PureComponent {
                           <th>#</th>
                           <th>Part Name</th>
                           <th>Part Number</th>
-                          <th>Qty</th>
-                          <th>Add to Cart </th>
+                          <th>Type</th>
+                          <th>Image </th>
                           <th>Part Quantity</th>
-                          <th>Part Quantity</th>
+                          <th>Total Quantity</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <th scope="row"> 1</th>
+                        {this.state.myCart?.map((ele, i) => {
+                          console.log(ele);
+                          return (
+                            <tr key={i}>
+                              <th scope="row"> {i + 1}</th>
 
-                          <td>val.Part_Name</td>
-                          <td>val.Part_Number</td>
-                          <td></td>
-                          <td>fsdfdsf</td>
-                          <td>val.Part_Qty</td>
-                        </tr>
+                              <td>{ele?.product?.Part_Name}</td>
+                              <td>{ele?.product?.Part_Number}</td>
+                              <td>{ele?.product?.Part_Catalogue}</td>
+                              <td>
+                                <img
+                                  width={35}
+                                  height={35}
+                                  src={
+                                    ele?.product?.Part_Image?.hyperlink &&
+                                    ele?.product?.Part_Image?.hyperlink
+                                  }
+                                />{" "}
+                              </td>
+
+                              <td>{ele?.quantity}</td>
+                              <td>{ele?.product?.Part_Qty}</td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </Table>
                   </ModalBody>
