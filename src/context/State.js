@@ -7,6 +7,7 @@ const State = (props) => {
   const [crateUserXmlView, setcreateUserXmlView] = useState({});
   const [Mode, setMode] = useState("semi-dark");
   const [PartsCatalougueCart, setPartsCatalougueCart] = useState([]);
+  const [UserInformatio, setUserInformatio] = useState({});
 
   useEffect(() => {
     // CreateAccountView()
@@ -27,6 +28,8 @@ const State = (props) => {
         Mode,
         setPartsCatalougueCart,
         PartsCatalougueCart,
+        setUserInformatio,
+        UserInformatio,
       }}
     >
       {props.children}

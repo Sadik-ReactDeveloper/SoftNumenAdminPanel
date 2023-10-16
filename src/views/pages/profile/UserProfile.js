@@ -17,13 +17,16 @@ import Breadcrumbs from "../../../components/@vuexy/breadCrumbs/BreadCrumb";
 import swal from "sweetalert";
 import axiosConfig from "../../../axiosConfig";
 import { EditUserProfile } from "../../../ApiEndPoint/ApiCalling";
+import UserContext from "../../../context/Context";
 
 class UserProfile extends React.Component {
+  static contextType = UserContext;
   constructor(props) {
     super(props);
     this.state = {
       name: "",
       LoginData: {},
+      Update_User_details: {},
       email: "",
       cnfmPassword: "",
       password: "",
@@ -33,6 +36,7 @@ class UserProfile extends React.Component {
       Date_Time_format: "",
       selectedName: "",
       Locale: "",
+      Loading: "Submit",
       T_Zone: "",
       selectedFile: null,
       data: {},
@@ -43,40 +47,29 @@ class UserProfile extends React.Component {
   onChangeHandler = (event) => {
     this.setState({ selectedFile: event.target.files[0] });
     this.setState({ selectedName: event.target.files[0].name });
-    console.log(event.target.files[0]);
+    // console.log(event.target.files[0]);
   };
 
   componentDidMount() {
-    // let { id } = this.props.match.params;
+    console.log(this.context);
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
+
     console.log(pageparmission);
     this.setState({ LoginData: pageparmission });
+
     this.setState({
       // data: response.data.data,
       name: pageparmission?.name,
       email: pageparmission?.email,
       mobile: pageparmission?.mobile,
       Role: pageparmission?.Role,
-      // password: pageparmission?.Userinfo?.password,
+      Date_format: pageparmission.dateFormat,
+      Locale: pageparmission?.locale,
+      Date_Time_format: pageparmission?.dateTimeFormat,
+      T_Zone: pageparmission?.timeZone,
       // cnfmPassword: pageparmission?.Userinfo?.password,
     });
-    // axiosConfig
-    //   .get(`/admin/getoneadmin/63875207a1d65ee4d84b3ab2`)
-    //   .then((response) => {
-    //     //console.log(response.data);
-    //     console.log(response);
-    //     this.setState({
-    //       // data: response.data.data,
-    //       name: response.data.data.name,
-    //       email: response.data.data.email,
-    //       // mobile: response.data.data.mobile,
-    //       password: response.data.data.password,
-    //       cnfmPassword: response.data.data.cnfmPassword,
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error.response);
-    //   });
+    // console.log(this.context);
   }
 
   changeHandler = (e) => {
@@ -85,12 +78,15 @@ class UserProfile extends React.Component {
 
   submitHandler = (e) => {
     e.preventDefault();
+    this.setState({ Loading: "Loading..." });
     let userData = JSON.parse(localStorage.getItem("userData"));
     const data = new FormData();
     data.append("name", this.state.name);
     data.append("email", this.state.email);
     // data.append("id", userData?._id);
-    data.append("Password", this.state.password);
+    if (this.state.password) {
+      data.append("Password", this.state.password);
+    }
     // data.append("cnfmPassword", this.state.cnfmPassword);
     data.append("dateFormat", this.state.Date_format);
     data.append("dateTimeFormat", this.state.Date_Time_format);
@@ -99,37 +95,63 @@ class UserProfile extends React.Component {
     if (this.state.selectedFile !== null) {
       data.append("file", this.state.selectedFile);
     }
+    if (this.state.password) {
+      if (this.state.password == this.state.cnfmPassword) {
+        EditUserProfile(userData?.accountId, data)
+          .then((response) => {
+            console.log(response);
+            let userData = { ...response?.updateUser[0], ...response?.user };
 
-    for (var value of data.values()) {
-      console.log(value);
-    }
+            this.context?.setUserInformatio(userData);
+            localStorage.setItem("userData", JSON.stringify(userData));
 
-    for (var key of data.keys()) {
-      console.log(key);
-    }
-    if (this.state.password == this.state.cnfmPassword) {
-      EditUserProfile(userData?._id, data)
+            if (response?.status) {
+              swal("Success!", "Updated Successfully", "success");
+              this.setState({ Loading: "Submit" });
+            }
+            window.location.reload("/#/pages/profile");
+          })
+          .catch((error) => {
+            swal("Error!", "Something went Wrong", "error");
+            this.setState({ Loading: "Submit" });
+            console.log(error.response);
+          });
+      } else {
+        swal("Password Does Not Match");
+        this.setState({ Loading: "Submit" });
+      }
+    } else {
+      EditUserProfile(userData?.accountId, data)
         .then((response) => {
-          debugger;
           console.log(response);
-          localStorage.setItem(
-            "Update_User_details",
-            JSON.stringify(response?.updateUser[0])
-          );
+          let userData = { ...response?.updateUser[0], ...response?.user };
+
+          this.context?.setUserInformatio(userData);
+          localStorage.setItem("userData", JSON.stringify(userData));
+
           if (response?.status) {
             swal("Success!", "Updated Successfully", "success");
+            this.setState({ Loading: "Submit" });
           }
-          // window.location.reload("/#/pages/profile");
+          window.location.reload("/#/pages/profile");
         })
         .catch((error) => {
+          debugger;
           swal("Error!", "Something went Wrong", "error");
           console.log(error.response);
+          this.setState({ Loading: "Submit" });
         });
-    } else {
-      swal("Password Does Not Match");
     }
+    // for (var value of data.values()) {
+    //   console.log(value);
+    // }
+
+    // for (var key of data.keys()) {
+    //   console.log(key);
+    // }
   };
   render() {
+    console.log(this.context?.UserInformatio);
     return (
       <React.Fragment>
         <Breadcrumbs
@@ -142,26 +164,44 @@ class UserProfile extends React.Component {
             <Col lg="4" md="4" xl="4" sm="12">
               <Card className="bg-authentication rounded-0 mb-0 w-100">
                 <div className="profile-img text-center st-1">
-                  <img
-                    src={this.state.data.adminimg}
-                    alt="adminimg"
-                    className="img-fluid img-border rounded-circle box-shadow-1"
-                    width="150"
-                  />
-                  <ul className="lst-1">
-                    <li className="lst-2">
+                  {this.state.LoginData?.profileImage ? (
+                    <>
+                      <img
+                        src={`http://3.7.55.231:5000/Images/${this.state.LoginData?.profileImage}`}
+                        alt="adminimg"
+                        className="img-fluid img-border rounded-circle box-shadow-1 mt-1"
+                        width="250px"
+                        height="280px"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <img
+                        src={`http://3.7.55.231:5000/Images/${this.state.LoginData?.user1?.profileImage}`}
+                        alt="adminimg"
+                        className="img-fluid img-border rounded-circle box-shadow-1 mt-1"
+                        width="210px"
+                        height="280px"
+                      />
+                    </>
+                  )}
+                  <ul
+                    style={{ listStyleType: "none" }}
+                    className="lst-1 usrdatlist"
+                  >
+                    <li className="lst-2 p-1">
                       Name:{" "}
                       <span className="lst-3">
-                        {this.state.LoginData?.name}
+                        <strong>{this.state.LoginData?.name}</strong>
                       </span>
                     </li>
-                    <li className="lst-2">
+                    <li className="lst-2 p-1">
                       Email:{" "}
                       <span className="lst-3">
-                        {this.state.LoginData?.email}
+                        <strong>{this.state.LoginData?.email}</strong>
                       </span>
                     </li>
-                    <li className="lst-2">
+                    <li className="lst-2 p-1">
                       Role:
                       <span className="lst-3">
                         <strong>{this.state.LoginData?.Role}</strong>
@@ -417,7 +457,7 @@ class UserProfile extends React.Component {
                     </Row>
                     <div className="d-flex justify-content-between">
                       <Button.Ripple color="primary" type="submit">
-                        Submit
+                        {this.state.Loading}
                       </Button.Ripple>
                     </div>
                   </div>
