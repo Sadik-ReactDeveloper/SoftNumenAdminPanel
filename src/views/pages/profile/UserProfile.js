@@ -246,7 +246,7 @@ class UserProfile extends React.Component {
                           required
                           type="select"
                         >
-                          <option value="">--Select--</option>
+                          <option value="NA">--Select--</option>
                           <option value="en_US">English (United States)</option>
                           <option value="en_GB">
                             English (United Kingdom)
@@ -256,36 +256,20 @@ class UserProfile extends React.Component {
                           <option value="de_DE">German (Germany)</option>
                           <option value="it_IT">Italian (Italy)</option>
                           <option value="ja_JP">Japanese (Japan)</option>
-                          <option value="zh_CN">
-                            Chinese (Simplified, China)
-                          </option>
+                          <option value="zh_CN">Chinese ( China)</option>
                           <option value="ru_RU"> Russian (Russia)</option>
                           <option value="ar_SA">Arabic (Saudi Arabia)</option>
-                          <option value="fr_FR">pt_BR - Portuguese</option>
-                          <option value="fr_FR">
-                            (Brazil) ko_KR - Korean (South Korea)
-                          </option>
+                          <option value="pt_BR">Portuguese (Brazil)</option>
+                          <option value="ko_KR">Korean (South Korea)</option>
 
-                          <option value="fr_FR">hi_IN - Hindi</option>
-                          <option value="fr_FR">
-                            (India) tr_TR - Turkish (Turkey)
-                          </option>
-                          <option value="fr_FR">
-                            nl_NL - Dutch (Netherlands)
-                          </option>
-                          <option value="fr_FR">
-                            sv_SE - Swedish (Sweden)
-                          </option>
-                          <option value="fr_FR">pl_PL - Polish (Poland)</option>
-                          <option value="fr_FR">
-                            no_NO - Norwegian (Norway)
-                          </option>
-                          <option value="fr_FR">
-                            fi_FI - Finnish (Finland)
-                          </option>
-                          <option value="fr_FR">
-                            da_DK - Danish (Denmark)
-                          </option>
+                          <option value="hi_IN">Hindi(India)</option>
+                          <option value="tr_TR">Turkish (Turkey)</option>
+                          <option value="nl_NL">Dutch (Netherlands)</option>
+                          <option value="sv_SE">Swedish (Sweden)</option>
+                          <option value="pl_PL">Polish (Poland)</option>
+                          <option value="no_NO">Norwegian (Norway)</option>
+                          <option value="fi_FI">Finnish (Finland)</option>
+                          <option value="da_DK">Danish (Denmark)</option>
                         </CustomInput>
                       </Col>
                       <Col sm="12" lg="6" md="6" className="p-1">
@@ -298,9 +282,56 @@ class UserProfile extends React.Component {
                           type="select"
                         >
                           <option value="us">--Select--</option>
-                          <option value="IST">IST</option>
-                          <option value="PST">PST</option>
-                          <option value="EST">EST</option>
+                          <option value="UTC">
+                            Coordinated Universal Time (UTC)
+                          </option>
+                          <option value="GMT">Greenwich Mean Time (GMT)</option>
+                          <option value="BST">British Summer Time (BST)</option>
+                          <option value="CET">
+                            Central European Time (CET)
+                          </option>
+                          <option value="CEST">
+                            Central European Summer Time (CEST)
+                          </option>
+                          <option value="EST">
+                            Eastern Standard Time (EST)
+                          </option>
+                          <option value="EDT">
+                            Eastern Daylight Time (EDT)
+                          </option>
+                          <option value="PST">
+                            Pacific Standard Time (PST)
+                          </option>
+                          <option value="PDT">
+                            Pacific Daylight Time (PDT)
+                          </option>
+                          <option value="HST">
+                            Hawaii Standard Time (HST)
+                          </option>
+                          <option value="AKST">
+                            Alaska Standard Time (AKST)
+                          </option>
+                          <option value="AKDT">
+                            Alaska Daylight Time (AKDT)
+                          </option>
+                          <option value="AEST">
+                            Australian Eastern Standard Time (AEST)
+                          </option>
+                          <option value="AEDT">
+                            Australian Eastern Daylight Time (AEDT)
+                          </option>
+                          <option value="JST">Japan Standard Time (JST)</option>
+                          <option value="KST">Korea Standard Time (KST)</option>
+                          <option value="IST">
+                            Indian Standard Time (IST)
+                          </option>
+                          <option value="AST">
+                            Arabian Standard Time (AST)
+                          </option>
+                          <option value="GST">Gulf Standard Time (GST)</option>
+                          <option value="SAST">
+                            South Africa Standard Time (SAST)
+                          </option>
                         </CustomInput>
                       </Col>
                       <Col sm="12" lg="6" md="6" className="p-1">
@@ -314,8 +345,27 @@ class UserProfile extends React.Component {
                         >
                           <option value="us">--Select--</option>
 
-                          <option value="mm-dd-yy">mm-dd-yy</option>
-                          <option value="dd-mm-yy">dd-mm-yy</option>
+                          <option value="YYYY-MM-DD">
+                            YYYY-MM-DD (e.g., 2023-10-16)
+                          </option>
+                          <option value="MM/DD/YYYY">
+                            MM/DD/YYYY (e.g., 10/16/2023)
+                          </option>
+                          <option value="DD/MM/YYYY">
+                            DD/MM/YYYY (e.g., 16/10/2023)
+                          </option>
+                          <option value="MMM D, YYYY">
+                            MMM D, YYYY (e.g., Oct 16, 2023)
+                          </option>
+                          <option value="D MMM, YYYY">
+                            D MMM, YYYY (e.g., 16 Oct, 2023)
+                          </option>
+                          <option value="MMMM D, YYYY">
+                            MMMM D, YYYY (e.g., October 16, 2023)
+                          </option>
+                          <option value="D of MMMM, YYYY">
+                            D of MMMM, YYYY (e.g., 16 of October, 2023)
+                          </option>
                         </CustomInput>
                       </Col>
                       <Col sm="12" lg="6" md="6" className="p-1">
@@ -329,11 +379,27 @@ class UserProfile extends React.Component {
                         >
                           <option value="us">--Select--</option>
 
-                          <option value="mm-dd-yy HH:mm:ss">
-                            mm-dd-yy HH:mm:ss
+                          <option value="YYYY-MM-DD HH:mm:ss">
+                            YYYY-MM-DD HH:mm:ss (e.g., 2023-10-16 15:30:45)
                           </option>
-                          <option value="dd-mm-yy HH:mm:ss">
-                            dd-mm-yy HH:mm:ss
+                          <option value="MM/DD/YYYY h:mm A">
+                            MM/DD/YYYY h:mm A (e.g., 10/16/2023 3:30 PM)
+                          </option>
+                          <option value="DD/MM/YYYY HH:mm">
+                            DD/MM/YYYY HH:mm (e.g., 16/10/2023 15:30)
+                          </option>
+                          <option value="MMM D, YYYY h:mm A">
+                            MMM D, YYYY h:mm A (e.g., Oct 16, 2023 3:30 PM)
+                          </option>
+                          <option value="D MMM, YYYY HH:mm">
+                            D MMM, YYYY HH:mm (e.g., 16 Oct, 2023 15:30)
+                          </option>
+                          <option value="MMMM D, YYYY h:mm A">
+                            MMMM D, YYYY h:mm A (e.g., October 16, 2023 3:30 PM)
+                          </option>
+                          <option value="D of MMMM, YYYY HH:mm">
+                            D of MMMM, YYYY HH:mm (e.g., 16 of October, 2023
+                            15:30)
                           </option>
                         </CustomInput>
                       </Col>
