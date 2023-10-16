@@ -64,3 +64,6 @@ export const Edit_Profile = "/create-account/edit-profile/";
 
 // Policy
 export const PolicyView = "/policy/get-xml";
+// Add to Cart PartsCatelougue
+export const Add_To_Cart_PartsCatelougue = "/cart/add-to-cart";
+export const Add_To_Cart_Get = "/cart/get-cart-items/";

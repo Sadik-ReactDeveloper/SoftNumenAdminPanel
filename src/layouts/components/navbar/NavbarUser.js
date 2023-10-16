@@ -9,7 +9,11 @@ import {
   DropdownToggle,
   Media,
   Badge,
+  Table,
+  Row,
+  Col,
 } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import axiosConfig from "../../../axiosConfig";
 import * as Icon from "react-feather";
@@ -25,6 +29,9 @@ import { Route, useHistory } from "react-router-dom";
 import ToggleMode from "./ToggleMode";
 import { BsCartCheckFill } from "react-icons/bs";
 import UserContext from "../../../context/Context";
+import { MdDelete } from "react-icons/md";
+import { AddToCartGet } from "../../../ApiEndPoint/ApiCalling";
+
 const handleNavigation = (e) => {
   e.preventDefault();
   history.push("/#/pages/profile/userProfile");
@@ -144,6 +151,11 @@ class NavbarUser extends React.PureComponent {
     // navbarSearch: false,
     langDropdown: false,
     userData: "",
+    modal: false,
+    myCart: [],
+    Update_User_details: {},
+
+    LoginData: {},
     shoppingCart: [
       {
         id: 1,
@@ -199,14 +211,23 @@ class NavbarUser extends React.PureComponent {
     ],
     suggestions: [],
   };
+  toggleModal = () => {
+    this.setState((prevState) => ({
+      modal: !prevState.modal,
+    }));
+  };
 
   componentDidMount() {
     const user = this.context;
-    console.log(user?.PartsCatalougueCart?.length);
-    // let accessToken = localStorage.getItem("auth-admintoken");
-    // if (accessToken === null || accessToken === undefined) {
-    //   history.push("/pages/login");
-    // }
+    console.log(user?.PartsCatalougueCart);
+
+    let pageparmission = JSON.parse(localStorage.getItem("userData"));
+
+    this.setState({ LoginData: pageparmission });
+    let accessToken = localStorage.getItem("userToken");
+    if (accessToken === null || accessToken === undefined) {
+      history.push("/pages/login");
+    }
     axiosConfig.get("/api/main-search/data").then(({ data }) => {
       this.setState({ suggestions: data.searchResult });
     });
@@ -214,6 +235,19 @@ class NavbarUser extends React.PureComponent {
     this.setState({ userData: data });
   }
 
+  handleShowCart = () => {
+    let userData = JSON.parse(localStorage.getItem("userData")); //forgot to close
+
+    this.toggleModal();
+    AddToCartGet(userData?._id)
+      .then((res) => {
+        this.setState({ myCart: res?.cart });
+        console.log(res?.cart);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   // handleNavbarSearch = () => {
   //   this.setState({
   //     navbarSearch: !this.state.navbarSearch
@@ -241,44 +275,46 @@ class NavbarUser extends React.PureComponent {
     const { userData } = this.state;
     const renderCartItems = this.state.shoppingCart.map((item) => {
       return (
-        <div className="cart-item" key={item.id}>
-          <Media
-            className="p-0"
-            onClick={() => history.push("/ecommerce/product-detail")}
-          >
-            <Media className="text-center pr-0 mr-1" left>
-              <img
-                className={`${
-                  item.imgClass
-                    ? item.imgClass + " cart-item-img"
-                    : "cart-item-img"
-                }`}
-                src={item.img}
-                width={item.width}
-                alt="Cart Item"
-              />
-            </Media>
-            <Media className="overflow-hidden pr-1 py-1 pl-0" body>
-              <span className="item-title text-truncate text-bold-500 d-block mb-50">
-                {item.name}
-              </span>
-              <span className="item-desc font-small-2 text-truncate d-block">
-                {item.desc}
-              </span>
-              <div className="d-flex justify-content-between align-items-center mt-1">
-                <span className="align-middle d-block">1 x {item.price}</span>
-                <Icon.X
-                  className="danger"
-                  size={15}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    this.removeItem(item.id);
-                  }}
+        <>
+          <div className="cart-item" key={item.id}>
+            <Media
+              className="p-0"
+              onClick={() => history.push("/ecommerce/product-detail")}
+            >
+              <Media className="text-center pr-0 mr-1" left>
+                <img
+                  className={`${
+                    item.imgClass
+                      ? item.imgClass + " cart-item-img"
+                      : "cart-item-img"
+                  }`}
+                  src={item.img}
+                  width={item.width}
+                  alt="Cart Item"
                 />
-              </div>
+              </Media>
+              <Media className="overflow-hidden pr-1 py-1 pl-0" body>
+                <span className="item-title text-truncate text-bold-500 d-block mb-50">
+                  {item.name}
+                </span>
+                <span className="item-desc font-small-2 text-truncate d-block">
+                  {item.desc}
+                </span>
+                <div className="d-flex justify-content-between align-items-center mt-1">
+                  <span className="align-middle d-block">1 x {item.price}</span>
+                  <Icon.X
+                    className="danger"
+                    size={15}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      this.removeItem(item.id);
+                    }}
+                  />
+                </div>
+              </Media>
             </Media>
-          </Media>
-        </div>
+          </div>
+        </>
       );
     });
 
@@ -309,6 +345,78 @@ class NavbarUser extends React.PureComponent {
                   </DropdownToggle>
                   <DropdownMenu right></DropdownMenu>
                 </Dropdown>
+                <Modal
+                  isOpen={this.state.modal}
+                  toggle={this.toggleModal}
+                  className="modal-dialog modal-xl"
+                  // className="modal-dialog modal-lg"
+                  size="lg"
+                  backdrop="true"
+                  fullscreen="true"
+                >
+                  <ModalHeader toggle={this.toggleModal}>
+                    Added To Cart
+                  </ModalHeader>
+                  <ModalBody className="">
+                    <Row>
+                      <Col> </Col>
+                      <Col>search Itme here </Col>
+                    </Row>
+
+                    <Table bordered hover striped>
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Part Name</th>
+                          <th>Part Number</th>
+                          <th>Type</th>
+                          <th>Image </th>
+                          <th>Part Quantity</th>
+                          <th>Total Quantity</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {this.state.myCart?.map((ele, i) => {
+                          console.log(ele);
+                          return (
+                            <tr key={i}>
+                              <th scope="row"> {i + 1}</th>
+
+                              <td>{ele?.product?.Part_Name}</td>
+                              <td>{ele?.product?.Part_Number}</td>
+                              <td>{ele?.product?.Part_Catalogue}</td>
+                              <td>
+                                <img
+                                  width={35}
+                                  height={35}
+                                  src={
+                                    ele?.product?.Part_Image?.hyperlink &&
+                                    ele?.product?.Part_Image?.hyperlink
+                                  }
+                                />{" "}
+                              </td>
+
+                              <td>{ele?.quantity}</td>
+                              <td>{ele?.product?.Part_Qty}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </Table>
+                    <Row>
+                      <Col>
+                        <div className="d-flex justify-content-end">
+                          total:125
+                        </div>
+                      </Col>
+                    </Row>
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button color="primary" onClick={this.toggleModal}>
+                      Submit
+                    </Button>{" "}
+                  </ModalFooter>
+                </Modal>
               </>
             );
           }}
@@ -327,7 +435,7 @@ class NavbarUser extends React.PureComponent {
           <DropdownMenu tag="ul" right className="dropdown-menu-media">
             <li className="dropdown-menu-header">
               <div className="dropdown-header mt-0">
-                <h3 className="text-white">1 New Product </h3>
+                <h3 className="text-white">Products </h3>
                 <span className="notification-title">Notifications</span>
               </div>
             </li>
@@ -342,14 +450,7 @@ class NavbarUser extends React.PureComponent {
                 return (
                   <>
                     <div className="d-flex justify-content-between">
-                      <Media
-                        key={i}
-                        className="d-flex align-items-start"
-                        onClick={() => {
-                          history.push("/#/app/softNumen/order/OrderOne");
-                          window.location.reload();
-                        }}
-                      >
+                      <Media key={i} className="d-flex align-items-start">
                         <Media left href="#">
                           <Icon.PlusSquare
                             className="font-medium-5 primary"
@@ -367,16 +468,24 @@ class NavbarUser extends React.PureComponent {
                               {ele?.quantity})
                             </p>
                           </Media>
-                          <p className="notification-text">
+                          {/* <p className="notification-text">
                             Are your going to meet me tonight?
-                          </p>
+                          </p> */}
                         </Media>
                         <small>
                           <time
                             className="media-meta"
                             dateTime="2015-06-11T18:29:20+08:00"
                           >
-                            9 hours ago
+                            <MdDelete
+                              color="red"
+                              size={25}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                console.log(ele);
+                              }}
+                              style={{ cursor: "pointer" }}
+                            />
                           </time>
                         </small>
                       </Media>
@@ -486,13 +595,21 @@ class NavbarUser extends React.PureComponent {
                 </Media>
               </div> */}
             </PerfectScrollbar>
-            <li className="dropdown-menu-footer">
+            <li
+              onClick={() => {
+                this.handleShowCart();
+              }}
+              className="dropdown-menu-footer"
+            >
               <DropdownItem tag="a" className="p-1 text-center">
-                <span className="align-middle">Read all notifications</span>
+                <span className="align-middle">View all</span>
               </DropdownItem>
             </li>
           </DropdownMenu>
         </UncontrolledDropdown>
+
+        {/* end */}
+
         <UncontrolledDropdown
           tag="li"
           className="dropdown-notification nav-item"
@@ -668,16 +785,27 @@ class NavbarUser extends React.PureComponent {
             </div>
             <span data-tour="user">
               {/* userimage integrated here */}
-              <img
-                // src={userData?.image}
-                src={logo}
-                // src={images}
-                // src={userData.image === undefined ? userData.image : null}
-                className="round"
-                height="40"
-                width="40"
-                alt="avatar"
-              />
+              {this.state.LoginData?.profileImage ? (
+                <>
+                  <img
+                    src={`http://3.7.55.231:5000/Images/${this.state.LoginData?.profileImage}`}
+                    className="round"
+                    height="40"
+                    width="40"
+                    alt="avatar"
+                  />
+                </>
+              ) : (
+                <>
+                  <img
+                    src={`http://3.7.55.231:5000/Images/${this.state.LoginData?.user1?.profileImage}`}
+                    className="round"
+                    height="40"
+                    width="40"
+                    alt="avatar"
+                  />
+                </>
+              )}
             </span>
           </DropdownToggle>
           <UserDropdown {...this.props} />

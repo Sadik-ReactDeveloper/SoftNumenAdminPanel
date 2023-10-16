@@ -20,12 +20,16 @@ import {
 } from "reactstrap";
 import "./Magnify.css";
 import { AiFillDownCircle, AiFillUpCircle } from "react-icons/ai";
-import { PartCatalogueView } from "../../../../ApiEndPoint/ApiCalling";
+import {
+  AddCartsPartsCatalgue,
+  PartCatalogueView,
+} from "../../../../ApiEndPoint/ApiCalling";
 import { BsCartCheckFill, BsFillArrowRightSquareFill } from "react-icons/bs";
 import * as Icon from "react-feather";
 import ZoomimageTest from "./ZoomimageTest";
 // import { ReactPanZoom } from "./Ra";
 import UserContext from "../../../../context/Context";
+import { MdOutlineDownloadDone } from "react-icons/md";
 
 function PartCatalougue() {
   const [CollapseIndex, setCollapseIndex] = useState("");
@@ -34,6 +38,8 @@ function PartCatalougue() {
   const [ListData, setListData] = useState([]);
   const [Fullimage, setFullimage] = useState(false);
   const [Cartvalue, setCartvalue] = useState(0);
+  const [totalItemCount, setTotalItemCount] = useState(0);
+
   const [cart, setCart] = useState([]);
   const [quantities, setQuantities] = useState(
     ListData.map((product) => ({
@@ -69,7 +75,8 @@ function PartCatalougue() {
   }, [context]);
 
   useEffect(() => {
-    // console.log(cart);
+    console.log(cart);
+
     context?.setPartsCatalougueCart(cart);
   }, [cart]);
 
@@ -80,7 +87,21 @@ function PartCatalougue() {
       return newQuantities;
     });
   };
+  const handleIncreaseCartItemQuantity = (index) => {
+    const newCart = [...cart];
+    newCart[index].quantity += 1;
+    setCart(newCart);
+    setTotalItemCount((count) => count + 1);
+  };
 
+  const handleDecreaseCartItemQuantity = (index) => {
+    const newCart = [...cart];
+    if (newCart[index].quantity > 0) {
+      newCart[index].quantity -= 1;
+      setCart(newCart);
+      setTotalItemCount((count) => count - 1);
+    }
+  };
   const handleDecreaseCount = (index) => {
     setQuantities((prevQuantities) => {
       const newQuantities = [...prevQuantities];
@@ -91,14 +112,62 @@ function PartCatalougue() {
     });
   };
 
-  const addToCart = (index) => {
+  // const addToCart = (index) => {
+  //   if (quantities[index] > 0) {
+  //     setCart((prevCart) => {
+  //       const newCart = [...prevCart];
+  //       newCart.push({
+  //         product: ListData[index],
+  //         quantity: quantities[index],
+  //       });
+  //       return newCart;
+  //     });
+  //     setQuantities((prevQuantities) => {
+  //       const newQuantities = [...prevQuantities];
+  //       newQuantities[index] = 0;
+  //       return newQuantities;
+  //     });
+  //   }
+  // };
+  const handleEditCartItemQuantity = (index, event) => {
+    const newCart = [...cart];
+    newCart[index].quantity = parseInt(event.target.value, 10);
+    setCart(newCart);
+    setTotalItemCount((count) => count + parseInt(event.target.value, 10));
+  };
+  const addToCart = (index, ele) => {
+    let userData = JSON.parse(localStorage.getItem("userData"));
+
     if (quantities[index] > 0) {
       setCart((prevCart) => {
         const newCart = [...prevCart];
-        newCart.push({
-          product: ListData[index],
+        setTotalItemCount((count) => count + quantities[index]);
+        const existingIndex = newCart.findIndex(
+          (item) => item?.product?._id === ListData[index]._id
+        );
+
+        let value = {
+          userId: userData?._id,
+          productId: ele?._id,
           quantity: quantities[index],
-        });
+        };
+        console.log(value);
+        AddCartsPartsCatalgue(value)
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => console.log(err));
+
+        if (existingIndex !== -1) {
+          // If the product already exists in the cart, update its quantity
+          newCart[existingIndex].quantity += quantities[index];
+        } else {
+          // If it doesn't exist, add it to the cart
+          newCart.push({
+            product: ListData[index],
+            quantity: quantities[index],
+          });
+        }
         return newCart;
       });
       setQuantities((prevQuantities) => {
@@ -109,22 +178,6 @@ function PartCatalougue() {
     }
   };
 
-  // const addToCart = (index) => {
-  //   debugger;
-  //   if (quantities[index] > 0) {
-  //     setCart((prevCart) => {
-  //       const newCart = [...prevCart];
-  //       newCart[index] += quantities[index];
-  //       console.log(newCart);
-  //       return newCart;
-  //     });
-  //     setQuantities((prevQuantities) => {
-  //       const newQuantities = [...prevQuantities];
-  //       newQuantities[index] = 0;
-  //       return newQuantities;
-  //     });
-  //   }
-  // };
   const toggleCollapse = (ele, i) => {
     if (ele) {
       setFullimage(true);
@@ -338,14 +391,24 @@ function PartCatalougue() {
                             >
                               {quantities[i] > 0 ? (
                                 <>
-                                  <Button
+                                  {/* <Button
                                     onClick={() => addToCart(i)}
                                     style={{ padding: "7px 8px" }}
                                     color="success"
                                     size="sm"
                                   >
                                     +
-                                  </Button>
+                                  </Button> */}
+                                  <MdOutlineDownloadDone
+                                    title="Click to add to Cart"
+                                    onClick={() => addToCart(i, val)}
+                                    style={{
+                                      // padding: "7px 8px",
+                                      cursor: "pointer",
+                                    }}
+                                    color="green"
+                                    size={40}
+                                  />
                                 </>
                               ) : null}
                               <UncontrolledDropdown

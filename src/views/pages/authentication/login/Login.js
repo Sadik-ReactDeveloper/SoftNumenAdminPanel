@@ -24,7 +24,7 @@ import LoginAuth0 from "./LoginAuth0";
 import LoginFirebase from "./LoginFirebase";
 import LoginJWT from "./LoginJWT";
 import { connect } from "react-redux";
-// import UserContext from "../../../../context/Context";
+import UserContext from "../../../../context/Context";
 import OtpInput from "react-otp-input";
 import swal from "sweetalert";
 import axiosConfig from "../../../../axiosConfig";
@@ -32,7 +32,7 @@ import { UserLogin, UserOTPVerify } from "../../../../ApiEndPoint/ApiCalling";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 class Login extends React.Component {
-  // static contextType = UserContext;
+  static contextType = UserContext;
 
   constructor(props) {
     super(props);
@@ -73,10 +73,20 @@ class Login extends React.Component {
     e.preventDefault();
     if (this.state.emailotp?.length == 6) {
       let Opt = { otp: this.state.emailotp, username: this.state.email };
+
       await UserOTPVerify(Opt)
         .then((response) => {
+          let basicinfor = response?.user;
+          let newinfor = response?.user?.user1;
+          let allinfor = { ...basicinfor, ...newinfor };
+
           if (response?.status) {
-            localStorage.setItem("userData", JSON.stringify(response?.user));
+            this.context?.setUserInformatio(allinfor);
+            localStorage.setItem("userData", JSON.stringify(allinfor));
+            localStorage.setItem(
+              "userToken",
+              JSON.stringify(response?.user?.token)
+            );
             setTimeout(() => {
               this.props.history.push("/dashboard");
             }, 1500);
@@ -132,13 +142,21 @@ class Login extends React.Component {
         ) {
           this.setState({ UserCredential: res?.user });
           if (res?.status) {
+            newinfor;
             swal("Success", "OTP sent");
             this.setState({ OtpScreen: true });
           } else {
             swal("Something Went Wrong");
           }
         } else {
-          localStorage.setItem("userData", JSON.stringify(res?.user));
+          let basicinfor = res?.user;
+          let newinfor = res?.user?.user1;
+          let allinfor = { ...basicinfor, ...newinfor };
+
+          this.context?.setUserInformatio(allinfor);
+
+          localStorage.setItem("userData", JSON.stringify(allinfor));
+          localStorage.setItem("userToken", JSON.stringify(res?.user?.token));
           this.props.history.push("/dashboard");
         }
       })
