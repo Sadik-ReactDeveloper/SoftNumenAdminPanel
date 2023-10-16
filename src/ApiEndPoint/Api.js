@@ -61,3 +61,6 @@ export const Login_OTP = "/create-account/verify-otp";
 export const Edit_Profile = "/create-account/edit-profile/";
 
 // part catalougue
+
+// Policy
+export const PolicyView = "/policy/get-xml";
