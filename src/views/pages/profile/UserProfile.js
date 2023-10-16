@@ -85,9 +85,7 @@ class UserProfile extends React.Component {
 
   submitHandler = (e) => {
     e.preventDefault();
-    console.log(this.state);
     let userData = JSON.parse(localStorage.getItem("userData"));
-    debugger;
     const data = new FormData();
     data.append("name", this.state.name);
     data.append("email", this.state.email);
@@ -112,9 +110,15 @@ class UserProfile extends React.Component {
     if (this.state.password == this.state.cnfmPassword) {
       EditUserProfile(userData?._id, data)
         .then((response) => {
+          debugger;
           console.log(response);
-          swal("Success!", "Submitted Successfully", "success");
-          localStorage.setItem("Update_User_details", response?.updateUser);
+          localStorage.setItem(
+            "Update_User_details",
+            JSON.stringify(response?.updateUser[0])
+          );
+          if (response?.status) {
+            swal("Success!", "Updated Successfully", "success");
+          }
           // window.location.reload("/#/pages/profile");
         })
         .catch((error) => {
@@ -242,10 +246,45 @@ class UserProfile extends React.Component {
                           required
                           type="select"
                         >
-                          <option value="us">--Select--</option>
-                          <option value="us">English(US)-USA</option>
-                          <option value="English(US)-USA">
-                            English(US)-USA
+                          <option value="">--Select--</option>
+                          <option value="en_US">English (United States)</option>
+                          <option value="en_GB">
+                            English (United Kingdom)
+                          </option>
+                          <option value="fr_FR">French (France)</option>
+                          <option value="es_ES">es_ES Spanish (Spain)</option>
+                          <option value="de_DE">German (Germany)</option>
+                          <option value="it_IT">Italian (Italy)</option>
+                          <option value="ja_JP">Japanese (Japan)</option>
+                          <option value="zh_CN">
+                            Chinese (Simplified, China)
+                          </option>
+                          <option value="ru_RU"> Russian (Russia)</option>
+                          <option value="ar_SA">Arabic (Saudi Arabia)</option>
+                          <option value="fr_FR">pt_BR - Portuguese</option>
+                          <option value="fr_FR">
+                            (Brazil) ko_KR - Korean (South Korea)
+                          </option>
+
+                          <option value="fr_FR">hi_IN - Hindi</option>
+                          <option value="fr_FR">
+                            (India) tr_TR - Turkish (Turkey)
+                          </option>
+                          <option value="fr_FR">
+                            nl_NL - Dutch (Netherlands)
+                          </option>
+                          <option value="fr_FR">
+                            sv_SE - Swedish (Sweden)
+                          </option>
+                          <option value="fr_FR">pl_PL - Polish (Poland)</option>
+                          <option value="fr_FR">
+                            no_NO - Norwegian (Norway)
+                          </option>
+                          <option value="fr_FR">
+                            fi_FI - Finnish (Finland)
+                          </option>
+                          <option value="fr_FR">
+                            da_DK - Danish (Denmark)
                           </option>
                         </CustomInput>
                       </Col>
