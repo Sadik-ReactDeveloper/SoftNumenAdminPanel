@@ -10,6 +10,7 @@ import {
   Media,
   Badge,
 } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import axiosConfig from "../../../axiosConfig";
 import * as Icon from "react-feather";
@@ -25,6 +26,8 @@ import { Route, useHistory } from "react-router-dom";
 import ToggleMode from "./ToggleMode";
 import { BsCartCheckFill } from "react-icons/bs";
 import UserContext from "../../../context/Context";
+import { MdDelete } from "react-icons/md";
+
 const handleNavigation = (e) => {
   e.preventDefault();
   history.push("/#/pages/profile/userProfile");
@@ -144,6 +147,10 @@ class NavbarUser extends React.PureComponent {
     // navbarSearch: false,
     langDropdown: false,
     userData: "",
+    modal: false,
+    Update_User_details: {},
+
+    LoginData: {},
     shoppingCart: [
       {
         id: 1,
@@ -202,11 +209,15 @@ class NavbarUser extends React.PureComponent {
 
   componentDidMount() {
     const user = this.context;
-    console.log(user?.PartsCatalougueCart?.length);
-    // let accessToken = localStorage.getItem("auth-admintoken");
-    // if (accessToken === null || accessToken === undefined) {
-    //   history.push("/pages/login");
-    // }
+    console.log(user?.PartsCatalougueCart);
+
+    let pageparmission = JSON.parse(localStorage.getItem("userData"));
+
+    this.setState({ LoginData: pageparmission });
+    let accessToken = localStorage.getItem("userToken");
+    if (accessToken === null || accessToken === undefined) {
+      history.push("/pages/login");
+    }
     axiosConfig.get("/api/main-search/data").then(({ data }) => {
       this.setState({ suggestions: data.searchResult });
     });
@@ -327,7 +338,7 @@ class NavbarUser extends React.PureComponent {
           <DropdownMenu tag="ul" right className="dropdown-menu-media">
             <li className="dropdown-menu-header">
               <div className="dropdown-header mt-0">
-                <h3 className="text-white">1 New Product </h3>
+                <h3 className="text-white">Products </h3>
                 <span className="notification-title">Notifications</span>
               </div>
             </li>
@@ -342,14 +353,7 @@ class NavbarUser extends React.PureComponent {
                 return (
                   <>
                     <div className="d-flex justify-content-between">
-                      <Media
-                        key={i}
-                        className="d-flex align-items-start"
-                        onClick={() => {
-                          history.push("/#/app/softNumen/order/OrderOne");
-                          window.location.reload();
-                        }}
-                      >
+                      <Media key={i} className="d-flex align-items-start">
                         <Media left href="#">
                           <Icon.PlusSquare
                             className="font-medium-5 primary"
@@ -367,16 +371,24 @@ class NavbarUser extends React.PureComponent {
                               {ele?.quantity})
                             </p>
                           </Media>
-                          <p className="notification-text">
+                          {/* <p className="notification-text">
                             Are your going to meet me tonight?
-                          </p>
+                          </p> */}
                         </Media>
                         <small>
                           <time
                             className="media-meta"
                             dateTime="2015-06-11T18:29:20+08:00"
                           >
-                            9 hours ago
+                            <MdDelete
+                              color="red"
+                              size={25}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                console.log(ele);
+                              }}
+                              style={{ cursor: "pointer" }}
+                            />
                           </time>
                         </small>
                       </Media>
@@ -488,11 +500,13 @@ class NavbarUser extends React.PureComponent {
             </PerfectScrollbar>
             <li className="dropdown-menu-footer">
               <DropdownItem tag="a" className="p-1 text-center">
-                <span className="align-middle">Read all notifications</span>
+                <span className="align-middle">View all</span>
               </DropdownItem>
             </li>
           </DropdownMenu>
         </UncontrolledDropdown>
+        {/* end */}
+
         <UncontrolledDropdown
           tag="li"
           className="dropdown-notification nav-item"
@@ -668,16 +682,27 @@ class NavbarUser extends React.PureComponent {
             </div>
             <span data-tour="user">
               {/* userimage integrated here */}
-              <img
-                // src={userData?.image}
-                src={logo}
-                // src={images}
-                // src={userData.image === undefined ? userData.image : null}
-                className="round"
-                height="40"
-                width="40"
-                alt="avatar"
-              />
+              {this.state.LoginData?.profileImage ? (
+                <>
+                  <img
+                    src={`http://3.7.55.231:5000/Images/${this.state.LoginData?.profileImage}`}
+                    className="round"
+                    height="40"
+                    width="40"
+                    alt="avatar"
+                  />
+                </>
+              ) : (
+                <>
+                  <img
+                    src={`http://3.7.55.231:5000/Images/${this.state.LoginData?.user1?.profileImage}`}
+                    className="round"
+                    height="40"
+                    width="40"
+                    alt="avatar"
+                  />
+                </>
+              )}
             </span>
           </DropdownToggle>
           <UserDropdown {...this.props} />
