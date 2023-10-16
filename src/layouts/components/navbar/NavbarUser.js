@@ -403,10 +403,17 @@ class NavbarUser extends React.PureComponent {
                         })}
                       </tbody>
                     </Table>
+                    <Row>
+                      <Col>
+                        <div className="d-flex justify-content-end">
+                          total:125
+                        </div>
+                      </Col>
+                    </Row>
                   </ModalBody>
                   <ModalFooter>
                     <Button color="primary" onClick={this.toggleModal}>
-                      Accept
+                      Submit
                     </Button>{" "}
                   </ModalFooter>
                 </Modal>
