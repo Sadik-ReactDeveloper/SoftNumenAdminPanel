@@ -318,9 +318,6 @@ class NavbarUser extends React.PureComponent {
     e.preventDefault();
     this.setState((prevState) => {
       const newQuantities = [...prevState.Quantity];
-      debugger;
-      // this.state.Quantity[index];
-      console.log(this.state.Quantity[index]);
       if (newQuantities[index] > 0) {
         newQuantities[index] -= 1;
       }
@@ -329,11 +326,9 @@ class NavbarUser extends React.PureComponent {
   };
   handleIncreaseCount = (ele, index, e) => {
     e.preventDefault();
-    console.log(ele);
+    console.log(ele?.product?.Part_Price);
     this.setState((prevState) => {
       const newQuantities = [...prevState.Quantity];
-      debugger;
-      console.log(this.state.Quantity[index] + 1);
       newQuantities[index] += 1;
       return { Quantity: newQuantities };
     });
