@@ -312,15 +312,15 @@ class NavbarUser extends React.PureComponent {
     });
   };
   handleQuantityChange = (e) => {
-    debugger;
-    console.log(i);
     console.log(e.target.value);
-    console.log(value);
   };
   handleDecreaseCount = (ele, index, e) => {
     e.preventDefault();
     this.setState((prevState) => {
       const newQuantities = [...prevState.Quantity];
+      debugger;
+      // this.state.Quantity[index];
+      console.log(this.state.Quantity[index]);
       if (newQuantities[index] > 0) {
         newQuantities[index] -= 1;
       }
@@ -329,8 +329,11 @@ class NavbarUser extends React.PureComponent {
   };
   handleIncreaseCount = (ele, index, e) => {
     e.preventDefault();
+    console.log(ele);
     this.setState((prevState) => {
       const newQuantities = [...prevState.Quantity];
+      debugger;
+      console.log(this.state.Quantity[index] + 1);
       newQuantities[index] += 1;
       return { Quantity: newQuantities };
     });
@@ -496,9 +499,9 @@ class NavbarUser extends React.PureComponent {
                                       name="cart"
                                       min="0"
                                       value={this.state.Quantity[i]}
-                                      onChange={(e) =>
-                                        this.handleQuantityChange(e, i)
-                                      }
+                                      onChange={(e) => {
+                                        this.handleQuantityChange(e, i);
+                                      }}
                                       onKeyDown={(e) => {
                                         ["e", "E", "+", "-"].includes(e.key) &&
                                           e.preventDefault();
@@ -524,8 +527,8 @@ class NavbarUser extends React.PureComponent {
                               <td>{ele?.product?.Part_Price}</td>
                               {/* Part price */}
                               <td>
-                                {/* {ele?.product?.Part_Price *
-                                  this.state.Quantity[i]} */}
+                                {ele?.product?.Part_Price *
+                                  this.state.Quantity[i]}
                                 {ele?.product?.Part_Price * ele?.quantity}
                               </td>
                             </tr>
