@@ -30,7 +30,9 @@ import * as Icon from "react-feather";
 import ZoomimageTest from "./ZoomimageTest";
 // import { ReactPanZoom } from "./Ra";
 import UserContext from "../../../../context/Context";
+import { Link, useLocation, matchPath } from "react-router-dom";
 import { MdOutlineDownloadDone } from "react-icons/md";
+import swal from "sweetalert";
 
 function PartCatalougue() {
   const [CollapseIndex, setCollapseIndex] = useState("");
@@ -44,7 +46,7 @@ function PartCatalougue() {
 
   const [cart, setCart] = useState([]);
   const [quantities, setQuantities] = useState(
-    ListData.map((product) => ({
+    ListData?.map((product) => ({
       quantity: 0,
       elementData: product, // You can set this to the product data
     }))
@@ -54,13 +56,15 @@ function PartCatalougue() {
   useEffect(() => {
     PartCatalogueView()
       .then((res) => {
-        // console.log(res?.Parts_Catalogue);
+        console.log(res?.Parts_Catalogue);
         setAllData(res?.Parts_Catalogue);
         let keys = Object.keys(res?.Parts_Catalogue);
+        console.log(keys);
         setCollapseIndex(0);
         console.log(res?.Parts_Catalogue);
-        setListData(res?.Parts_Catalogue?.backAxleSubassembly);
-        setBreadcums(res?.Parts_Catalogue?.backAxleSubassembly);
+        setListData(res?.Parts_Catalogue[keys[0]]);
+        // setListData(res?.Parts_Catalogue?.backAxleSubassembly);
+        setBreadcums(res?.Parts_Catalogue[keys[0]]);
         setfrontSide(keys);
       })
       .catch((err) => {
@@ -68,16 +72,19 @@ function PartCatalougue() {
       });
   }, []);
   useEffect(() => {
-    const initialQuantities = new Array(ListData.length).fill(0);
+    const initialQuantities = new Array(ListData?.length).fill(0);
     setQuantities(initialQuantities);
   }, [ListData]);
 
-  useEffect(() => {
-    console.log(cart);
-    console.log(context);
+  // useEffect(() => {
+  //   console.log(cart);
+  //   console.log(context);
 
-    // context?.setPartsCatalougueCart(cart);
-  }, [cart, context]);
+  //   // context?.setPartsCatalougueCart(cart);
+  // }, [cart, context]);
+  useEffect(() => {
+    console.log(Breadcums);
+  }, [Breadcums]);
 
   const handleIncreaseCount = (index) => {
     setQuantities((prevQuantities) => {
@@ -146,10 +153,15 @@ function PartCatalougue() {
                 context?.setPartsCatalougueCart(res?.cart);
               })
               .catch((err) => {
-                console.log(err);
+                console.log(err.response);
               });
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err.response);
+            if (err.response?.data?.message) {
+              swal("Warning", `${err.response?.data?.message}`);
+            }
+          });
 
         if (existingIndex !== -1) {
           // If the product already exists in the cart, update its quantity
@@ -177,6 +189,7 @@ function PartCatalougue() {
     }
     // console.log(ele, AllData[ele]);
     setListData(AllData[ele]);
+    setBreadcums(AllData[ele]);
     setCollapseIndex(i);
   };
 
@@ -186,13 +199,12 @@ function PartCatalougue() {
         <Col>
           <Breadcrumb>
             <BreadcrumbItem>
-              <a href="/app/SoftNumen/parts/PartCatalougue">Home</a>
+              <a>Home</a>
             </BreadcrumbItem>
-            {/* {ListData} */}
+
             <BreadcrumbItem>
-              <a href="#">Library</a>
+              <a>{frontSide[CollapseIndex]}</a>
             </BreadcrumbItem>
-            <BreadcrumbItem active>Product</BreadcrumbItem>
           </Breadcrumb>
         </Col>
       </Row>
@@ -284,7 +296,7 @@ function PartCatalougue() {
           </div>
           {ListData && ListData ? (
             <>
-              <Imagemagnify imageSrc={ListData[0]?.Part_Image?.text} />
+              <Imagemagnify imageSrc={ListData[0]?.Part_Image} />
             </>
           ) : (
             <>
@@ -373,7 +385,7 @@ function PartCatalougue() {
                               color="primary"
                               size="sm"
                             >
-                              +
+                              <strong>+</strong>
                             </Button>
                           </span>
                         </td>

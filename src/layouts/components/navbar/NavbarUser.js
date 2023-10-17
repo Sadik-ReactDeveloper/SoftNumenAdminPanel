@@ -35,7 +35,7 @@ import {
   DeleteCartItemPartsCatelogue,
 } from "../../../ApiEndPoint/ApiCalling";
 import swal from "sweetalert";
-
+const total = [];
 const handleNavigation = (e) => {
   e.preventDefault();
   history.push("/#/pages/profile/userProfile");
@@ -157,8 +157,9 @@ class NavbarUser extends React.PureComponent {
     userData: "",
     modal: false,
     myCart: [],
+    Total: Number,
     Update_User_details: {},
-
+    Quantity: [],
     LoginData: {},
     shoppingCart: [
       {
@@ -275,11 +276,21 @@ class NavbarUser extends React.PureComponent {
 
     await AddToCartGet(userData?._id)
       .then((res) => {
-        // debugger;
+        console.log(res?.cart);
         const user = this.context;
+        let total = res?.cart?.map(
+          (val, i) => val?.quantity * val?.product?.Part_Price
+        );
+        let qty = res?.cart?.map((val, i) => val?.quantity);
+        this.setState({ Quantity: qty });
+        // console.log(qty);
+
+        console.log(total);
+        let findtotal = total?.reduce((a, b) => a + b, 0);
+        console.log(findtotal);
+        this.setState({ Total: findtotal });
         this.setState({ myCart: res?.cart });
         user?.setPartsCatalougueCart(res?.cart);
-        console.log(res?.cart);
       })
       .catch((err) => {
         console.log(err);
@@ -300,15 +311,31 @@ class NavbarUser extends React.PureComponent {
       shoppingCart: updatedCart,
     });
   };
-
+  handleDecreaseCount = (index) => {
+    this.setState((prev) => {
+      console.log(prev);
+    });
+    // setQuantities((prevQuantities) => {
+    //   const newQuantities = [...prevQuantities];
+    //   if (newQuantities[index] > 0) {
+    //     newQuantities[index] -= 1;
+    //   }
+    //   return newQuantities;
+    // });
+  };
   handleLangDropdown = () =>
     this.setState({ langDropdown: !this.state.langDropdown });
   render() {
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
-    // console.log(pageparmission);
     const user = this.context;
-    // console.log(pageparmission?.Userinfo.full_name);
-    //  console.log('console.log(this.state.userData) ',this.state.userData.image)
+    const taxAmount = (this.state.Total * 0.18).toFixed(2);
+    const Shipping = (this.state.Total * 0.1).toFixed(2);
+    const Grand = (
+      this.state.Total * 1 +
+      Number(taxAmount) +
+      Number(Shipping)
+    ).toFixed(2);
+
     const { userData } = this.state;
     const renderCartItems = this.state.shoppingCart.map((item) => {
       return (
@@ -394,13 +421,13 @@ class NavbarUser extends React.PureComponent {
                   <ModalHeader toggle={this.toggleModal}>
                     Added To Cart
                   </ModalHeader>
-                  <ModalBody className="">
-                    <Row>
-                      <Col> </Col>
-                      <Col>search Itme here </Col>
-                    </Row>
-
-                    <Table bordered hover striped>
+                  <ModalBody className="myproducttable">
+                    <Table
+                      style={{ height: "300px", overflowY: "scroll" }}
+                      bordered
+                      hover
+                      striped
+                    >
                       <thead>
                         <tr>
                           <th>#</th>
@@ -409,13 +436,14 @@ class NavbarUser extends React.PureComponent {
                           <th>Type</th>
                           <th>Image </th>
                           <th>Part Quantity</th>
-                          <th>Total Quantity</th>
+                          <th>Part Price</th>
+                          <th>Total Price</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {this.state.myCart?.map((ele, i) => {
+                        {user?.PartsCatalougueCart?.map((ele, i) => {
                           {
-                            /* console.log(ele); */
+                            /* {this.state.myCart?.map((ele, i) => { */
                           }
                           return (
                             <tr key={i}>
@@ -429,14 +457,60 @@ class NavbarUser extends React.PureComponent {
                                   width={35}
                                   height={35}
                                   src={
-                                    ele?.product?.Part_Image?.hyperlink &&
-                                    ele?.product?.Part_Image?.hyperlink
+                                    ele?.product?.Part_Image &&
+                                    ele?.product?.Part_Image
                                   }
                                 />{" "}
                               </td>
 
-                              <td>{ele?.quantity}</td>
-                              <td>{ele?.product?.Part_Qty}</td>
+                              <td>
+                                <span className="d-flex">
+                                  <Button
+                                    style={{ padding: "7px 8px" }}
+                                    className="minusbutton"
+                                    color="primary"
+                                    size="sm"
+                                    onClick={() => this.handleDecreaseCount(i)}
+                                  >
+                                    -
+                                  </Button>
+                                  <div className="inputheading">
+                                    <input
+                                      style={{ width: "40px" }}
+                                      type="number"
+                                      name="cart"
+                                      min="0"
+                                      value={this.state.Quantity[i]}
+                                      // onChange={(e) => {
+                                      //   handleQuantityChange(i, e.target.value);
+                                      // }}
+
+                                      onKeyDown={(e) => {
+                                        ["e", "E", "+", "-"].includes(e.key) &&
+                                          e.preventDefault();
+                                      }}
+                                      maxlength="4"
+                                      size="2"
+                                    />
+                                  </div>{" "}
+                                  <Button
+                                    // onClick={() => handleIncreaseCount(i)}
+
+                                    style={{ padding: "7px 8px" }}
+                                    color="primary"
+                                    size="sm"
+                                  >
+                                    <strong>+</strong>
+                                  </Button>
+                                  {ele?.quantity}
+                                </span>
+                              </td>
+                              {/* <td>{ele?.quantity}</td> */}
+                              <td>{ele?.product?.Part_Price}</td>
+                              {/* Part price */}
+                              <td>
+                                {ele?.product?.Part_Price * ele?.quantity}
+                              </td>
                             </tr>
                           );
                         })}
@@ -444,15 +518,34 @@ class NavbarUser extends React.PureComponent {
                     </Table>
                     <Row>
                       <Col>
-                        <div className="d-flex justify-content-end">
-                          total:125
+                        <div className="mytotal mynavbaramont">
+                          <div className="d-flex justify-content-end p-1">
+                            <strong>
+                              Total Amount : &nbsp;{this.state.Total}
+                            </strong>
+                          </div>
+                          <div className="d-flex justify-content-end p-1">
+                            <strong>Tax Amount : &nbsp;{taxAmount}</strong>
+                          </div>
+                          <div className="d-flex justify-content-end p-1">
+                            <strong>Shipping fee : &nbsp;{Shipping}</strong>
+                          </div>
+                          <hr />
+                          <div className="d-flex justify-content-end p-1">
+                            <h5>
+                              <b>
+                                Grand Total : &nbsp;
+                                {Grand}
+                              </b>
+                            </h5>
+                          </div>
                         </div>
                       </Col>
                     </Row>
                   </ModalBody>
                   <ModalFooter>
                     <Button color="primary" onClick={this.toggleModal}>
-                      Submit
+                      Proceed to Payment
                     </Button>{" "}
                   </ModalFooter>
                 </Modal>
@@ -525,7 +618,7 @@ class NavbarUser extends React.PureComponent {
                           >
                             <MdDelete
                               color="red"
-                              size={25}
+                              size={20}
                               onClick={(e) => {
                                 this.handleDeletePartsCate(e, ele);
                               }}
