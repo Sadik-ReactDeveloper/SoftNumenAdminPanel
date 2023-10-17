@@ -91,9 +91,9 @@ const CreateWiki = () => {
   useEffect(() => {}, [formData]);
   useEffect(() => {
     createWikiViewData()
-      .then(res => {
+      .then((res) => {
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        // console.log(JSON.parse(jsonData));
+        console.log(JSON.parse(jsonData));
         let origionalpermission =
           JSON.parse(jsonData)?.CreateAccount?.input[14].permissions?.role;
         // const rolePermissions = origionalpermission?.find(
@@ -109,25 +109,25 @@ const CreateWiki = () => {
         setCreatAccountView(JSON.parse(jsonData));
         setdropdownValue(JSON.parse(jsonData));
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }, []);
 
-  const submitHandler = e => {
+  const submitHandler = (e) => {
     e.preventDefault();
     if (error) {
       swal("Error occured while Entering Details");
     } else {
       CreateAccountSave(formData)
-        .then(res => {
+        .then((res) => {
           if (res.status) {
             setFormData({});
             window.location.reload();
             swal("Acccont Created Successfully");
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     }
@@ -209,7 +209,7 @@ const CreateWiki = () => {
                     let Edit = "";
                     if (ele?.role) {
                       let roles = ele?.role?.find(
-                        role => role._attributes?.name === "WARRANTY APPROVER"
+                        (role) => role._attributes?.name === "WARRANTY APPROVER"
                       );
 
                       View = roles?.permissions?._text.includes("View");
@@ -229,7 +229,7 @@ const CreateWiki = () => {
                                 <PhoneInput
                                   inputClass="myphoneinput"
                                   country={"us"}
-                                  onKeyDown={e => {
+                                  onKeyDown={(e) => {
                                     if (
                                       ele?.type?._attributes?.type == "number"
                                     ) {
@@ -240,7 +240,7 @@ const CreateWiki = () => {
                                   countryCodeEditable={false}
                                   name={ele?.name?._text}
                                   value={formData[ele?.name?._text]}
-                                  onChange={phone => {
+                                  onChange={(phone) => {
                                     setFormData({
                                       ...formData,
                                       [ele?.name?._text]: phone,
@@ -323,14 +323,14 @@ const CreateWiki = () => {
                                 inputClass="countryclass"
                                 className="countryclassnw"
                                 options={Country.getAllCountries()}
-                                getOptionLabel={options => {
+                                getOptionLabel={(options) => {
                                   return options["name"];
                                 }}
-                                getOptionValue={options => {
+                                getOptionValue={(options) => {
                                   return options["name"];
                                 }}
                                 value={formData.country}
-                                onChange={country => {
+                                onChange={(country) => {
                                   setFormData({
                                     ...formData,
                                     ["country"]: country,
@@ -360,14 +360,14 @@ const CreateWiki = () => {
                                 options={State?.getStatesOfCountry(
                                   formData?.country?.isoCode
                                 )}
-                                getOptionLabel={options => {
+                                getOptionLabel={(options) => {
                                   return options["name"];
                                 }}
-                                getOptionValue={options => {
+                                getOptionValue={(options) => {
                                   return options["name"];
                                 }}
                                 value={formData.State}
-                                onChange={State => {
+                                onChange={(State) => {
                                   setFormData({
                                     ...formData,
                                     ["State"]: State,
@@ -398,14 +398,14 @@ const CreateWiki = () => {
                                   formData?.State?.countryCode,
                                   formData?.State?.isoCode
                                 )}
-                                getOptionLabel={options => {
+                                getOptionLabel={(options) => {
                                   return options["name"];
                                 }}
-                                getOptionValue={options => {
+                                getOptionValue={(options) => {
                                   return options["name"];
                                 }}
                                 value={formData.City}
-                                onChange={City => {
+                                onChange={(City) => {
                                   setFormData({
                                     ...formData,
                                     ["City"]: City,
@@ -436,7 +436,7 @@ const CreateWiki = () => {
                               <Label>{ele?.label?._text}</Label>
 
                               <Input
-                                onKeyDown={e => {
+                                onKeyDown={(e) => {
                                   if (
                                     ele?.type?._attributes?.type == "number"
                                   ) {
@@ -448,7 +448,7 @@ const CreateWiki = () => {
                                 placeholder={ele?.placeholder?._text}
                                 name={ele?.name?._text}
                                 value={formData[ele?.name?._text]}
-                                onChange={e =>
+                                onChange={(e) =>
                                   handleInputChange(
                                     e,
                                     ele?.type?._attributes?.type,
@@ -536,7 +536,7 @@ const CreateWiki = () => {
                                   style={{ marginRight: "3px" }}
                                   type={ele?.type?._attributes?.type}
                                   name={ele?.name?._text}
-                                  onChange={e =>
+                                  onChange={(e) =>
                                     handleInputChange(e, "checkbox")
                                   }
                                 />{" "}
