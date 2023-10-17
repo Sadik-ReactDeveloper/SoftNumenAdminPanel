@@ -311,18 +311,27 @@ class NavbarUser extends React.PureComponent {
       shoppingCart: updatedCart,
     });
   };
-  handleDecreaseCount = (index) => {
-    this.setState((prev) => {
-      console.log(prev);
+  handleDecreaseCount = (ele, index, e) => {
+    e.preventDefault();
+    this.setState((prevState) => {
+      debugger;
+      const newQuantities = [...prevState.quantities];
+      if (newQuantities[index] > 0) {
+        newQuantities[index] -= 1;
+      }
+      return { Quantity: newQuantities };
     });
-    // setQuantities((prevQuantities) => {
-    //   const newQuantities = [...prevQuantities];
-    //   if (newQuantities[index] > 0) {
-    //     newQuantities[index] -= 1;
-    //   }
-    //   return newQuantities;
-    // });
   };
+  handleIncreaseCount = (ele, index, e) => {
+    e.preventDefault();
+    this.setState((prevState) => {
+      debugger;
+      const newQuantities = [...prevState.quantities];
+      newQuantities[index] += 1;
+      return { Quantity: newQuantities };
+    });
+  };
+
   handleLangDropdown = () =>
     this.setState({ langDropdown: !this.state.langDropdown });
   render() {
@@ -470,7 +479,9 @@ class NavbarUser extends React.PureComponent {
                                     className="minusbutton"
                                     color="primary"
                                     size="sm"
-                                    onClick={() => this.handleDecreaseCount(i)}
+                                    onClick={(e) =>
+                                      this.handleDecreaseCount(ele, i, e)
+                                    }
                                   >
                                     -
                                   </Button>
@@ -494,8 +505,9 @@ class NavbarUser extends React.PureComponent {
                                     />
                                   </div>{" "}
                                   <Button
-                                    // onClick={() => handleIncreaseCount(i)}
-
+                                    onClick={(e) =>
+                                      this.handleIncreaseCount(ele, i, e)
+                                    }
                                     style={{ padding: "7px 8px" }}
                                     color="primary"
                                     size="sm"
