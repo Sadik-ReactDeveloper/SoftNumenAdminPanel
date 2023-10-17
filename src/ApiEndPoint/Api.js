@@ -51,7 +51,7 @@ export const Spare_Parts = "/part-catalogue/get-spare-parts";
 export const Parts_Catalogue = "/part-catalogue/get-partscatalogue-parts";
 export const Order_Parts = "/part-catalogue/get-orders-parts";
 export const AddSupplierView = "/create-supplier/createSupplier";
-export const createWikiView = "/create-wiki/createWiki";
+export const createWikiView = "/product-wiki/createWiki";
 export const createQuoteView = "/create-quote/create-quote";
 export const createWarehouseView = "/create-warehouse/create-warehouse";
 

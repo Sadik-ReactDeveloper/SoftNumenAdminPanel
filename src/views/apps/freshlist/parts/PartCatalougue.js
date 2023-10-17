@@ -360,12 +360,6 @@ function PartCatalougue() {
                                 onChange={(e) => {
                                   handleQuantityChange(i, e.target.value);
                                 }}
-                                // onChange={(e) => {
-
-                                //   const newQuantities = [...quantities];
-                                //   newQuantities[i] = e.target.value;
-                                //   setQuantities(newQuantities);
-                                // }}
                                 onKeyDown={(e) => {
                                   ["e", "E", "+", "-"].includes(e.key) &&
                                     e.preventDefault();

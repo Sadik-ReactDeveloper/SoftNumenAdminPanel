@@ -142,7 +142,6 @@ class Login extends React.Component {
         ) {
           this.setState({ UserCredential: res?.user });
           if (res?.status) {
-            newinfor;
             swal("Success", "OTP sent");
             this.setState({ OtpScreen: true });
           } else {
