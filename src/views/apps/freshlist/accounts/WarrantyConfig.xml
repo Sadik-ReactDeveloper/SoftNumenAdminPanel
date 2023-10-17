@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+
+<Warranty>
+<DropdownRole>
+<dropdown>
+<label>Role</label>
+<name>Role</name>
+<option value="OEM">OEM</option>
+<option value="SUPERADMIN">SUPERADMIN</option>
+
+<option value="DISTRIBUTOR ADMIN">DISTRIBUTOR ADMIN</option>
+
+<option value="ADMIN">ADMIN</option>
+
+<option value="DISTRIBUTOR">DISTRIBUTOR</option>
+
+<option value="DEALER ADMIN">DEALER ADMIN</option>
+
+<option value="DEALER">DEALER</option>
+
+<option value=" WARRANTY SUPERVISER">WARRANTY SUPERVISER</option>
+
+<option value=" WARRANTY APPROVER">WARRANTY APPROVER</option>
+
+<option value=" WARRANTY REVIWER">WARRANTY REVIWER</option>
+
+<option value="SUPERVISER">SUPERVISER</option>
+
+</dropdown>
+
+</DropdownRole>
+
+<!-- <DropdownPartner>
+<dropdown>
+<label>Partner Code</label>
+<name>Partner Code</name>
+<option value="101">101</option>
+<option value="102">102</option>
+<option value="103">103</option>
+<option value="104">104</option>
+</dropdown>
+</DropdownPartner> -->
+<input>
+		<label>Partner Name</label>
+		<type type="text">text</type>
+		<name>PartnerName</name>
+		<placeholder>Enter Partner Name</placeholder>
+	</input>
+
+    <input>
+		<label>Partner Address</label>
+		<type type="textarea">text</type>
+		<name>PartnerAddress</name>
+		<placeholder>Enter Partner Address</placeholder>
+	</input>
+<input>
+		<label>Product# </label>
+		<type type="text">text</type>
+		<name>Product</name>
+	</input>
+    <input>
+		<label>Product Name </label>
+		<type type="text">text</type>
+		<name>ProductName</name>
+	</input>
+
+    <input>
+		<label>Model</label>
+		<type type="text">text</type>
+		<name>Model</name>
+		<placeholder>Enter Model</placeholder>
+	</input>
+    <input>
+		<label>Variant</label>
+		<type type="text">text</type>
+		<name>Variant</name>
+		<placeholder>Enter Variant</placeholder>
+	</input>
+    <!-- <input>
+		<label>Part Name</label>
+		<type type="text">text</type>
+		<name>PartName</name>
+		<placeholder>Enter Part Name</placeholder>
+	</input> -->
+
+	<CheckBox>
+        <h3>Covered Under Warranty</h3>
+		<input>
+			<label>Yes</label>
+			<type type="checkbox">text</type>
+			<name>Yes</name>
+		</input>
+		<input>
+			<label>No</label>
+			<type type="checkbox">text</type>
+			<name>No</name>
+		</input>
+	</CheckBox>
+
+<DropdownWarrantyType>
+<dropdown>
+<label>WarrantyType</label>
+<name>Partner Code</name>
+<option value="Standard">Standard</option>
+<option value="Extended">Extended</option>
+</dropdown>
+</DropdownWarrantyType>
+
+ <input>
+		<label>Warranty Start Date</label>
+		<type type="date">text</type>
+		<name>StartDate</name>
+	</input>
+ <input>
+		<label>Warranty End Date</label>
+		<type type="date">text</type>
+		<name>EndDate</name>
+	</input>
+
+ <input>
+		<label>Days to Expire</label>
+		<type type="date">text</type>
+		<name>DaystoExpire</name>
+	</input>
+
+
+<DropdownDamageType>
+<dropdown>
+<label>Damage Type</label>
+<name>DamageType</name>
+<option value="Regular Inspection">Regular Inspection</option>
+<option value="Scratches">Scratches</option>
+<option value="Dents">Dents</option>
+<option value="Cracks">Cracks</option>
+<option value="Fracture">Fracture</option>
+<option value="Breakdown">Breakdown</option>
+<option value="Wiring">Wiring</option>
+<option value="Glasswork">Glasswork</option>
+<option value="crack">crack</option>
+<option value="Engine Failure">Engine Failure</option>
+</dropdown>
+</DropdownDamageType>
+<input>
+		<label>Days Of Purchase</label>
+		<type type="date">text</type>
+		<name>DaystoExpire</name>
+	</input>
+<input>
+		<label>Registered on</label>
+		<type type="text">text</type>
+		<name>Registeredon</name>
+	</input>
+
+    <input>
+		<label>Mobile1</label>
+		<type type="number">text</type>
+		<name>Mobile1</name>
+		<phoneinput>yes</phoneinput>
+		<placeholder>Enter Mobile</placeholder>
+	</input>
+
+    <input>
+		<label>Mobile2</label>
+		<type type="number">text</type>
+		<name>Mobile2</name>
+		<phoneinput>yes</phoneinput>
+		<placeholder>Enter Mobile</placeholder>
+	</input>
+    <input>
+		<label>Email</label>
+		<type type="email">text</type>
+		<name>email</name>
+		<placeholder>Enter Email</placeholder>
+	</input>
+    <input>
+		<label>Price of the Part</label>
+		<type type="number">text</type>
+		<name>email</name>
+		<placeholder>Price of the Part</placeholder>
+	</input>
+    <input>
+		<label>Quantity</label>
+		<type type="number">text</type>
+		<name>Quantity</name>
+		<placeholder>Enter Quantity</placeholder>
+	</input>
+
+
+	<Radiobutton>
+		<Heading>Status</Heading>
+        <input>
+			<label>Active</label>
+			<type type="radio">text</type>
+			<name>Status</name>
+		</input>
+
+		<input>
+			<label>Deactive</label>
+			<type type="radio">text</type>
+			<name>Status</name>
+		</input>
+	</Radiobutton>
+</Warranty>

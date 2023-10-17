@@ -12,27 +12,25 @@ import {
   FormGroup,
   CustomInput,
 } from "reactstrap";
-import { history } from "../../../../history";
+import { history } from "../../../../../history";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { Country, State, City } from "country-state-city";
 import Select from "react-select";
-
 import swal from "sweetalert";
-import "../../../../../src/layouts/assets/scss/pages/users.scss";
 
 import {
-  PolicySaveData,
-  PolicyViewData,
-} from "../../../../ApiEndPoint/ApiCalling";
+  CreateAccountSave,
+  WarrantyViewData,
+} from "../../../../../ApiEndPoint/ApiCalling";
 import { BiEnvelope } from "react-icons/bi";
 import { FcPhoneAndroid } from "react-icons/fc";
 import { BsWhatsapp } from "react-icons/bs";
-import "../../../../assets/scss/pages/users.scss";
-import UserContext from "../../../../context/Context";
+import "../../../../../assets/scss/pages/users.scss";
+import UserContext from "../../../../../context/Context";
 import { CloudLightning } from "react-feather";
 
-const CreatePolicy = () => {
+const CreateWarranty = () => {
   const [CreatePolicyView, setCreatePolicyView] = useState({});
   const [Countries, setCountry] = useState({});
   const [States, setState] = useState({});
@@ -100,10 +98,10 @@ const CreatePolicy = () => {
   };
   useEffect(() => {}, [formData]);
   useEffect(() => {
-    PolicyViewData()
+    WarrantyViewData()
       .then(res => {
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        console.log(JSON.parse(jsonData).Policy);
+        console.log(JSON.parse(jsonData).Warranty);
         setCreatePolicyView(JSON.parse(jsonData));
         let value = JSON.parse(jsonData)?.MyDropdown?.CheckBox?.input;
         value?.map(ele => {
@@ -138,22 +136,21 @@ const CreatePolicy = () => {
 
   const submitHandler = e => {
     e.preventDefault();
-    if (error) {
-      swal("Error occured while Entering Details");
-    } else {
-      PolicySaveData(formData)
-        .then(res => {
-          console.log(res);
-          // setFormData({});
-          // if (res.status) {
-          //   window.location.reload();
-          //   swal("Policy Submited Successfully");
-          // }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
+    // if (error) {
+    //   swal("Error occured while Entering Details");
+    // } else {
+    //   CreateAccountSave(formData)
+    //     .then(res => {
+    //       setFormData({});
+    //       if (res.status) {
+    //         window.location.reload();
+    //         swal("Acccont Created Successfully");
+    //       }
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // }
   };
 
   return (
@@ -162,7 +159,7 @@ const CreatePolicy = () => {
         <Card>
           <Row className="m-2">
             <Col>
-              <h1 className="float-left">Create Policy</h1>
+              <h1 className="float-left">Create Warranty</h1>
             </Col>
           </Row>
 
@@ -173,7 +170,7 @@ const CreatePolicy = () => {
                   <FormGroup>
                     <Label>
                       {
-                        dropdownValue.Policy?.DropdownRole?.dropdown?.label
+                        dropdownValue.Warranty?.DropdownRole?.dropdown?.label
                           ?._text
                       }
                     </Label>
@@ -181,19 +178,19 @@ const CreatePolicy = () => {
                       required
                       type="select"
                       name={
-                        dropdownValue.Policy?.DropdownRole?.dropdown?.name
+                        dropdownValue.Warranty?.DropdownRole?.dropdown?.name
                           ?._text
                       }
                       value={
                         formData[
-                          dropdownValue.Policy?.DropdownRole?.dropdown?.name
+                          dropdownValue.Warranty?.DropdownRole?.dropdown?.name
                             ?._text
                         ]
                       }
                       onChange={handleInputChange}
                     >
                       <option value="">--Select Role---</option>
-                      {dropdownValue?.Policy?.DropdownRole?.dropdown?.option.map(
+                      {dropdownValue?.Warranty?.DropdownRole?.dropdown?.option.map(
                         (option, index) => (
                           <option
                             key={index}
@@ -210,27 +207,27 @@ const CreatePolicy = () => {
                   <FormGroup>
                     <Label>
                       {
-                        dropdownValue.Policy?.DropdownPolicy?.dropdown?.label
-                          ?._text
+                        dropdownValue.Warranty?.DropdownDamageType?.dropdown
+                          ?.label?._text
                       }
                     </Label>
                     <CustomInput
                       required
                       type="select"
                       name={
-                        dropdownValue.Policy?.DropdownPolicy?.dropdown?.name
-                          ?._text
+                        dropdownValue.Warranty?.DropdownDamageType?.dropdown
+                          ?.name?._text
                       }
                       value={
                         formData[
-                          dropdownValue.Policy?.DropdownPolicy?.dropdown?.name
-                            ?._text
+                          dropdownValue.Warranty?.DropdownDamageType?.dropdown
+                            ?.name?._text
                         ]
                       }
                       onChange={handleInputChange}
                     >
-                      <option value="">--Select Warranty---</option>
-                      {dropdownValue?.Policy?.DropdownPolicy?.dropdown?.option.map(
+                      <option value="">--Select DamageType---</option>
+                      {dropdownValue?.Warranty?.DropdownDamageType?.dropdown?.option.map(
                         (option, index) => (
                           <option
                             key={index}
@@ -247,27 +244,27 @@ const CreatePolicy = () => {
                   <FormGroup>
                     <Label>
                       {
-                        dropdownValue.Policy?.DropdownPartner?.dropdown?.label
-                          ?._text
+                        dropdownValue.Warranty?.DropdownWarrantyType?.dropdown
+                          ?.label?._text
                       }
                     </Label>
                     <CustomInput
                       required
                       type="select"
                       name={
-                        dropdownValue.Policy?.DropdownPartner?.dropdown?.name
-                          ?._text
+                        dropdownValue.Warranty?.DropdownWarrantyType?.dropdown
+                          ?.name?._text
                       }
                       value={
                         formData[
-                          dropdownValue.Policy?.DropdownPartner?.dropdown?.name
-                            ?._text
+                          dropdownValue.Warranty?.DropdownWarrantyType?.dropdown
+                            ?.name?._text
                         ]
                       }
                       onChange={handleInputChange}
                     >
-                      <option value="">--Select Partner Code---</option>
-                      {dropdownValue?.Policy?.DropdownPartner?.dropdown?.option.map(
+                      <option value="">--Select Warranty Type ---</option>
+                      {dropdownValue?.Warranty?.DropdownWarrantyType?.dropdown?.option.map(
                         (option, index) => (
                           <option
                             key={index}
@@ -280,193 +277,9 @@ const CreatePolicy = () => {
                     </CustomInput>
                   </FormGroup>
                 </Col>
-                <Col lg="6" md="6">
-                  <FormGroup>
-                    <Label>
-                      {
-                        dropdownValue.Policy?.DropdownProduct?.dropdown?.label
-                          ?._text
-                      }
-                    </Label>
-                    <CustomInput
-                      required
-                      type="select"
-                      name={
-                        dropdownValue.Policy?.DropdownProduct?.dropdown?.name
-                          ?._text
-                      }
-                      value={
-                        formData[
-                          dropdownValue.Policy?.DropdownProduct?.dropdown?.name
-                            ?._text
-                        ]
-                      }
-                      onChange={handleInputChange}
-                    >
-                      <option value="">--Select Product ---</option>
-                      {dropdownValue?.Policy?.DropdownProduct?.dropdown?.option.map(
-                        (option, index) => (
-                          <option
-                            key={index}
-                            value={option?._attributes?.value}
-                          >
-                            {option?._attributes?.value}
-                          </option>
-                        )
-                      )}
-                    </CustomInput>
-                  </FormGroup>
-                </Col>
-                <Col lg="6" md="6">
-                  <FormGroup>
-                    <Label>
-                      {
-                        dropdownValue.Policy?.DropdownModel?.dropdown?.label
-                          ?._text
-                      }
-                    </Label>
-                    <CustomInput
-                      required
-                      type="select"
-                      name={
-                        dropdownValue.Policy?.DropdownModel?.dropdown?.name
-                          ?._text
-                      }
-                      value={
-                        formData[
-                          dropdownValue.Policy?.DropdownModel?.dropdown?.name
-                            ?._text
-                        ]
-                      }
-                      onChange={handleInputChange}
-                    >
-                      <option value="">--Select Model ---</option>
-                      {dropdownValue?.Policy?.DropdownModel?.dropdown?.option.map(
-                        (option, index) => (
-                          <option
-                            key={index}
-                            value={option?._attributes?.value}
-                          >
-                            {option?._attributes?.value}
-                          </option>
-                        )
-                      )}
-                    </CustomInput>
-                  </FormGroup>
-                </Col>
-                <Col lg="6" md="6">
-                  <FormGroup>
-                    <Label>
-                      {
-                        dropdownValue.Policy?.DropdownVariant?.dropdown?.label
-                          ?._text
-                      }
-                    </Label>
-                    <CustomInput
-                      required
-                      type="select"
-                      name={
-                        dropdownValue.Policy?.DropdownVariant?.dropdown?.name
-                          ?._text
-                      }
-                      value={
-                        formData[
-                          dropdownValue.Policy?.DropdownVariant?.dropdown?.name
-                            ?._text
-                        ]
-                      }
-                      onChange={handleInputChange}
-                    >
-                      <option value="">--Select Variant ---</option>
-                      {dropdownValue?.Policy?.DropdownVariant?.dropdown?.option.map(
-                        (option, index) => (
-                          <option
-                            key={index}
-                            value={option?._attributes?.value}
-                          >
-                            {option?._attributes?.value}
-                          </option>
-                        )
-                      )}
-                    </CustomInput>
-                  </FormGroup>
-                </Col>
-                <Col lg="6" md="6">
-                  <FormGroup>
-                    <Label>
-                      {
-                        dropdownValue.Policy?.DropdownUnit?.dropdown?.label
-                          ?._text
-                      }
-                    </Label>
-                    <CustomInput
-                      required
-                      type="select"
-                      name={
-                        dropdownValue.Policy?.DropdownUnit?.dropdown?.name
-                          ?._text
-                      }
-                      value={
-                        formData[
-                          dropdownValue.Policy?.DropdownUnit?.dropdown?.name
-                            ?._text
-                        ]
-                      }
-                      onChange={handleInputChange}
-                    >
-                      <option value="">--Select Unit ---</option>
-                      {dropdownValue?.Policy?.DropdownUnit?.dropdown?.option.map(
-                        (option, index) => (
-                          <option
-                            key={index}
-                            value={option?._attributes?.value}
-                          >
-                            {option?._attributes?.value}
-                          </option>
-                        )
-                      )}
-                    </CustomInput>
-                  </FormGroup>
-                </Col>
-                <Col lg="6" md="6">
-                  <FormGroup>
-                    <Label>
-                      {
-                        dropdownValue.Policy?.DropdownYear?.dropdown?.label
-                          ?._text
-                      }
-                    </Label>
-                    <CustomInput
-                      required
-                      type="select"
-                      name={
-                        dropdownValue.Policy?.DropdownYear?.dropdown?.name
-                          ?._text
-                      }
-                      value={
-                        formData[
-                          dropdownValue.Policy?.DropdownYear?.dropdown?.name
-                            ?._text
-                        ]
-                      }
-                      onChange={handleInputChange}
-                    >
-                      <option value="">--Select Year ---</option>
-                      {dropdownValue?.Policy?.DropdownYear?.dropdown?.option.map(
-                        (option, index) => (
-                          <option
-                            key={index}
-                            value={option?._attributes?.value}
-                          >
-                            {option?._attributes?.value}
-                          </option>
-                        )
-                      )}
-                    </CustomInput>
-                  </FormGroup>
-                </Col>
+
                 {CreatePolicyView &&
-                  CreatePolicyView?.Policy?.input?.map((ele, i) => {
+                  CreatePolicyView?.Warranty?.input?.map((ele, i) => {
                     if (!!ele?.phoneinput) {
                       return (
                         <>
@@ -868,7 +681,7 @@ const CreatePolicy = () => {
                   </Label>
                   <div className="form-label-group mx-1">
                     {CreatePolicyView &&
-                      CreatePolicyView?.Policy?.Radiobutton?.input?.map(
+                      CreatePolicyView?.Warranty?.Radiobutton?.input?.map(
                         (ele, i) => {
                           return (
                             <FormGroup key={i}>
@@ -915,4 +728,4 @@ const CreatePolicy = () => {
     </div>
   );
 };
-export default CreatePolicy;
+export default CreateWarranty;

@@ -52,6 +52,9 @@ import {
   Distributor_View,
   ProductUpload_View,
   PolicyView,
+  SearchPolicy,
+  Savepolicy,
+  warrantyView,
 } from "./Api";
 import axiosConfig from "../axiosConfig";
 
@@ -375,23 +378,42 @@ export const createWarehouseViewData = async () => {
     .then(res => res.data);
   return response;
 };
+
+// policyAll
 export const PolicyViewData = async () => {
   let response = await axiosConfig.get(`${PolicyView}`).then(res => res.data);
+  return response;
+};
+export const PolicySearchData = async () => {
+  let response = await axiosConfig.get(`${SearchPolicy}`).then(res => res.data);
+  return response;
+};
+
+export const PolicySaveData = async formdata => {
+  console.log(formdata);
+  let response = await axiosConfig
+    .post(`${Savepolicy}`, formdata)
+    .then(res => res.data);
+  return response;
+};
+
+export const WarrantyViewData = async () => {
+  let response = await axiosConfig.get(`${warrantyView}`).then(res => res.data);
   return response;
 };
 
 // ADD TO CART PART CATALOUGUE
 
-export const AddCartsPartsCatalgue = async (data) => {
+export const AddCartsPartsCatalgue = async data => {
   let response = await axiosConfig
     .post(`${Add_To_Cart_PartsCatelougue}`, data)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };
 
-export const AddToCartGet = async (id) => {
+export const AddToCartGet = async id => {
   let response = await axiosConfig
     .get(`${Add_To_Cart_Get}` + id)
-    .then((res) => res.data);
+    .then(res => res.data);
   return response;
 };

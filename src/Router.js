@@ -437,7 +437,7 @@ const OemWarranty = lazy(() =>
   import("./views/apps/freshlist/customer/WarrantyCLaims/OemWarranty")
 );
 const CreateWarrenty = lazy(() =>
-  import("./views/apps/freshlist/customer/WarrantyCLaims/CreateWarrenty")
+  import("./views/apps/freshlist/customer/WarrantyCLaims/CreateWarranty")
 );
 const SearchWarrenty = lazy(() =>
   import("./views/apps/freshlist/customer/WarrantyCLaims/SearchWarrenty")
@@ -471,6 +471,9 @@ const StockTransfer = lazy(() =>
 );
 const SupplierWarranty = lazy(() =>
   import("./views/apps/freshlist/customer/WarrantyCLaims/SupplierWarranty")
+);
+const CreateWarranty = lazy(() =>
+  import("./views/apps/freshlist/customer/WarrantyCLaims/CreateWarranty")
 );
 const Placeorder = lazy(() =>
   import("./views/apps/freshlist/order/Placeorder")
@@ -635,6 +638,9 @@ const ViewAccount = lazy(() =>
 // policy
 const CreatePolicy = lazy(() =>
   import("./views/apps/freshlist/policy/CreatePolicy")
+);
+const SearchPolicy = lazy(() =>
+  import("./views/apps/freshlist/policy/SearchPolicy")
 );
 const RoleList = lazy(() => import("./views/apps/freshlist/accounts/RoleList"));
 // INhouseProduct
@@ -1604,6 +1610,10 @@ class AppRouter extends React.Component {
             component={SupplierWarranty}
           />
           <AppRoute
+            path="/app/softNumen/warranty/CreateWarranty"
+            component={CreateWarranty}
+          />
+          <AppRoute
             path="/app/softNumen/warranty/OEMWarranty"
             component={OemWarranty}
           />
@@ -1838,6 +1848,10 @@ class AppRouter extends React.Component {
           <AppRoute
             path="/app/SoftNumen/policy/CreatePolicy"
             component={CreatePolicy}
+          />
+          <AppRoute
+            path="/app/SoftNumen/policy/SearchPolicy"
+            component={SearchPolicy}
           />
           <AppRoute path="/app/Trupee/account/RoleList" component={RoleList} />
           {/* inhouse Product */}

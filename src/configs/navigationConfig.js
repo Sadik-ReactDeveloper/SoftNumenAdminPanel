@@ -46,11 +46,7 @@ const navigationConfig = [
     permissions: ["admin", "editor"],
     navLink: "/dashboard",
   },
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "Customers Managment",
-  //   title: "Customers",
-  // },
+
   {
     id: "Customer",
     title: "Customers",
@@ -100,11 +96,7 @@ const navigationConfig = [
       },
     ],
   },
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "System Managment",
-  //   title: "System Managment",
-  // },
+
   {
     id: "systemManagment",
     title: "System Managment",
@@ -174,11 +166,6 @@ const navigationConfig = [
     ],
   },
 
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "Quotation MANAGEMENT",
-  //   title: "Quotation",
-  // },
   {
     id: "Quotation",
     title: "Quotation",
@@ -219,11 +206,7 @@ const navigationConfig = [
       },
     ],
   },
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "Product Managment",
-  //   title: "Product Managment",
-  // },
+
   {
     id: "Product Managment",
     title: "Product Managment",
@@ -264,11 +247,6 @@ const navigationConfig = [
       },
     ],
   },
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "Parts Management",
-  //   title: "Parts",
-  // },
 
   {
     id: "Parts",
@@ -295,11 +273,6 @@ const navigationConfig = [
     ],
   },
 
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "Order Management",
-  //   title: "Order Management",
-  // },
   {
     id: "order",
     title: "Order Management",
@@ -324,11 +297,7 @@ const navigationConfig = [
       },
     ],
   },
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "BILLINGS",
-  //   title: "BILLINGS",
-  // },
+
   {
     id: "BILLINGS",
     title: "BILLINGS",
@@ -354,11 +323,6 @@ const navigationConfig = [
     ],
   },
 
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "Warranty Management",
-  //   title: "Warranty Management",
-  // },
   {
     id: "Warranty create",
     title: "Warranty",
@@ -383,11 +347,7 @@ const navigationConfig = [
       },
     ],
   },
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "Ticketing Tool",
-  //   title: "Ticketing Tool",
-  // },
+
   {
     id: "Ticket",
     title: "Ticket",
@@ -412,11 +372,7 @@ const navigationConfig = [
       },
     ],
   },
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "Scrutiny/Inspections",
-  //   title: "Inspections",
-  // },
+
   {
     id: "Inspections",
     title: "Scrutiny/Inspections",
@@ -443,14 +399,9 @@ const navigationConfig = [
     ],
   },
 
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "Product Wiki",
-  //   title: "Product Wiki",
-  // },
   {
     id: "Product",
-    title: "Product",
+    title: "Product WIKI",
     type: "collapse",
     icon: <FaShoppingCart size={15} />,
     children: [
@@ -472,11 +423,7 @@ const navigationConfig = [
       },
     ],
   },
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "WAREHOUSE MANAGEMENT",
-  //   title: "WAREHOUSE",
-  // },
+
   {
     id: "WAREHOUSE",
     title: "WAREHOUSE",
@@ -501,42 +448,6 @@ const navigationConfig = [
       },
     ],
   },
-
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "Warranty Claims",
-  //   title: "Warranty Claims",
-  // },
-  {
-    id: "Warranty Claims",
-    title: "Warranty Claims",
-    type: "collapse",
-    icon: <FaShoppingCart size={15} />,
-    children: [
-      {
-        id: "OEM Warranty",
-        title: "OEM Warranty",
-        type: "item",
-        icon: <FaList size={15} />,
-        permissions: ["admin", "editor"],
-        navLink: "/app/softNumen/warranty/OEMWarranty",
-      },
-      {
-        id: "Supplier Warranty",
-        title: "Suppier Warranty",
-        type: "item",
-        icon: <FaList size={15} />,
-        permissions: ["admin", "editor"],
-        navLink: "/app/softNumen/warranty/SupplierWarranty",
-      },
-    ],
-  },
-
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "Stock Management",
-  //   title: "Stock Management",
-  // },
 
   {
     id: "Stock Management",
@@ -564,11 +475,6 @@ const navigationConfig = [
     ],
   },
 
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "Product Policies",
-  //   title: "Policies",
-  // },
   {
     id: "Policy",
     title: " Policy",
@@ -582,6 +488,14 @@ const navigationConfig = [
         icon: <FaPodcast size={15} />,
         permissions: ["admin", "editor"],
         navLink: "/app/SoftNumen/policy/CreatePolicy",
+      },
+      {
+        id: "SearchPolicy",
+        title: "Search Policy",
+        type: "item",
+        icon: <FaPodcast size={15} />,
+        permissions: ["admin", "editor"],
+        navLink: "/app/SoftNumen/policy/SearchPolicy",
       },
       {
         id: "ExtendedPolicy",
@@ -602,11 +516,6 @@ const navigationConfig = [
     ],
   },
 
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "Reports Management",
-  //   title: "Reports Management",
-  // },
   {
     id: "Reports Management",
     title: "Reports Management",
@@ -656,11 +565,7 @@ const navigationConfig = [
       },
     ],
   },
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "Promotion Management",
-  //   title: "Promotion Management",
-  // },
+
   {
     id: "Promotion Management",
     title: "Promotion Management",
@@ -685,11 +590,6 @@ const navigationConfig = [
       },
     ],
   },
-
-  // {
-  //   type: "groupHeader",
-  //   groupTitle: "SUPPORT MANAGEMENT",
-  // },
 
   {
     id: "Supportcreate",

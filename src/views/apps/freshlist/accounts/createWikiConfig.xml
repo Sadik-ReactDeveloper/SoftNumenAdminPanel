@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+
+<createWiki>
+<DropdownRole>
+<dropdown>
+<label>Role</label>
+<name>Role</name>
+<option value="OEM">OEM</option>
+<option value="SUPERADMIN">SUPERADMIN</option>
+
+<option value="DISTRIBUTOR ADMIN">DISTRIBUTOR ADMIN</option>
+
+<option value="ADMIN">ADMIN</option>
+
+<option value="DISTRIBUTOR">DISTRIBUTOR</option>
+
+<option value="DEALER ADMIN">DEALER ADMIN</option>
+
+<option value="DEALER">DEALER</option>
+
+<option value=" WARRANTY SUPERVISER">WARRANTY SUPERVISER</option>
+
+<option value=" WARRANTY APPROVER">WARRANTY APPROVER</option>
+
+<option value=" WARRANTY REVIWER">WARRANTY REVIWER</option>
+
+<option value="SUPERVISER">SUPERVISER</option>
+
+</dropdown>
+
+</DropdownRole>
+
+
+<input>
+		<label>Product# </label>
+		<type type="text">text</type>
+		<name>Product</name>
+	</input>
+ 
+<DropdownDocumentType>
+<dropdown>
+<label>Document Type</label>
+<name>documentType</name>
+<option value="User Manual">User Manual</option>
+<option value="Workshop Manual">Workshop Manual</option>
+</dropdown>
+</DropdownDocumentType>
+
+
+<DropdownBrand>
+<dropdown>
+<label>Brand</label>
+<name>Brand</name>
+<option value="Maruti">Maruti</option>
+<option value="Suzuki">Suzuki</option>
+<option value="Brezza">Brezza</option>
+</dropdown>
+</DropdownBrand>
+
+
+<DropdownModel>
+<dropdown>
+<label>Model</label>
+<name>Model</name>
+<option value="Ertiga">Ertiga</option>
+<option value="Wagon R">Wagon R</option>
+<option value="Brezza">Brezza</option>
+</dropdown>
+</DropdownModel>
+
+<DropdownVaraint>
+<dropdown>
+<label>Varaint</label>
+<name>varaint</name>
+<option value="LXI">LXI</option>
+<option value="VXI">VXI</option>
+<option value="ZXI">ZXI</option>
+</dropdown>
+</DropdownVaraint>
+
+<input>
+		<label>Name</label>
+		<type type="text">text</type>
+		<name>name</name>
+		<placeholder>Enter Name</placeholder>
+	</input>
+
+ <input>
+		<label>WikiStartDate</label>
+		<type type="date">text</type>
+		<name>StartDate</name>
+	</input>
+ <input>
+		<label>Wiki End Date</label>
+		<type type="date">text</type>
+		<name>EndDate</name>
+	</input>
+
+	<Radiobutton>
+		<Heading>Status</Heading>
+        <input>
+			<label>Active</label>
+			<type type="radio">text</type>
+			<name>Status</name>
+		</input>
+
+		<input>
+			<label>Deactive</label>
+			<type type="radio">text</type>
+			<name>Status</name>
+		</input>
+	</Radiobutton>
+</createWiki>

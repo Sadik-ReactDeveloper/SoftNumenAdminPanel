@@ -27,9 +27,12 @@ import "../../../../assets/scss/pages/users.scss";
 import swal from "sweetalert";
 import { Route } from "react-router-dom";
 import { BsEye, BsTrash } from "react-icons/bs";
-import { CreateAccountView } from "../../../../ApiEndPoint/ApiCalling";
+import {
+  PolicySearchData,
+  PolicyViewData,
+} from "../../../../ApiEndPoint/ApiCalling";
 
-class RoleList extends React.Component {
+class SearchPolicy extends React.Component {
   static contextType = UserContext;
 
   state = {
@@ -43,100 +46,26 @@ class RoleList extends React.Component {
     getPageSize: "",
     defaultColDef: {
       sortable: true,
-      // editable: true,
       resizable: true,
       suppressMenu: true,
     },
     columnDefs: [],
-    // columnDefs: [
-    //   {
-    //     headerName: "S.No",
-    //     valueGetter: "node.rowIndex + 1",
-    //     field: "node.rowIndex + 1",
-    //     width: 150,
-    //     filter: true,
-    //   },
-    //   {
-    //     headerName: "Role Name",
-    //     field: "Name",
-    //     filter: true,
-    //     resizable: true,
-    //     width: 160,
-    //     cellRendererFramework: (params) => {
-    //       return (
-    //         <div className="d-flex align-items-center cursor-pointer">
-    //           <div className="">
-    //             <span>{params?.data}</span>
-    //           </div>
-    //         </div>
-    //       );
-    //     },
-    //   },
-
-    //   {
-    //     headerName: "Actions",
-    //     field: "sortorder",
-    //     field: "transactions",
-    //     width: 160,
-    //     cellRendererFramework: (params) => {
-    //       return (
-    //         <div className="actions cursor-pointer">
-    //           {/* {this.state.Viewpermisson && (
-    //             <BsEye
-    //               className="mr-50"
-    //               size="25px"
-    //               color="green"
-    //               onClick={() =>
-    //                 history.push(
-    //                   `/app/freshlist/account/updateexistingrole/${params.data.id}`
-    //                 )
-    //               }
-    //             />
-    //           )} */}
-
-    //           {this.state.Editpermisson && (
-    //             <Route
-    //               render={({ history }) => (
-    //                 <Edit
-    //                   className="mr-50"
-    //                   size="25px"
-    //                   color="blue"
-    //                   onClick={() =>
-    //                     history.push({
-    //                       pathname: `/app/freshlist/account/editRole/${params?.data}`,
-    //                       data: params,
-    //                     })
-    //                   }
-    //                 />
-    //               )}
-    //             />
-    //           )}
-    //           {/* {this.state.Deletepermisson && (
-    //             <BsTrash
-    //               className="mr-50"
-    //               size="25px"
-    //               color="red"
-    //               onClick={() => {
-    //                 this.runthisfunction(params.data.id);
-    //               }}
-    //             />
-    //           )} */}
-    //         </div>
-    //       );
-    //     },
-    //   },
-    // ],
   };
   async componentDidMount() {
-    CreateAccountView()
+    PolicyViewData()
       .then(res => {
         var mydropdownArray = [];
         var adddropdown = [];
         const jsonData = xmlJs.xml2json(res.data, { compact: true, spaces: 2 });
-        console.log(JSON.parse(jsonData));
-        let dropdown = JSON.parse(jsonData).CreateAccount?.MyDropdown?.dropdown;
-        if (dropdown.length) {
+        console.log(JSON.parse(jsonData).Policy);
+        // console.log(jsonData);
+
+        let dropdown = JSON.parse(jsonData).Policy?.DropdownModel?.dropdown;
+        if (dropdown?.length) {
           var mydropdownArray = dropdown?.map(ele => {
+            {
+              console.log(ele);
+            }
             return {
               headerName: ele?.label,
               field: ele?.name,
@@ -223,7 +152,7 @@ class RoleList extends React.Component {
       })
       .catch(err => {
         console.log(err);
-        swal("Error", "something went wrong try again");
+        // swal("Error", "something went wrong try again");
       });
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
 
@@ -348,7 +277,7 @@ class RoleList extends React.Component {
           <Card>
             <Row className="m-2">
               <Col>
-                <h1 className="float-left">Created Role List</h1>
+                <h1 className="float-left">Search Policy</h1>
               </Col>
               {/* <Col>
                 <Route
@@ -414,52 +343,6 @@ class RoleList extends React.Component {
                         </DropdownMenu>
                       </UncontrolledDropdown>
                     </div>
-                    {/* <div className="d-flex flex-wrap justify-content-between mb-1">
-                      <div className="table-input mr-1">
-                        <Input
-                          placeholder="Hub Name"
-                          onChange={(e) =>
-                            this.updateSearchQuery(e.target.value)
-                          }
-                          value={this.state.value}
-                        />
-                      </div>
-                      <div className="table-input mr-1">
-                        <Input
-                          placeholder="Order Id"
-                          onChange={(e) =>
-                            this.updateSearchQuery(e.target.value)
-                          }
-                          value={this.state.value}
-                        />
-                      </div>
-                      <div className="table-input mr-1">
-                        <Input
-                          placeholder="Phone Number"
-                          onChange={(e) =>
-                            this.updateSearchQuery(e.target.value)
-                          }
-                          value={this.state.value}
-                        />
-                      </div>
-                      <div className="table-input mr-1">
-                        <Input
-                          placeholder="Enter Email"
-                          onChange={(e) =>
-                            this.updateSearchQuery(e.target.value)
-                          }
-                          value={this.state.value}
-                        />
-                      </div>
-                      <div className="export-btn">
-                        <Button.Ripple
-                          color="primary"
-                          onClick={() => this.gridApi.exportDataAsCsv()}
-                        >
-                          Export as CSV
-                        </Button.Ripple>
-                      </div>
-                    </div> */}
                   </div>
                   <ContextLayout.Consumer>
                     {context => (
@@ -489,4 +372,4 @@ class RoleList extends React.Component {
     );
   }
 }
-export default RoleList;
+export default SearchPolicy;
