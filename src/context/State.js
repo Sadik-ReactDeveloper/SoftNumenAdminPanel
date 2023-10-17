@@ -8,6 +8,7 @@ const State = (props) => {
   const [Mode, setMode] = useState("semi-dark");
   const [PartsCatalougueCart, setPartsCatalougueCart] = useState([]);
   const [UserInformatio, setUserInformatio] = useState({});
+  const [PartsCatloguelength, setPartsCatloguelength] = useState(0);
 
   useEffect(() => {
     // CreateAccountView()
@@ -29,6 +30,8 @@ const State = (props) => {
         setPartsCatalougueCart,
         PartsCatalougueCart,
         setUserInformatio,
+        setPartsCatloguelength,
+        PartsCatloguelength,
         UserInformatio,
       }}
     >

@@ -93,10 +93,10 @@ const ImageZoom = ({ imageSrc }) => {
     <div className="image-zoom-container">
       <div className="zoom-controls">
         <Button size="sm" onClick={handleZoomIn} color="primary" outline>
-          +
+          <strong>+</strong>
         </Button>
         <Button size="sm" onClick={handleZoomOut} color="primary" outline>
-          -
+          <strong>-</strong>
         </Button>
         <Button
           size="sm"
@@ -104,7 +104,7 @@ const ImageZoom = ({ imageSrc }) => {
           color="primary"
           outline
         >
-          &uarr;
+          <strong>&uarr;</strong>
         </Button>
         <Button
           size="sm"
@@ -112,7 +112,7 @@ const ImageZoom = ({ imageSrc }) => {
           color="primary"
           outline
         >
-          &darr;
+          <strong>&darr;</strong>
         </Button>
         <Button
           size="sm"
@@ -120,7 +120,7 @@ const ImageZoom = ({ imageSrc }) => {
           color="primary"
           outline
         >
-          &larr;
+          <strong>&larr;</strong>
         </Button>
         <Button
           size="sm"
@@ -128,7 +128,7 @@ const ImageZoom = ({ imageSrc }) => {
           color="primary"
           outline
         >
-          &rarr;
+          <strong>&rarr;</strong>
         </Button>
         <Button
           size="sm"
@@ -139,7 +139,7 @@ const ImageZoom = ({ imageSrc }) => {
           color="primary"
           outline
         >
-          Reset
+          <strong>Reset</strong>
         </Button>
       </div>
       <div className="image-zoom">

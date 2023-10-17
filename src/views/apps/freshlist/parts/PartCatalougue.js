@@ -22,6 +22,7 @@ import "./Magnify.css";
 import { AiFillDownCircle, AiFillUpCircle } from "react-icons/ai";
 import {
   AddCartsPartsCatalgue,
+  AddToCartGet,
   PartCatalogueView,
 } from "../../../../ApiEndPoint/ApiCalling";
 import { BsCartCheckFill, BsFillArrowRightSquareFill } from "react-icons/bs";
@@ -29,20 +30,23 @@ import * as Icon from "react-feather";
 import ZoomimageTest from "./ZoomimageTest";
 // import { ReactPanZoom } from "./Ra";
 import UserContext from "../../../../context/Context";
+import { Link, useLocation, matchPath } from "react-router-dom";
 import { MdOutlineDownloadDone } from "react-icons/md";
+import swal from "sweetalert";
 
 function PartCatalougue() {
   const [CollapseIndex, setCollapseIndex] = useState("");
   const [frontSide, setfrontSide] = useState([]);
   const [AllData, setAllData] = useState({});
   const [ListData, setListData] = useState([]);
+  const [Breadcums, setBreadcums] = useState([]);
   const [Fullimage, setFullimage] = useState(false);
-  const [Cartvalue, setCartvalue] = useState(0);
+  // const [Cartvalue, setCartvalue] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
 
   const [cart, setCart] = useState([]);
   const [quantities, setQuantities] = useState(
-    ListData.map((product) => ({
+    ListData?.map((product) => ({
       quantity: 0,
       elementData: product, // You can set this to the product data
     }))
@@ -52,33 +56,35 @@ function PartCatalougue() {
   useEffect(() => {
     PartCatalogueView()
       .then((res) => {
-        // console.log(res?.Parts_Catalogue);
+        console.log(res?.Parts_Catalogue);
         setAllData(res?.Parts_Catalogue);
         let keys = Object.keys(res?.Parts_Catalogue);
+        console.log(keys);
         setCollapseIndex(0);
-
-        setListData(res?.Parts_Catalogue?.backAxleSubassembly);
+        console.log(res?.Parts_Catalogue);
+        setListData(res?.Parts_Catalogue[keys[0]]);
+        // setListData(res?.Parts_Catalogue?.backAxleSubassembly);
+        setBreadcums(res?.Parts_Catalogue[keys[0]]);
         setfrontSide(keys);
-        // console.log(keys);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
   useEffect(() => {
-    const initialQuantities = new Array(ListData.length).fill(0);
+    const initialQuantities = new Array(ListData?.length).fill(0);
     setQuantities(initialQuantities);
   }, [ListData]);
 
-  useEffect(() => {
-    console.log(context);
-  }, [context]);
+  // useEffect(() => {
+  //   console.log(cart);
+  //   console.log(context);
 
+  //   // context?.setPartsCatalougueCart(cart);
+  // }, [cart, context]);
   useEffect(() => {
-    console.log(cart);
-
-    context?.setPartsCatalougueCart(cart);
-  }, [cart]);
+    console.log(Breadcums);
+  }, [Breadcums]);
 
   const handleIncreaseCount = (index) => {
     setQuantities((prevQuantities) => {
@@ -112,29 +118,14 @@ function PartCatalougue() {
     });
   };
 
-  // const addToCart = (index) => {
-  //   if (quantities[index] > 0) {
-  //     setCart((prevCart) => {
-  //       const newCart = [...prevCart];
-  //       newCart.push({
-  //         product: ListData[index],
-  //         quantity: quantities[index],
-  //       });
-  //       return newCart;
-  //     });
-  //     setQuantities((prevQuantities) => {
-  //       const newQuantities = [...prevQuantities];
-  //       newQuantities[index] = 0;
-  //       return newQuantities;
-  //     });
-  //   }
-  // };
   const handleEditCartItemQuantity = (index, event) => {
     const newCart = [...cart];
     newCart[index].quantity = parseInt(event.target.value, 10);
     setCart(newCart);
     setTotalItemCount((count) => count + parseInt(event.target.value, 10));
   };
+
+  // add to cart
   const addToCart = (index, ele) => {
     let userData = JSON.parse(localStorage.getItem("userData"));
 
@@ -155,8 +146,22 @@ function PartCatalougue() {
         AddCartsPartsCatalgue(value)
           .then((res) => {
             console.log(res.data);
+            let userData = JSON.parse(localStorage.getItem("userData")); //forgot to close
+
+            AddToCartGet(userData?._id)
+              .then((res) => {
+                context?.setPartsCatalougueCart(res?.cart);
+              })
+              .catch((err) => {
+                console.log(err.response);
+              });
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err.response);
+            if (err.response?.data?.message) {
+              swal("Warning", `${err.response?.data?.message}`);
+            }
+          });
 
         if (existingIndex !== -1) {
           // If the product already exists in the cart, update its quantity
@@ -182,8 +187,9 @@ function PartCatalougue() {
     if (ele) {
       setFullimage(true);
     }
-    console.log(ele, AllData[ele]);
+    // console.log(ele, AllData[ele]);
     setListData(AllData[ele]);
+    setBreadcums(AllData[ele]);
     setCollapseIndex(i);
   };
 
@@ -193,12 +199,12 @@ function PartCatalougue() {
         <Col>
           <Breadcrumb>
             <BreadcrumbItem>
-              <a href="#">Home</a>
+              <a>Home</a>
             </BreadcrumbItem>
+
             <BreadcrumbItem>
-              <a href="#">Library</a>
+              <a>{frontSide[CollapseIndex]}</a>
             </BreadcrumbItem>
-            <BreadcrumbItem active>Product</BreadcrumbItem>
           </Breadcrumb>
         </Col>
       </Row>
@@ -290,7 +296,7 @@ function PartCatalougue() {
           </div>
           {ListData && ListData ? (
             <>
-              <Imagemagnify imageSrc={ListData[0]?.Part_Image?.text} />
+              <Imagemagnify imageSrc={ListData[0]?.Part_Image} />
             </>
           ) : (
             <>
@@ -379,7 +385,7 @@ function PartCatalougue() {
                               color="primary"
                               size="sm"
                             >
-                              +
+                              <strong>+</strong>
                             </Button>
                           </span>
                         </td>
