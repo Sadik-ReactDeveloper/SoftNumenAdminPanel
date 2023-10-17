@@ -286,6 +286,7 @@ class NavbarUser extends React.PureComponent {
         // console.log(qty);
 
         console.log(total);
+
         let findtotal = total?.reduce((a, b) => a + b, 0);
         console.log(findtotal);
         this.setState({ Total: findtotal });
@@ -326,10 +327,16 @@ class NavbarUser extends React.PureComponent {
   };
   handleIncreaseCount = (ele, index, e) => {
     e.preventDefault();
-    console.log(ele?.product);
+    console.log(ele?.product?.Part_Price);
+    console.log(this.state.Quantity[index]);
+    console.log(ele?.product?.Part_Price * (this.state.Quantity[index] + 1));
+    console.log(this.state.Total[index]);
+    debugger;
     this.setState((prevState) => {
       const newQuantities = [...prevState.Quantity];
       newQuantities[index] += 1;
+      console.log(ele?.product?.Part_Price * newQuantities);
+
       return { Quantity: newQuantities };
     });
   };
@@ -524,7 +531,7 @@ class NavbarUser extends React.PureComponent {
                               <td>
                                 {ele?.product?.Part_Price *
                                   this.state.Quantity[i]}
-                                {ele?.product?.Part_Price * ele?.quantity}
+                                {/* {ele?.product?.Part_Price * ele?.quantity} */}
                               </td>
                             </tr>
                           );
