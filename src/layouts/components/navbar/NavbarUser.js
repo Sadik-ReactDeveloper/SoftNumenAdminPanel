@@ -30,7 +30,11 @@ import ToggleMode from "./ToggleMode";
 import { BsCartCheckFill } from "react-icons/bs";
 import UserContext from "../../../context/Context";
 import { MdDelete } from "react-icons/md";
-import { AddToCartGet } from "../../../ApiEndPoint/ApiCalling";
+import {
+  AddToCartGet,
+  DeleteCartItemPartsCatelogue,
+} from "../../../ApiEndPoint/ApiCalling";
+import swal from "sweetalert";
 
 const handleNavigation = (e) => {
   e.preventDefault();
@@ -217,9 +221,9 @@ class NavbarUser extends React.PureComponent {
     }));
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const user = this.context;
-    console.log(user?.PartsCatalougueCart);
+    await this.handleShowCart();
 
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
 
@@ -233,15 +237,48 @@ class NavbarUser extends React.PureComponent {
     });
     let data = JSON.parse(localStorage.getItem("userData")); //forgot to close
     this.setState({ userData: data });
+
+    console.log(user);
   }
 
-  handleShowCart = () => {
+  handleDeletePartsCate = (e, ele) => {
+    e.preventDefault();
+    let userdata = JSON.parse(localStorage.getItem("userData"));
+
+    swal("Warning", "Sure You Want to Delete item", {
+      buttons: {
+        cancel: "Cancel",
+        catch: { text: "Delete ", value: "delete" },
+      },
+    }).then((value) => {
+      switch (value) {
+        case "delete":
+          let value = {
+            userId: userdata?._id,
+            productId: ele?.productId,
+          };
+          DeleteCartItemPartsCatelogue(value)
+            .then((res) => {
+              console.log(res);
+              this.handleShowCart();
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          break;
+        default:
+      }
+    });
+  };
+  handleShowCart = async () => {
     let userData = JSON.parse(localStorage.getItem("userData")); //forgot to close
 
-    this.toggleModal();
-    AddToCartGet(userData?._id)
+    await AddToCartGet(userData?._id)
       .then((res) => {
+        // debugger;
+        const user = this.context;
         this.setState({ myCart: res?.cart });
+        user?.setPartsCatalougueCart(res?.cart);
         console.log(res?.cart);
       })
       .catch((err) => {
@@ -351,8 +388,8 @@ class NavbarUser extends React.PureComponent {
                   className="modal-dialog modal-xl"
                   // className="modal-dialog modal-lg"
                   size="lg"
-                  backdrop="true"
-                  fullscreen="true"
+                  backdrop={true}
+                  fullscreen={true}
                 >
                   <ModalHeader toggle={this.toggleModal}>
                     Added To Cart
@@ -377,7 +414,9 @@ class NavbarUser extends React.PureComponent {
                       </thead>
                       <tbody>
                         {this.state.myCart?.map((ele, i) => {
-                          console.log(ele);
+                          {
+                            /* console.log(ele); */
+                          }
                           return (
                             <tr key={i}>
                               <th scope="row"> {i + 1}</th>
@@ -429,7 +468,12 @@ class NavbarUser extends React.PureComponent {
           <DropdownToggle tag="a" className="nav-link nav-link-label">
             <BsCartCheckFill color="#055761" size={21} />
             <Badge pill color="primary" className="badge-up">
-              {user?.PartsCatalougueCart && user?.PartsCatalougueCart?.length}
+              {user?.PartsCatalougueCart?.length > 0 ? (
+                <>{user?.PartsCatalougueCart?.length}</>
+              ) : (
+                <>{this.state.myCart.length}</>
+              )}
+              {/* {this.state.myCart.length && this.state.myCart.length} */}
             </Badge>
           </DropdownToggle>
           <DropdownMenu tag="ul" right className="dropdown-menu-media">
@@ -446,7 +490,9 @@ class NavbarUser extends React.PureComponent {
               }}
             >
               {user?.PartsCatalougueCart?.map((ele, i) => {
-                console.log(ele);
+                {
+                  /* console.log(ele); */
+                }
                 return (
                   <>
                     <div className="d-flex justify-content-between">
@@ -481,8 +527,7 @@ class NavbarUser extends React.PureComponent {
                               color="red"
                               size={25}
                               onClick={(e) => {
-                                e.preventDefault();
-                                console.log(ele);
+                                this.handleDeletePartsCate(e, ele);
                               }}
                               style={{ cursor: "pointer" }}
                             />
@@ -493,111 +538,11 @@ class NavbarUser extends React.PureComponent {
                   </>
                 );
               })}
-              {/* <div className="d-flex justify-content-between">
-                <Media className="d-flex align-items-start">
-                  <Media left href="#">
-                    <Icon.DownloadCloud
-                      className="font-medium-5 success"
-                      size={21}
-                    />
-                  </Media>
-                  <Media body>
-                    <Media heading className="success media-heading" tag="h6">
-                      99% Server load
-                    </Media>
-                    <p className="notification-text">
-                      You got new order of goods?
-                    </p>
-                  </Media>
-                  <small>
-                    <time
-                      className="media-meta"
-                      dateTime="2015-06-11T18:29:20+08:00"
-                    >
-                      5 hours ago
-                    </time>
-                  </small>
-                </Media>
-              </div>
-              <div className="d-flex justify-content-between">
-                <Media className="d-flex align-items-start">
-                  <Media left href="#">
-                    <Icon.AlertTriangle
-                      className="font-medium-5 danger"
-                      size={21}
-                    />
-                  </Media>
-                  <Media body>
-                    <Media heading className="danger media-heading" tag="h6">
-                      Warning Notification
-                    </Media>
-                    <p className="notification-text">
-                      Server has used 99% of CPU
-                    </p>
-                  </Media>
-                  <small>
-                    <time
-                      className="media-meta"
-                      dateTime="2015-06-11T18:29:20+08:00"
-                    >
-                      Today
-                    </time>
-                  </small>
-                </Media>
-              </div>
-              <div className="d-flex justify-content-between">
-                <Media className="d-flex align-items-start">
-                  <Media left href="#">
-                    <Icon.CheckCircle
-                      className="font-medium-5 info"
-                      size={21}
-                    />
-                  </Media>
-                  <Media body>
-                    <Media heading className="info media-heading" tag="h6">
-                      Complete the task
-                    </Media>
-                    <p className="notification-text">
-                      One of your task is pending.
-                    </p>
-                  </Media>
-                  <small>
-                    <time
-                      className="media-meta"
-                      dateTime="2015-06-11T18:29:20+08:00"
-                    >
-                      Last week
-                    </time>
-                  </small>
-                </Media>
-              </div>
-              <div className="d-flex justify-content-between">
-                <Media className="d-flex align-items-start">
-                  <Media left href="#">
-                    <Icon.File className="font-medium-5 warning" size={21} />
-                  </Media>
-                  <Media body>
-                    <Media heading className="warning media-heading" tag="h6">
-                      Generate monthly report
-                    </Media>
-                    <p className="notification-text">
-                      Reminder to generate monthly report
-                    </p>
-                  </Media>
-                  <small>
-                    <time
-                      className="media-meta"
-                      dateTime="2015-06-11T18:29:20+08:00"
-                    >
-                      Last month
-                    </time>
-                  </small>
-                </Media>
-              </div> */}
             </PerfectScrollbar>
             <li
               onClick={() => {
                 this.handleShowCart();
+                this.toggleModal();
               }}
               className="dropdown-menu-footer"
             >

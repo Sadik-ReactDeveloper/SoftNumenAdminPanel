@@ -67,3 +67,4 @@ export const PolicyView = "/policy/get-xml";
 // Add to Cart PartsCatelougue
 export const Add_To_Cart_PartsCatelougue = "/cart/add-to-cart";
 export const Add_To_Cart_Get = "/cart/get-cart-items/";
+export const Delete_CartItem_PartsCat = "/cart/remove-cart-item";

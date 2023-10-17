@@ -22,6 +22,7 @@ import "./Magnify.css";
 import { AiFillDownCircle, AiFillUpCircle } from "react-icons/ai";
 import {
   AddCartsPartsCatalgue,
+  AddToCartGet,
   PartCatalogueView,
 } from "../../../../ApiEndPoint/ApiCalling";
 import { BsCartCheckFill, BsFillArrowRightSquareFill } from "react-icons/bs";
@@ -36,8 +37,9 @@ function PartCatalougue() {
   const [frontSide, setfrontSide] = useState([]);
   const [AllData, setAllData] = useState({});
   const [ListData, setListData] = useState([]);
+  const [Breadcums, setBreadcums] = useState([]);
   const [Fullimage, setFullimage] = useState(false);
-  const [Cartvalue, setCartvalue] = useState(0);
+  // const [Cartvalue, setCartvalue] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
 
   const [cart, setCart] = useState([]);
@@ -56,10 +58,10 @@ function PartCatalougue() {
         setAllData(res?.Parts_Catalogue);
         let keys = Object.keys(res?.Parts_Catalogue);
         setCollapseIndex(0);
-
+        console.log(res?.Parts_Catalogue);
         setListData(res?.Parts_Catalogue?.backAxleSubassembly);
+        setBreadcums(res?.Parts_Catalogue?.backAxleSubassembly);
         setfrontSide(keys);
-        // console.log(keys);
       })
       .catch((err) => {
         console.log(err);
@@ -71,14 +73,11 @@ function PartCatalougue() {
   }, [ListData]);
 
   useEffect(() => {
-    console.log(context);
-  }, [context]);
-
-  useEffect(() => {
     console.log(cart);
+    console.log(context);
 
-    context?.setPartsCatalougueCart(cart);
-  }, [cart]);
+    // context?.setPartsCatalougueCart(cart);
+  }, [cart, context]);
 
   const handleIncreaseCount = (index) => {
     setQuantities((prevQuantities) => {
@@ -112,29 +111,14 @@ function PartCatalougue() {
     });
   };
 
-  // const addToCart = (index) => {
-  //   if (quantities[index] > 0) {
-  //     setCart((prevCart) => {
-  //       const newCart = [...prevCart];
-  //       newCart.push({
-  //         product: ListData[index],
-  //         quantity: quantities[index],
-  //       });
-  //       return newCart;
-  //     });
-  //     setQuantities((prevQuantities) => {
-  //       const newQuantities = [...prevQuantities];
-  //       newQuantities[index] = 0;
-  //       return newQuantities;
-  //     });
-  //   }
-  // };
   const handleEditCartItemQuantity = (index, event) => {
     const newCart = [...cart];
     newCart[index].quantity = parseInt(event.target.value, 10);
     setCart(newCart);
     setTotalItemCount((count) => count + parseInt(event.target.value, 10));
   };
+
+  // add to cart
   const addToCart = (index, ele) => {
     let userData = JSON.parse(localStorage.getItem("userData"));
 
@@ -155,6 +139,15 @@ function PartCatalougue() {
         AddCartsPartsCatalgue(value)
           .then((res) => {
             console.log(res.data);
+            let userData = JSON.parse(localStorage.getItem("userData")); //forgot to close
+
+            AddToCartGet(userData?._id)
+              .then((res) => {
+                context?.setPartsCatalougueCart(res?.cart);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           })
           .catch((err) => console.log(err));
 
@@ -182,7 +175,7 @@ function PartCatalougue() {
     if (ele) {
       setFullimage(true);
     }
-    console.log(ele, AllData[ele]);
+    // console.log(ele, AllData[ele]);
     setListData(AllData[ele]);
     setCollapseIndex(i);
   };
@@ -193,8 +186,9 @@ function PartCatalougue() {
         <Col>
           <Breadcrumb>
             <BreadcrumbItem>
-              <a href="#">Home</a>
+              <a href="/app/SoftNumen/parts/PartCatalougue">Home</a>
             </BreadcrumbItem>
+            {/* {ListData} */}
             <BreadcrumbItem>
               <a href="#">Library</a>
             </BreadcrumbItem>
