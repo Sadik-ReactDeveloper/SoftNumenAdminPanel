@@ -351,8 +351,8 @@ class NavbarUser extends React.PureComponent {
                   className="modal-dialog modal-xl"
                   // className="modal-dialog modal-lg"
                   size="lg"
-                  backdrop="true"
-                  fullscreen="true"
+                  backdrop={true}
+                  fullscreen={true}
                 >
                   <ModalHeader toggle={this.toggleModal}>
                     Added To Cart
