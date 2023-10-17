@@ -220,6 +220,7 @@ class NavbarUser extends React.PureComponent {
   componentDidMount() {
     const user = this.context;
     console.log(user?.PartsCatalougueCart);
+    this.handleShowCart();
 
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
 
@@ -238,7 +239,6 @@ class NavbarUser extends React.PureComponent {
   handleShowCart = () => {
     let userData = JSON.parse(localStorage.getItem("userData")); //forgot to close
 
-    this.toggleModal();
     AddToCartGet(userData?._id)
       .then((res) => {
         this.setState({ myCart: res?.cart });
@@ -429,7 +429,8 @@ class NavbarUser extends React.PureComponent {
           <DropdownToggle tag="a" className="nav-link nav-link-label">
             <BsCartCheckFill color="#055761" size={21} />
             <Badge pill color="primary" className="badge-up">
-              {user?.PartsCatalougueCart && user?.PartsCatalougueCart?.length}
+              {/* {user?.PartsCatalougueCart && user?.PartsCatalougueCart?.length} */}
+              {this.state.myCart.length && this.state.myCart.length}
             </Badge>
           </DropdownToggle>
           <DropdownMenu tag="ul" right className="dropdown-menu-media">
@@ -497,6 +498,7 @@ class NavbarUser extends React.PureComponent {
             <li
               onClick={() => {
                 this.handleShowCart();
+                this.toggleModal();
               }}
               className="dropdown-menu-footer"
             >
