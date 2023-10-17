@@ -1,0 +1,2 @@
+.image-zoom{position:relative;overflow:hidden;transition:transform .3s ease-in-out;max-width:100%}.zoom-controls{position:absolute;top:-44px;z-index:2}[dir=ltr] .zoom-controls{right:10px}[dir=rtl] .zoom-controls{left:10px}button{font-size:24px}[dir] button{padding:5px 10px;cursor:pointer}img{max-width:100%;display:block}.tableheadingmy{overflow-x:scroll}.cardheadercustme.card-header{display:flex;justify-content:space-evenly}[dir] .cardheadercustme.card-header{padding:10px}
+/*# sourceMappingURL=365.29f63d41.chunk.css.map */

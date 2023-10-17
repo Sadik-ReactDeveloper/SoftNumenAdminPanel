@@ -30,7 +30,11 @@ import ToggleMode from "./ToggleMode";
 import { BsCartCheckFill } from "react-icons/bs";
 import UserContext from "../../../context/Context";
 import { MdDelete } from "react-icons/md";
-import { AddToCartGet } from "../../../ApiEndPoint/ApiCalling";
+import {
+  AddToCartGet,
+  DeleteCartItemPartsCatelogue,
+} from "../../../ApiEndPoint/ApiCalling";
+import swal from "sweetalert";
 
 const handleNavigation = (e) => {
   e.preventDefault();
@@ -217,10 +221,9 @@ class NavbarUser extends React.PureComponent {
     }));
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const user = this.context;
-    console.log(user?.PartsCatalougueCart);
-    this.handleShowCart();
+    await this.handleShowCart();
 
     let pageparmission = JSON.parse(localStorage.getItem("userData"));
 
@@ -234,14 +237,48 @@ class NavbarUser extends React.PureComponent {
     });
     let data = JSON.parse(localStorage.getItem("userData")); //forgot to close
     this.setState({ userData: data });
+
+    console.log(user);
   }
 
-  handleShowCart = () => {
+  handleDeletePartsCate = (e, ele) => {
+    e.preventDefault();
+    let userdata = JSON.parse(localStorage.getItem("userData"));
+
+    swal("Warning", "Sure You Want to Delete item", {
+      buttons: {
+        cancel: "Cancel",
+        catch: { text: "Delete ", value: "delete" },
+      },
+    }).then((value) => {
+      switch (value) {
+        case "delete":
+          let value = {
+            userId: userdata?._id,
+            productId: ele?.productId,
+          };
+          DeleteCartItemPartsCatelogue(value)
+            .then((res) => {
+              console.log(res);
+              this.handleShowCart();
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          break;
+        default:
+      }
+    });
+  };
+  handleShowCart = async () => {
     let userData = JSON.parse(localStorage.getItem("userData")); //forgot to close
 
-    AddToCartGet(userData?._id)
+    await AddToCartGet(userData?._id)
       .then((res) => {
+        // debugger;
+        const user = this.context;
         this.setState({ myCart: res?.cart });
+        user?.setPartsCatalougueCart(res?.cart);
         console.log(res?.cart);
       })
       .catch((err) => {
@@ -377,7 +414,9 @@ class NavbarUser extends React.PureComponent {
                       </thead>
                       <tbody>
                         {this.state.myCart?.map((ele, i) => {
-                          console.log(ele);
+                          {
+                            /* console.log(ele); */
+                          }
                           return (
                             <tr key={i}>
                               <th scope="row"> {i + 1}</th>
@@ -429,8 +468,12 @@ class NavbarUser extends React.PureComponent {
           <DropdownToggle tag="a" className="nav-link nav-link-label">
             <BsCartCheckFill color="#055761" size={21} />
             <Badge pill color="primary" className="badge-up">
-              {/* {user?.PartsCatalougueCart && user?.PartsCatalougueCart?.length} */}
-              {this.state.myCart.length && this.state.myCart.length}
+              {user?.PartsCatalougueCart?.length > 0 ? (
+                <>{user?.PartsCatalougueCart?.length}</>
+              ) : (
+                <>{this.state.myCart.length}</>
+              )}
+              {/* {this.state.myCart.length && this.state.myCart.length} */}
             </Badge>
           </DropdownToggle>
           <DropdownMenu tag="ul" right className="dropdown-menu-media">
@@ -447,7 +490,9 @@ class NavbarUser extends React.PureComponent {
               }}
             >
               {user?.PartsCatalougueCart?.map((ele, i) => {
-                console.log(ele);
+                {
+                  /* console.log(ele); */
+                }
                 return (
                   <>
                     <div className="d-flex justify-content-between">
@@ -482,8 +527,7 @@ class NavbarUser extends React.PureComponent {
                               color="red"
                               size={25}
                               onClick={(e) => {
-                                e.preventDefault();
-                                console.log(ele);
+                                this.handleDeletePartsCate(e, ele);
                               }}
                               style={{ cursor: "pointer" }}
                             />
